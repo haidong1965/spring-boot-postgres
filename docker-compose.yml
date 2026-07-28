@@ -41,7 +41,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-your-secret-key-for-jwt-token-generation-1234567890}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
     ports:
-      - "8080:8080"
+      - "8443:8443"
     networks:
       - spring-network
     depends_on:
