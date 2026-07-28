@@ -32,7 +32,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		List<User> users = userRepository.findAll();
 
 		for (User user : users) {
-			if(user.getName().equalsIgnoreCase("hdo")) {
+			if(user.getName().equalsIgnoreCase("admin")) {
 				userRepository.deleteById(user.getId());
 			}
 		}
