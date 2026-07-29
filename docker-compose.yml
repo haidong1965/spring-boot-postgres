@@ -1,5 +1,15 @@
 
 services:
+  
+  react_app:
+    build:
+      context: ./react_app
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+  #  volumes:
+  #    - ./certs:/app/certs
+
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine

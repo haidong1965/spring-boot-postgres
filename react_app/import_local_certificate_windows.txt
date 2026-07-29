@@ -1,0 +1,37 @@
+Step-by-Step Guide: Importing to the Trusted Root Store
+You will primarily use the Microsoft Management Console (MMC) utility.
+
+Prerequisites:
+Administrator privileges on the Windows PC.
+The combined_keystore.p12 file and its associated password.
+
+Step 1: Open the Certificate Manager
+Press Win + R to open the Run dialog.
+Type 
+	certmgr.msc 
+	
+(or sometimes, for system-level imports, you might need to run this from an elevated Command Prompt as certlm.msc). Run as Administrator.
+
+Step 2: Export/Import via MMC Snap-in
+If the .p12 file contains multiple certificates or keys, directly importing it can sometimes be tricky if it's not structured exactly how Windows expects for a root CA. A safer approach is often to export the root certificate first, then import it.
+
+The Direct Import Method (Use this first):
+
+In the MMC window, navigate to Trusted Root Certification Authorities 
+?
+? Certificates.
+Right-click on Certificates and select All Tasks 
+?
+? Import....
+Browse to your combined_keystore.p12.
+When prompted, provide the password for the .p12 file.
+The wizard will ask you where to place it. Crucially, select the destination store: Trusted Root Certification Authorities.
+Complete the wizard.
+Step 3: Verification (Testing Trust)
+After the import is complete, the certificate should now appear under the "Issued To" or similar section within the Trusted Root Certification Authorities container.
+
+===================================================================================================================================================
+
+Start the React client by using the certifacte by running this
+
+	node --use-system-ca node_modules/vite/bin/vite.js --host

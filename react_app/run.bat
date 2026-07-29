@@ -1,0 +1,1 @@
+node --use-system-ca node_modules/vite/bin/vite.js --host
