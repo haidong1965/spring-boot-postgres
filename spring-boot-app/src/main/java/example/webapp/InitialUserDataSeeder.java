@@ -32,12 +32,12 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		List<User> users = userRepository.findAll();
 
 		for (User user : users) {
-			if(user.getName().equalsIgnoreCase("admin")) {
+			if(user.getName().equalsIgnoreCase("admin@gmail.com")) {
 				userRepository.deleteById(user.getId());
 			}
 		}
 
-		String name = "admin";
+		String name = "admin@gmail.com";
 		String role = "ADMIN";
 		String rawPassword = "rpass"; // <-- CHANGE THIS!
 
