@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // --- IMPORT YOUR PAGES HERE ---
-import LoginPage from './pages/LoginPage'; 
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';  
 import HomePage from './pages/HomePage';   // Assuming you created this file in Step 1
 import EmptyPage from './pages/EmptyPage'; 
 import ListPage from './pages/ListPage'; 
@@ -17,6 +18,7 @@ function App() {
 
         {/* Login Path */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         
         {/* ? NEW DASHBOARD ROUTE HERE ? */}
         <Route path="/dashboard" element={<Dashboard />} /> 

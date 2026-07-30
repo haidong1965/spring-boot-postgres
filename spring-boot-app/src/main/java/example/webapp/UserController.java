@@ -44,6 +44,7 @@ class UserController {
         String token;
     }
     
+    
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody UserRequest request) {
             // Call the service layer method, passing the raw password
