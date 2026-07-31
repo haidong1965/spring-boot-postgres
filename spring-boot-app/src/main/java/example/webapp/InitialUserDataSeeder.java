@@ -2,6 +2,7 @@ package example.webapp;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		userRepository.deleteAll();
+		if(userRepository.findByName("admin@dietarydiary.com") != null)
+			return;
 		String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
 		String rawPassword = "rpass"; // <-- CHANGE THIS!
