@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';  
 import HomePage from './pages/HomePage';   // Assuming you created this file in Step 1
-import EmptyPage from './pages/EmptyPage'; 
+import UserPage from './pages/UserPage'; 
 import ListPage from './pages/ListPage'; 
 import Dashboard from './pages/Dashboard'; // <-- Import the new component!
 
@@ -23,10 +23,9 @@ function App() {
         {/* ? NEW DASHBOARD ROUTE HERE ? */}
         <Route path="/dashboard" element={<Dashboard />} /> 
         
-        <Route path="/user" element={<EmptyPage />} />
+        <Route path="/users/:id" element={<UserPage />} />
         <Route path="/admin" element={<ListPage />} />
 
-        {/* Catch-all route (404) */}
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>

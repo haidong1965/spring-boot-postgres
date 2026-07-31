@@ -22,6 +22,16 @@ class UserController {
 	    this.jwtService = jwtService;
 	}
 	
+	@GetMapping("/{requestedId}")
+	private ResponseEntity<User> findById(@PathVariable Long requestedId) {
+	    User user = UserRepository.getReferenceById(requestedId);
+	    if (user != null) {
+	        return ResponseEntity.ok(user);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
     @GetMapping("/list")
     private ResponseEntity<List<User>> findAll( @RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
         List<User> users = UserRepository.findAll();

@@ -28,8 +28,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		userRepository.deleteAll();
+		if(userRepository.findByName("admin@dietarydiary.com") != null)
+			return;
 		String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
 		String rawPassword = "rpass"; // <-- CHANGE THIS!

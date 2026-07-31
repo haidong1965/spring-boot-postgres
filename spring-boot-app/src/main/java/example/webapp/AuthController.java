@@ -54,7 +54,9 @@ public class AuthController {
 		    if(user.getRole().equalsIgnoreCase("ADMIN"))
 		        url = "/admin";
 		    else
-		        url = "/user";
+		        url = "/users/" + user.getId() ;
+		    System.out.println("++++++++++ user " + user.getName() + " : " + "Role : " + user.getRole() + " ID : " + user.getId());
+		    
             LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url, request.getName());
             Gson gson = new Gson();
             // Print the JSON string
