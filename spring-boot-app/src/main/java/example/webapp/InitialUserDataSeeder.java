@@ -29,35 +29,13 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		List<User> users = userRepository.findAll();
-
-		for (User user : users) {
-			if(user.getName().equalsIgnoreCase("admin@gmail.com")) {
-				userRepository.deleteById(user.getId());
-			}
-		}
-
-		String name = "admin@gmail.com";
+		userRepository.deleteAll();
+		String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
 		String rawPassword = "rpass"; // <-- CHANGE THIS!
-
-		// CRITICAL: Hash the password securely before saving
 		String hashedPassword = passwordEncoder.encode(rawPassword);
-
-		// 3. Create and save the user entity/object
 		User adminUser = new User(name, role, hashedPassword);
-
-		String jwtToken = jwtService.generateToken(name);
-		System.out.println("++++++++++++++ " + jwtToken + " +++++++++++++++++");
 		userRepository.save(adminUser);
-
-		users = userRepository.findAll();
-
-		for (User user : users) {
-			System.out.println("--------------------:" + user.toString());
-		}
-
 		System.out.println("✅ SUCCESS: Default Admin user " + adminUser.toString());
-
 	}
 }

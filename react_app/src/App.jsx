@@ -23,8 +23,8 @@ function App() {
         {/* ? NEW DASHBOARD ROUTE HERE ? */}
         <Route path="/dashboard" element={<Dashboard />} /> 
         
-        <Route path="/my-new-page" element={<EmptyPage />} />
-        <Route path="/list" element={<ListPage />} />
+        <Route path="/user" element={<EmptyPage />} />
+        <Route path="/admin" element={<ListPage />} />
 
         {/* Catch-all route (404) */}
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />

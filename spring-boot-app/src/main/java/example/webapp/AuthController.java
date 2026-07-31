@@ -41,20 +41,7 @@ public class AuthController {
         return "index";
     }
 
-	/*
-	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
-		System.out.println("++++++++++++++ login ++++++++++++++");
-		String token = "";
-		// 1. Call your UserService/SecurityService to validate credentials against DB
-		if (userService.verifyPassword(request.getName(), request.getPassword())) {
-			User user = userService.getUserByName(request.getName());
-		    token = jwtService.generateToken(request.getName());
-            LoginResponse response = new LoginResponse("true", jwtService.generateToken(request.getName()), "/my-new-page");
-            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
-		} 
-		return new ResponseEntity<>("wrong username or password", HttpStatus.FORBIDDEN);
-	}*/
+	
 	
 	@PostMapping("/api/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
@@ -65,9 +52,9 @@ public class AuthController {
 			User user = userService.getUserByName(request.getName());
 		    token = jwtService.generateToken(request.getName());
 		    if(user.getRole().equalsIgnoreCase("ADMIN"))
-		        url = "/list";
+		        url = "/admin";
 		    else
-		        url = "/my-new-page";
+		        url = "/user";
             LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url, request.getName());
             Gson gson = new Gson();
             // Print the JSON string
@@ -76,17 +63,23 @@ public class AuthController {
 		return new ResponseEntity<>("incorrect username or password", HttpStatus.FORBIDDEN);
 	}
 	
-	/*@PostMapping("/api/signup")
-	public ResponseEntity<String> signup(@RequestBody AuthRequest request) throws Exception {
-		System.out.println("------------------------- signup " + request.name);
-		
-        return new ResponseEntity<>("email sent", HttpStatus.OK);
-	}*/
+	@GetMapping("/create")
+	public ResponseEntity<String>   addNewUser(@RequestParam("name") String name,  @RequestParam("token") String token) throws Exception {
+		System.out.println("------------------------- add new user :  " + name);
+		String password = jwtService.extractSubject(token);
+		userService.createUser(name, "USER", password);
+		System.out.println("------------------------- add new user :  " + name + " done");
+		String response = "<html><body>Congratulations " + name + "! <br/>You can login the website through login page <br/> <a href=\"https://192.168.1.81:5173/login\">https://192.168.1.81:5173/login</a>  now<br/> </body></html>";
+		return ResponseEntity.ok(response);
+	}
 	
 	@PostMapping("/api/signup")
     public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
 		System.out.println("++++++++++++++ signup " + request.username + " : " + request.password + "++++++++++++++");
-		String text = "You have signup with email address : \n" + request.username + "\n Password : " + request.password + "\nPlease confirm it by click on link : \nhttps://192.168.1.81:5173/create";
+		String token = jwtService.generateToken(request.password);
+		String text = "You have signup with email address : \n" 
+		        + request.username 
+				+ "\nPlease confirm it by click on link : \nhttps://192.168.1.81:8443/create?name=" + request.username + "&token=" + token;
 		Map<String, Object> response = new HashMap<>();
         try {
             emailService.sendSimpleMessage(request.username, "confirm your email", text);
