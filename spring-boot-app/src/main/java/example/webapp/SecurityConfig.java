@@ -43,12 +43,9 @@ public class SecurityConfig {
 	        .csrf(csrf -> csrf.disable())         
 	        // 3. Authorize requests: This is where the fix lies.
 	        .authorizeHttpRequests(auth -> auth
-	            // A. Permit ALL on /login for both browser AND curl
-	        	.requestMatchers("/api/signup", "/create", "/api/users/*", "/api/login").permitAll()  
-	        	// B. Permit all API routes that don't need specific role checks (e.g., public endpoints)
-	            .requestMatchers("/api/public/**", "/users/login_test").permitAll() // <--- ADD any other known non-protected paths here
-	            // C. Everything else requires authentication
-	            .anyRequest().authenticated() 
+                .requestMatchers("/api/signup", "/create", "/api/users/*", "/users/*", "/api/login").permitAll()
+                .requestMatchers("/api/public/**", "/users/login_test").permitAll()
+                .anyRequest().authenticated() 
 	        );
 
 	    return http.build();
