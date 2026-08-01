@@ -44,7 +44,7 @@ function SignupPage() {
         setError(null); // Clear previous errors
 
         try {
-          const response = await axios.post('https://192.168.1.81:8443/api/signup', 
+          const response = await axios.post('https://192.168.1.81:8443/signup', 
                             userData
                         );
         

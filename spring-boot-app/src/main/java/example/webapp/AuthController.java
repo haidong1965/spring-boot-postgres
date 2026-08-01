@@ -75,7 +75,7 @@ public class AuthController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@PostMapping("/api/signup")
+	@PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
 		System.out.println("++++++++++++++ signup " + request.username + " : " + request.password + "++++++++++++++");
 		String token = jwtService.generateToken(request.password);
