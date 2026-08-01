@@ -1,6 +1,5 @@
 package example.webapp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -11,14 +10,11 @@ import io.jsonwebtoken.io.IOException;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -30,8 +26,6 @@ import java.security.PublicKey;
 public class JwtService {
 
 	private final ResourceLoader resourceLoader;
-	// Token expiration time in milliseconds (e.g., 1 hour * 24 * 7)
-	private static final long EXPIRATION_TIME = 3600 * 1000L * 24 * 7;
 
 	private PrivateKey signingKey;
 	
@@ -42,17 +36,9 @@ public class JwtService {
 		return signingKey;
 	}
 
-	/**
-	 * Constructor: Initializes the service by loading and validating the private
-	 * key.
-	 * 
-	 * @throws Exception if the key file cannot be found, read, or parsed.
-	 */
 	public JwtService(ResourceLoader resourceLoader) throws Exception {
 		this.resourceLoader = resourceLoader;
-		System.out.println("--- Initializing JwtService ---");
 		this.signingKey = loadPrivateKeyFromPem();
-		System.out.println("✅ JwtService initialized successfully with RS256 Private Key.");
 	}
 	
 	public String extractSubject(String token) {
@@ -72,7 +58,6 @@ public class JwtService {
                 .parseClaimsJws(token);
 
         Claims claims = claimsJws.getBody();
-        System.out.println("+++++++++++++++++++++++++++++++++ " + claims.getExpiration().toGMTString());
         return claims.getExpiration().toGMTString();
 	}
 
@@ -109,12 +94,6 @@ public class JwtService {
 		return kf.generatePrivate(keySpec);
 	}
 
-	/**
-	 * Generates a fully signed JWT token using RS256 algorithm.
-	 * 
-	 * @param subject The user ID or unique identifier for the token owner.
-	 * @return The complete, compact JWT string.
-	 */
 	public String generateToken(String subject) {
 		if (signingKey == null) {
 			throw new IllegalStateException("Signing key has not been initialized correctly.");
@@ -132,7 +111,6 @@ public class JwtService {
 	}
 
 	public boolean verifyToken(String token) throws Exception {
-		System.out.println("\n[Verification] Token verification requires the PUBLIC Key.");
 		URL resourceURL = getClass().getClassLoader().getResource("authz.pub");
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = publkicKeyResource.getContentAsString(StandardCharsets.UTF_8);

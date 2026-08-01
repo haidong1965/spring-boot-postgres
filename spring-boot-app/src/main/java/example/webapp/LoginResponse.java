@@ -23,9 +23,8 @@ public class LoginResponse {
 	public void setRedirectUrl(String redirectUrl) {
 		this.redirectUrl = redirectUrl;
 	}
-	private String redirectUrl; // Where the frontend should go next
+	private String redirectUrl;
 
-    // Constructor (Recommended for easy instantiation)
     public LoginResponse(boolean success, String token, String redirectUrl, String name) {
         this.success = success;
         this.token = token;

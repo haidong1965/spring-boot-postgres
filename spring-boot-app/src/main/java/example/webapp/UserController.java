@@ -1,8 +1,6 @@
 package example.webapp;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +30,7 @@ class UserController {
 	}
 
 	@GetMapping("/list")
-	private ResponseEntity<List<User>> findAll(
-			@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	private ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
 		List<User> users = UserRepository.findAll();
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -46,7 +43,6 @@ class UserController {
 		return null;
 	}
 
-	// DTO for receiving clean input data (Good practice!)
 	static class UserRequest {
 		String username;
 		String role;

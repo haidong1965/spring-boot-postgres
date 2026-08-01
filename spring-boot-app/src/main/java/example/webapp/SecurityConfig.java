@@ -5,10 +5,9 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,7 +25,6 @@ public class SecurityConfig {
 		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8443")); 
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
-		// If you need credentials/cookies to pass, uncomment this:
 		config.setAllowCredentials(true);
 
 		// 🚀 Register the entire configuration object against ALL paths ("/**")
@@ -50,28 +48,9 @@ public class SecurityConfig {
 
 	    return http.build();
 	}
-
-	/*
-	@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // Permit all requests without any authentication or authorization checks
-        http
-            .authorizeHttpRequests(request -> request
-            		 .requestMatchers("/login").permitAll()
-                     .requestMatchers("/users/**").hasRole("ADMIN")) 
-            .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic Authentication (optional)
-            .csrf(csrf -> csrf.disable()); // Disable CSRF protection (optional, depending on your use case)
-        return http.build();
-    }
-    
-	*/
-
-	/**
-	 * This method bean registers the BCryptEncoder with Spring, making it available
-	 * to any service that requires it via constructor injection.
-	 */
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	
+	@Bean PasswordEncoder passwordEncoder() {
+	     return new BCryptPasswordEncoder();
 	}
+
 }

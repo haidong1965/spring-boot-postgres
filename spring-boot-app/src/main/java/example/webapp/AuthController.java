@@ -47,7 +47,6 @@ public class AuthController {
 	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
 		String token = "";
 		String url = "";
-		// 1. Call your UserService/SecurityService to validate credentials against DB
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			User user = userService.getUserByName(request.getName());
 		    token = jwtService.generateToken(request.getName());
@@ -59,7 +58,6 @@ public class AuthController {
 		    
             LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url, request.getName());
             Gson gson = new Gson();
-            // Print the JSON string
             return new ResponseEntity<>(gson.toJson(response), HttpStatus.OK);
 		} 
 		return new ResponseEntity<>("incorrect username or password", HttpStatus.FORBIDDEN);
