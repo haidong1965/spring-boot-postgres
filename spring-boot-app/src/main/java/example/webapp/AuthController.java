@@ -23,14 +23,12 @@ import example.webapp.UserController.AuthRequest;
 public class AuthController {
 
 	private final UserService userService;
-	private final ResourceLoader resourceLoader;
 	private final JwtService jwtService;
 	private final EmailService emailService;
 	
 	
 	private AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService, EmailService emailService) {
 		this.userService = userService;
-		this.resourceLoader = resourceLoader;
 		this.jwtService = jwtService;
 		this.emailService = emailService;
 	}
@@ -54,7 +52,6 @@ public class AuthController {
 		        url = "/admin";
 		    else
 		        url = "/users/" + user.getId() ;
-		    System.out.println("++++++++++ user " + user.getName() + " : " + "Role : " + user.getRole() + " ID : " + user.getId());
 		    
             LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url, request.getName());
             Gson gson = new Gson();
@@ -65,17 +62,14 @@ public class AuthController {
 	
 	@GetMapping("/create")
 	public ResponseEntity<String>   addNewUser(@RequestParam("name") String name,  @RequestParam("token") String token) throws Exception {
-		System.out.println("------------------------- add new user :  " + name);
 		String password = jwtService.extractSubject(token);
 		userService.createUser(name, "USER", password);
-		System.out.println("------------------------- add new user :  " + name + " done");
 		String response = "<html><body>Congratulations " + name + "! <br/>You can login the website through login page <br/> <a href=\"https://192.168.1.81:5173/login\">https://192.168.1.81:5173/login</a>  now<br/> </body></html>";
 		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
-		System.out.println("++++++++++++++ signup " + request.username + " : " + request.password + "++++++++++++++");
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" 
 		        + request.username 
@@ -108,14 +102,12 @@ public class AuthController {
 			this.password = password;
 		}
 		private String password;
-	    // Getters and Setters...
 	}
 	
 	static class AuthRequest {
         private String name;
         private String password;
 
-        // Getters and Setters (required by Spring for JSON deserialization)
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getPassword() { return password; }
