@@ -43,7 +43,7 @@ public class AuthController {
 
 	
 	
-	@PostMapping("/api/login")
+	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
 		String token = "";
 		String url = "";

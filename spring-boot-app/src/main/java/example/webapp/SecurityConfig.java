@@ -43,8 +43,8 @@ public class SecurityConfig {
 	        .csrf(csrf -> csrf.disable())         
 	        // 3. Authorize requests: This is where the fix lies.
 	        .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/signup", "/create", "/api/users/*", "/users/*", "/api/login").permitAll()
-                .requestMatchers("/api/public/**", "/users/login_test").permitAll()
+                .requestMatchers("/api/signup", "/create", "/api/users/*", "/users/*", "/login").permitAll()
+                .requestMatchers("/api/public/**").permitAll()
                 .anyRequest().authenticated() 
 	        );
 

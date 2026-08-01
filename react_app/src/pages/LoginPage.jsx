@@ -21,7 +21,7 @@ function LoginPage() {
    
 
     try {
-      const response = await axios.post('https://192.168.1.81:8443/api/login', 
+      const response = await axios.post('https://192.168.1.81:8443/login', 
                                  { 
                                    name: username, 
                                    password: password 
