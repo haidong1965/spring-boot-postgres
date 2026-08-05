@@ -62,18 +62,20 @@ public class AuthController {
 	
 	@GetMapping("/create")
 	public ResponseEntity<String>   addNewUser(@RequestParam("name") String name,  @RequestParam("token") String token) throws Exception {
+		System.out.println("++++++++++++++ addNewUser!  ++++++++++++++");
 		String password = jwtService.extractSubject(token);
 		userService.createUser(name, "USER", password);
-		String response = "<html><body>Congratulations " + name + "! <br/>You can login the website through login page <br/> <a href=\"https://192.168.1.81:5173/login\">https://192.168.1.81:5173/login</a>  now<br/> </body></html>";
+		String response = "<html><body>Congratulations " + name + "! <br/>You can go to the login page to login  now<br/> </body></html>";
 		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
+		System.out.println("++++++++++++++ triggerEmail!  ++++++++++++++");
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" 
 		        + request.username 
-				+ "\nPlease confirm it by click on link : \nhttps://192.168.1.81:8443/create?name=" + request.username + "&token=" + token;
+				+ "\nPlease confirm it by click on link : \nhttps://2.106.164.55:8443/create?name=" + request.username + "&token=" + token;
 		Map<String, Object> response = new HashMap<>();
         try {
             emailService.sendSimpleMessage(request.username, "confirm your email", text);

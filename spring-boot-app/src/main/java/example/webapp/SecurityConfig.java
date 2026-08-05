@@ -22,7 +22,7 @@ public class SecurityConfig {
 		// -----------------------------------------------
 		// FIX: Build a single, permissive configuration object first.
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8443")); 
+		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8443", "https://2.106.164.55:8443")); 
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);

@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) { 
         registry.addMapping("/**") 
-                .allowedOrigins("https://192.168.1.81:5173")      // the spring boot end point ip address
+                .allowedOrigins("https://192.168.1.81:5173", "https://2.106.164.55:8443")      // the spring boot end point ip address
         		.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
     }
