@@ -38,7 +38,7 @@ public class SecurityConfig {
 	        // 1. Apply the CORS configuration first and most generally
 	        .cors(cors -> cors.configurationSource(corsConfig)) 	        
 	        // 2. Disable CSRF (Good for API testing)
-	        .csrf(csrf -> csrf.disable())         
+	        //.csrf(csrf -> csrf.disable())         
 	        // 3. Authorize requests: This is where the fix lies.
 	        .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/signup", "/create", "/users/*", "/login").permitAll()
