@@ -10,7 +10,7 @@ const SSL_DIR = path.join(__dirname, 'certs'); // Create a 'certs' directory wit
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 5174,
 	host: '0.0.0.0',
     https: {
       key: fs.readFileSync(path.join(SSL_DIR, 'server_key.pem')),

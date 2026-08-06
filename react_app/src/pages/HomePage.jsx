@@ -5,11 +5,11 @@ function HomePage() {
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
       <h1>Welcome to the App!</h1>
-      <a href="https://192.168.1.81:5173/login" target="_self">
+      <a href="https://192.168.1.81:5174/login" target="_self">
          Login
       </a>
       <br/>
-      <a href="https://192.168.1.81:5173/signup" target="_self">
+      <a href="https://192.168.1.81:5174/signup" target="_self">
          Sign up 
       </a>
     </div>

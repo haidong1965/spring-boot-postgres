@@ -7,6 +7,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,12 +40,17 @@ public class AuthController {
         return "index";
     }
 
-	
+	@GetMapping("/csrf")
+	public CsrfToken csrf(CsrfToken token) {
+		System.out.println("++++++++++++++ csrf-token!  ++++++++++++++");
+	    return token;
+	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
 		String token = "";
 		String url = "";
+		System.out.println("++++++++++++++ login   ++++++++++++++");
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			User user = userService.getUserByName(request.getName());
 		    token = jwtService.generateToken(request.getName());
@@ -71,16 +77,17 @@ public class AuthController {
 	
 	@PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
-		System.out.println("++++++++++++++ triggerEmail!  ++++++++++++++");
+		System.out.println("++++++++++++++ signup: triggerEmail!  ++++++++++++++");
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" 
 		        + request.username 
-				+ "\nPlease confirm it by click on link : \nhttps://2.106.164.55:8443/create?name=" + request.username + "&token=" + token;
+				+ "\nPlease confirm it by click on link : \nhttps://2.106.164.55:8444/create?name=" + request.username + "&token=" + token;
 		Map<String, Object> response = new HashMap<>();
         try {
             emailService.sendSimpleMessage(request.username, "confirm your email", text);
             response.put("success", true);
             response.put("message", "Email sent successfully");
+            System.out.println("++++++++++++++ signup: Email Sent!  ++++++++++++++");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
         	response.put("success", false);
@@ -91,7 +98,8 @@ public class AuthController {
 	
 	static class SignupRequest {
 	    private String username;
-	    public String getUsername() {
+	    
+		public String getUsername() {
 			return username;
 		}
 		public void setUsername(String username) {

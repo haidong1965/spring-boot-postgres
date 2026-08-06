@@ -5,17 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "node --use-system-ca ./node_modules/vite/bin/vite.js",
-	"start": "npm run dev",
-    "build": "vite build",
+    "start": "npm run dev",
+    "build": "vite build  --mode production",
     "lint": "eslint .",
     "preview": "vite preview",
-	"run": "cross-env HTTPS=true" 
+    "run": "cross-env HTTPS=true"
   },
   "dependencies": {
     "axios": "^1.18.1",
+    "js-cookie": "^3.0.8",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

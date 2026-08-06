@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Assuming you are using axios or fetch for API calls
 import axios from 'axios'; 
 import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
@@ -7,6 +7,7 @@ function SignupPage() {
   // 1. State to hold input values
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null); // For displaying errors
   const navigate = useNavigate(); 
@@ -28,8 +29,30 @@ function SignupPage() {
   
   const userData = {
       username: username, // Keys match the expected JSON structure on the backend
-      password: password,
+      password: password
     };
+    
+    // Get CSRF token when component mounts
+    useEffect(() => {
+        const fetchCsrfToken = async () => {
+            try {
+                // Make a request to get CSRF token
+                const response = await axios.get('https://192.168.1.81:8444/csrf', {
+                    withCredentials: true
+                });
+                
+                // If server sends token in response body
+                if (response.data.token) {
+                    setCsrfToken(response.data.token);
+                }
+                console.log('setCsrfToken:', response.data.token);
+            } catch (error) {
+                console.log('CSRF token fetch failed:', error);
+            }
+        };
+
+        fetchCsrfToken();
+    }, []);
 
   // 2. Handler for form submission
   const handleSubmit = async (e) => {
@@ -44,9 +67,16 @@ function SignupPage() {
         setError(null); // Clear previous errors
 
         try {
-          const response = await axios.post('https://192.168.1.81:8443/signup', 
-                            userData
-                        );
+          const response = await axios.post('https://192.168.1.81:8444/signup', userData,
+                           {
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'X-XSRF-TOKEN': csrfToken // Send CSRF token
+                              },
+                              withCredentials: true // Important for cookies
+                           }
+                         );
+                        
         
           //setMessage(`Success: ${response.data}`); 
           window.location.replace("/dashboard");

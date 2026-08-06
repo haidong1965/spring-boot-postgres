@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -22,7 +24,7 @@ public class SecurityConfig {
 		// -----------------------------------------------
 		// FIX: Build a single, permissive configuration object first.
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8443", "https://2.106.164.55:8443")); 
+		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8444", "https://2.106.164.55:8444"));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
@@ -33,24 +35,27 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfig) throws Exception {
-	    http
-	        // 1. Apply the CORS configuration first and most generally
-	        .cors(cors -> cors.configurationSource(corsConfig)) 	        
-	        // 2. Disable CSRF (Good for API testing)
-	        //.csrf(csrf -> csrf.disable())         
-	        // 3. Authorize requests: This is where the fix lies.
-	        .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/signup", "/create", "/users/*", "/login").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .anyRequest().authenticated() 
-	        );
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfig)
+			throws Exception {
+		http
+				// 1. Apply the CORS configuration first and most generally
+				.cors(cors -> cors.configurationSource(corsConfig))
+				// 2. Disable CSRF (Good for API testing)
+				.csrf(csrf -> csrf
+		                // CSRF is enabled by default
+		                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+				// 3. Authorize requests: This is where the fix lies.
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf").permitAll()
+						.requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
-	    return http.build();
+		return http.build();
 	}
-	
-	@Bean PasswordEncoder passwordEncoder() {
-	     return new BCryptPasswordEncoder();
+
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 }

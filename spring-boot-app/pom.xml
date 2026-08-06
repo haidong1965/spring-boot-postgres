@@ -107,6 +107,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <!-- Add your custom properties file here -->
+                <additionalProperties>
+                    <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
+                    <spring.profiles.active>dev</spring.profiles.active>
+                </additionalProperties>
+            </configuration>
+        </plugin>
 		</plugins>
 	</build>
 
