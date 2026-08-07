@@ -3,6 +3,7 @@ package example.webapp;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+	
+	@Value("${server.port}")
+	private String serverPort;
+	@Value("${server.public}")
+	private String serverPublic;
+	@Value("${server.private}")
+	private String serverPrivate;
 
 	public CorsConfigurationSource corsConfigurationSource() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -24,7 +32,7 @@ public class SecurityConfig {
 		// -----------------------------------------------
 		// FIX: Build a single, permissive configuration object first.
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(Arrays.asList("https://192.168.1.81:8444", "https://2.106.164.55:8444"));
+		config.setAllowedOrigins(Arrays.asList("https://" + serverPrivate + ":" + serverPort, "https://" + serverPublic + ":" + serverPort));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
@@ -47,7 +55,7 @@ public class SecurityConfig {
 		                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				// 3. Authorize requests: This is where the fix lies.
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf").permitAll()
+						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf", "/").permitAll()
 						.requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
 		return http.build();

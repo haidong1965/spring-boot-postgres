@@ -3,6 +3,7 @@ package example.webapp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ import example.webapp.UserController.AuthRequest;
 @RestController
 @RequestMapping("/")
 public class AuthController {
+	
+	@Value("${server.port}")
+	private String serverPort;
+	@Value("${server.public}")
+	private String serverPublic;
 
 	private final UserService userService;
 	private final JwtService jwtService;
@@ -36,7 +42,7 @@ public class AuthController {
 	
 	@GetMapping("/")
     public String index() {
-		System.out.println("++++++++++++++ Welcome to the SSL!  ++++++++++++++");
+		System.out.println("++++++++++++++ Welcome to the SSL on  ++++++++++++++" + serverPort);
         return "index";
     }
 
@@ -81,7 +87,7 @@ public class AuthController {
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" 
 		        + request.username 
-				+ "\nPlease confirm it by click on link : \nhttps://2.106.164.55:8444/create?name=" + request.username + "&token=" + token;
+				+ "\nPlease confirm it by click on link : \nhttps://" + serverPublic + ":" + serverPort + "/create?name=" + request.username + "&token=" + token;
 		Map<String, Object> response = new HashMap<>();
         try {
             emailService.sendSimpleMessage(request.username, "confirm your email", text);
