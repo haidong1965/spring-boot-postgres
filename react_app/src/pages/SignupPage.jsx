@@ -14,6 +14,9 @@ function SignupPage() {
   
   console.log('SignupPage : create new user and password');
   
+  const csrf = import.meta.env.VITE_API_CSRF;
+  const signup = import.meta.env.VITE_API_SIGNUP;
+  
   const isValidusername = (username) => {
     if (!username || typeof username !== 'string') {
         return false; // Handle null, undefined, or non-string inputs
@@ -37,7 +40,7 @@ function SignupPage() {
         const fetchCsrfToken = async () => {
             try {
                 // Make a request to get CSRF token
-                const response = await axios.get('https://192.168.1.81:8444/csrf', {
+                const response = await axios.get(csrf, {
                     withCredentials: true
                 });
                 
@@ -67,7 +70,7 @@ function SignupPage() {
         setError(null); // Clear previous errors
 
         try {
-          const response = await axios.post('https://192.168.1.81:8444/signup', userData,
+          const response = await axios.post(signup, userData,
                            {
                               headers: {
                                 'Content-Type': 'application/json',

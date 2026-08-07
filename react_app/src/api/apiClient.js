@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { getToken } from '../utils/authService'; 
 // 1. Create an instance configured with your base URL
+
+
+
 const apiClient = axios.create({
-  baseURL: 'https://192.168.1.81:8444', // <-- CHANGE THIS to your actual backend URL
+  baseURL: import.meta.env.VITE_API_URL, // <-- CHANGE THIS to your actual backend URL
   headers: {
     'Content-Type': 'application/json',
   },

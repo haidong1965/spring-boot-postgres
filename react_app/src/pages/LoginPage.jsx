@@ -13,6 +13,9 @@ function LoginPage() {
   const [error, setError] = useState(null); // For displaying errors
   const navigate = useNavigate(); 
   
+  const csrf = import.meta.env.VITE_API_CSRF;
+  const login = import.meta.env.VITE_API_LOGIN;
+  
   console.log('LoginPage : Attempting login');
   
     // Get CSRF token when component mounts
@@ -20,7 +23,7 @@ function LoginPage() {
         const fetchCsrfToken = async () => {
             try {
                 // Make a request to get CSRF token
-                const response = await axios.get('https://192.168.1.81:8444/csrf', {
+                const response = await axios.get(csrf, {
                     withCredentials: true
                 });
                 
@@ -46,7 +49,7 @@ function LoginPage() {
     try {
         
         console.log('csrfToken : ' + csrfToken);
-        const response = await axios.post('https://192.168.1.81:8444/login', {
+        const response = await axios.post(login, {
             name: username,
             password: password
         }, {
