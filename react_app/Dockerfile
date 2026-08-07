@@ -19,4 +19,4 @@ RUN npm run build
 # Install serve to serve the app
 RUN npm install -g serve
 
-CMD ["node", "--use-system-ca", "node_modules/vite/bin/vite.js", "--host"]
+CMD ["node", "--use-system-ca", "node_modules/vite/bin/vite.js", "--host", "--mode", "production"]
