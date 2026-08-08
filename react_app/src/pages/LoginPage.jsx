@@ -1,6 +1,5 @@
 import React, { useState , useEffect} from 'react';
-// Assuming you are using axios or fetch for API calls
-import axios from 'axios'; 
+import apiClient from '../api/apiClient'; 
 import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
 import { setToken } from '../utils/authService'; 
 
@@ -23,7 +22,7 @@ function LoginPage() {
         const fetchCsrfToken = async () => {
             try {
                 // Make a request to get CSRF token
-                const response = await axios.get(csrf, {
+                const response = await apiClient.get("/csrf", {
                     withCredentials: true
                 });
                 
@@ -49,7 +48,7 @@ function LoginPage() {
     try {
         
         console.log('csrfToken : ' + csrfToken);
-        const response = await axios.post(login, {
+        const response = await apiClient.post("/login", {
             name: username,
             password: password
         }, {

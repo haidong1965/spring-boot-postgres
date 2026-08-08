@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// Assuming you are using axios or fetch for API calls
-import axios from 'axios'; 
+import apiClient from '../api/apiClient'; 
 import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
 
 function SignupPage() {
@@ -40,9 +39,10 @@ function SignupPage() {
         const fetchCsrfToken = async () => {
             try {
                 // Make a request to get CSRF token
-                const response = await axios.get(csrf, {
+                const response = await apiClient.get('/csrf', 
+                    {
                     withCredentials: true
-                });
+                    }); 
                 
                 // If server sends token in response body
                 if (response.data.token) {
@@ -70,7 +70,8 @@ function SignupPage() {
         setError(null); // Clear previous errors
 
         try {
-          const response = await axios.post(signup, userData,
+          const response = await apiClient.post("/signup", 
+                           userData,
                            {
                               headers: {
                                 'Content-Type': 'application/json',
