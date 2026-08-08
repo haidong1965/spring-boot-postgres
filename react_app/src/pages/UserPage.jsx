@@ -1,12 +1,11 @@
 // src/pages/UserPage.jsx
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getToken, removeToken } from '../utils/authService'; 
-import LoginPage from './LoginPage'; 
-import axios from 'axios'; // Import axios
-import { Link, useNavigate } from 'react-router-dom'; 
-import apiClient from '../api/apiClient'; 
+import { useNavigate } from 'react-router-dom'; 
 import { useParams } from 'react-router-dom';
+import LoginPage from './LoginPage'; 
+import apiClient from '../api/apiClient'; 
 
 
 /**
@@ -20,8 +19,6 @@ const UserPage = () => {
 
   // State to hold the fetched user data (or null initially)
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -32,19 +29,14 @@ const UserPage = () => {
     navigate('/login', { replace: true });   
   };
   
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = getToken();
 	console.log(" .................   Running getToken() ...................");
     if (token) {
-      setIsAuthenticated(true);
-	  console.log(" .................   setIsAuthenticated(true) ...................");
-      // OPTIONAL: If you use a global state manager (e.g., Redux), dispatch an action here
-      // dispatch({ type: 'AUTH_SET', payload: token }); 
-
+	  console.log(" .................  got token ...................");
     } else {
-      setIsAuthenticated(false);
+		console.log(" .................  no token ...................");
     }
   }, []); // Empty dependency array means this runs ONLY ONCE after the first render
 
@@ -64,12 +56,9 @@ const UserPage = () => {
     // 3. Define the async fetching function inside useEffect
     const fetchUserDetails = async () => {
       if (!userIdFromUrl) {
-        setError("User ID is missing in the URL.");
-        setIsLoading(false);
+        console.log("User ID is missing in the URL.");
         return;
       }
-
-      setIsLoading(true);
 
       try {
         // 4. *** CRITICAL CORRECTION HERE ***: Use template literals to inject the 'id' variable
@@ -81,11 +70,10 @@ const UserPage = () => {
 
       } catch (err) {
         console.error("Failed to fetch user details:", err);
-        setError("Could not load user profile. Please try again later.");
+        console.log("Could not load user profile. Please try again later.");
         setUser(null); // Clear any previous successful state on failure
       } finally {
         // This runs whether the request succeeded or failed
-        setIsLoading(false);
       }
     };
 
@@ -95,9 +83,9 @@ const UserPage = () => {
   }, [userIdFromUrl]); 
 
 
-  if (!isAuthenticated) {
+  if (!user) {
     // If the token isn't found on load, redirect them to the login page.
-    console.log("Token missing or invalid. Redirecting to Login.");
+    console.log("invalid login. Redirecting to Login.");
     // Example: navigate('/login'); 
     return <LoginPage />;
   }

@@ -1,7 +1,7 @@
 // src/pages/ListPage.jsx
 
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { setToken } from '../utils/authService'; 
 import apiClient from '../api/apiClient'; 
 
@@ -28,27 +28,21 @@ const ListPage = () => {
   
   useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true); // Set loading state to true before the request
+      setError(null);    // Clear previous errors
+      console.log('++++++++++++++++++++++++++++++++++++++');
       try {
-        setIsLoading(true); // Set loading state to true before the request
-        setError(null);    // Clear previous errors
-        console.log('++++++++++++++++++++++++++++++++++++++');
-        try {
           // *** THE DATA FETCHING CALL GOES HERE ***
-          const response = await apiClient.get('/users/list');  
-          setUsers(response.data);  
-        } catch (fetchError) {
-          console.error("Fetching error:", fetchError);
-          setError('Failed to load users. Please check the server is running.');
-        } finally {
-          // This runs regardless of success or failure
-          setIsLoading(false);
-        }
-
-      } catch (generalError) {
-        // Catching network errors or setup issues
-        setError('A general error occurred while connecting to the server.');
+        const response = await apiClient.get('/users/list');  
+        setUsers(response.data);  
+      } catch (fetchError) {
+        console.error("Fetching error:", fetchError);
+        setError('Failed to load users. Please check the server is running.');
+      } finally {
+        // This runs regardless of success or failure
         setIsLoading(false);
       }
+
     };
 
     fetchUsers();

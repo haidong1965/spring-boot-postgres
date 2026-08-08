@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import { useState , useEffect} from 'react';
 import apiClient from '../api/apiClient'; 
 import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
 import { setToken } from '../utils/authService'; 
@@ -11,9 +11,6 @@ function LoginPage() {
   const [csrfToken, setCsrfToken] = useState('');
   const [error, setError] = useState(null); // For displaying errors
   const navigate = useNavigate(); 
-  
-  const csrf = import.meta.env.VITE_API_CSRF;
-  const login = import.meta.env.VITE_API_LOGIN;
   
   console.log('LoginPage : Attempting login');
   
