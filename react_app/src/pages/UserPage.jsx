@@ -89,18 +89,9 @@ const UserPage = () => {
   }, [userIdFromUrl]); 
 
   useEffect(() => {
-        const token = getToken();
         const fetchOptions = async () => {
             try {
-			    console.log("+++++++++++++++ fetchOptions +++++++++++++");
-                // Replace with your actual API endpoint
-                const response = await apiClient.get("/food/list", {
-                    headers: {
-                        'Authorization': `Bearer ${token}` // Include the token here
-                    },
-                    withCredentials: true
-                });
-                
+                const response = await apiClient.get("/food/list");
 				const formattedOptions = response.data.split(":").map((item) => ({
                   value: item,
                   label: item
