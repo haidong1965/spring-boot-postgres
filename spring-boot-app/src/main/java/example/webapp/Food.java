@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "FOODS") // Explicitly names the table 'users'
-public class Foods {
+public class Food {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrementing primary key
@@ -20,19 +20,35 @@ public class Foods {
 	private String name;
 	
 	@Column(nullable = false)
-	private String enerfy;
+	private String energy;
 	
+	public String getFiber() {
+		return fiber;
+	}
+
+	public void setFiber(String fiber) {
+		this.fiber = fiber;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	@Column(nullable = false)
 	private String protein;
 	
 	@Column(nullable = false)
-	private String dietaryFiber;
+	private String fiber;
 	
 	@Column(nullable = false)
 	private String calcium;
 	
 	@Column(nullable = false)
-	private int foodType;
+	private int type;
 
 	public Long getId() {
 		return id;
@@ -50,12 +66,14 @@ public class Foods {
 		this.name = name;
 	}
 
-	public String getEnerfy() {
-		return enerfy;
+	
+
+	public String getEnergy() {
+		return energy;
 	}
 
-	public void setEnerfy(String enerfy) {
-		this.enerfy = enerfy;
+	public void setEnergy(String energy) {
+		this.energy = energy;
 	}
 
 	public String getProtein() {
@@ -66,13 +84,6 @@ public class Foods {
 		this.protein = protein;
 	}
 
-	public String getDietaryFiber() {
-		return dietaryFiber;
-	}
-
-	public void setDietaryFiber(String dietaryFiber) {
-		this.dietaryFiber = dietaryFiber;
-	}
 
 	public String getCalcium() {
 		return calcium;
@@ -82,12 +93,5 @@ public class Foods {
 		this.calcium = calcium;
 	}
 
-	public int getFoodType() {
-		return foodType;
-	}
-
-	public void setFoodType(int foodType) {
-		this.foodType = foodType;
-	}
 
 }

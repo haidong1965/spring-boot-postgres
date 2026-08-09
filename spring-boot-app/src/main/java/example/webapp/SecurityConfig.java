@@ -32,6 +32,8 @@ public class SecurityConfig {
 		// -----------------------------------------------
 		// FIX: Build a single, permissive configuration object first.
 		CorsConfiguration config = new CorsConfiguration();
+		String corsAllowed = "https://" + serverPrivate + ":" + serverPort +" : "+ "https://" + serverPublic + ":" + serverPort;
+		System.out.println("++++++++++++ CORSALLOWED: " + corsAllowed);
 		config.setAllowedOrigins(Arrays.asList("https://" + serverPrivate + ":" + serverPort, "https://" + serverPublic + ":" + serverPort));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
@@ -55,7 +57,7 @@ public class SecurityConfig {
 		                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				// 3. Authorize requests: This is where the fix lies.
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf", "/").permitAll()
+						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf", "/", "/food/list").permitAll()
 						.requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
 		return http.build();

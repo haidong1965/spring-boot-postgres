@@ -25,5 +25,12 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		String hashedPassword = passwordEncoder.encode(rawPassword);
 		User adminUser = new User(name, role, hashedPassword);
 		userRepository.save(adminUser);
+		//test user
+		String name1 = "hai_dong1@yahoo.com";
+		String role1 = "USER";
+		String rawPassword1 = "1"; // <-- CHANGE THIS!
+		String hashedPassword1 = passwordEncoder.encode(rawPassword1);
+		User hdo = new User(name1, role1, hashedPassword1);
+		userRepository.save(hdo);
 	}
 }

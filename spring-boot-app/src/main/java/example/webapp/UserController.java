@@ -31,10 +31,12 @@ class UserController {
 
 	@GetMapping("/list")
 	private ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+		
 		List<User> users = UserRepository.findAll();
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
+			System.out.println("++++++++++++++ token : " + token);
 		}
 		if (token != null) {
 			if (jwtService.verifyToken(token))
