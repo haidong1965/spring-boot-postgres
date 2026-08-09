@@ -26,19 +26,20 @@ import java.security.PublicKey;
 public class JwtService {
 
 	private final ResourceLoader resourceLoader;
+	
+	private final JwtProperties jwtProperties;
 
 	private PrivateKey signingKey;
-	
-	@Value("${jwt.expiration}")
-	private Long expiration;
 
 	public PrivateKey getSigningKey() {
 		return signingKey;
 	}
 
-	public JwtService(ResourceLoader resourceLoader) throws Exception {
+	public JwtService(ResourceLoader resourceLoader, JwtProperties jwtProperties) throws Exception {
 		this.resourceLoader = resourceLoader;
+		this.jwtProperties = jwtProperties;
 		this.signingKey = loadPrivateKeyFromPem();
+		System.out.println("+++++++++++++++ expiration:" + jwtProperties.getExpiration());
 	}
 	
 	public String extractSubject(String token) {
@@ -103,7 +104,7 @@ public class JwtService {
 		String jwtToken = Jwts.builder().setSubject(subject) // e.g., User ID
 				.setId(UUID.randomUUID().toString()) 
 				.setIssuedAt(now)
-				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
 				// --- THE CRITICAL STEP: Signing with the loaded PrivateKey ---
 				.signWith(signingKey, SignatureAlgorithm.RS256).compact();
 
@@ -160,7 +161,7 @@ public class JwtService {
 			}
 		};
 
-		JwtService service = new JwtService(mockResourceLoader);
+		JwtService service = new JwtService(mockResourceLoader, new JwtProperties());
 		String userId = "hdo";
 		// 2. Generate a token for a sample user String userId = "hdo"; String token
 		String token = service.generateToken(userId);
