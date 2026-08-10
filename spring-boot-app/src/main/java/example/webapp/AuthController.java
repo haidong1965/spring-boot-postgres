@@ -56,11 +56,9 @@ public class AuthController {
 	
 	@GetMapping("/validate")
 	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
-		System.out.println("++++++++++++++ validate +++++++++++++++");
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
-			System.out.println("++++++++++++++ token : " + token);
 		}
 		if (token != null) {
 			if (jwtService.verifyToken(token))
