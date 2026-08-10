@@ -10,7 +10,6 @@ import LoginPage from './LoginPage';
 import apiClient from '../api/apiClient';
 
 
-
 /**
  * This component serves as the base structure for an empty page.
  * You should build out all your content, layout, and logic here.
@@ -36,6 +35,7 @@ const UserPage = () => {
         navigate('/login', { replace: true });
     };
 
+    // Check for Expiry/Stale Token 
     useEffect(() => {
         const token = getToken();
         if (token) {
@@ -43,10 +43,6 @@ const UserPage = () => {
         } else {
             console.log(" .................  no token ...................");
         }
-    }, []); // Empty dependency array means this runs ONLY ONCE after the first render
-
-    // --- OPTIONAL: Check for Expiry/Stale Token (Advanced) ---
-    useEffect(() => {
         const intervalId = setInterval(async () => {
             try {
                 await apiClient.get("/validate");
@@ -55,7 +51,7 @@ const UserPage = () => {
                 navigate('/login', { replace: true });
             }
             console.log("Running background token check...");
-        }, 1 * 60 * 1000); // Check every 5 minutes
+        }, 10 * 60 * 1000); // Check every 10 minutes
 
         return () => clearInterval(intervalId); // Cleanup the interval when component unmounts
     }, []);
