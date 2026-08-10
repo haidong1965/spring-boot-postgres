@@ -25,26 +25,17 @@ public class FoodController {
 	}
 	
 	@GetMapping("/list")
-	private ResponseEntity<String> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	private  ResponseEntity<List<Food>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
 		System.out.println("++++++++++++++ FoodController: findAll() ++++++++++++++");
 		List<Food> foods = foodRepository.findAll();
-		String options = "";
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
+			System.out.println("++++++++++++++ token : " + token);
 		}
 		if (token != null) {
-			System.out.println("++++++++++++++ FoodController token : " + token);
-			if (jwtService.verifyToken(token)) {
-				for(Food food : foods) {
-					
-					options = options + food.getName() + ":";
-				}
-				Gson gson = new Gson();
-				System.out.println("++++++++++++++ get all foods ++++++++++++++" + options);
-				
-				return new ResponseEntity<>(options, HttpStatus.OK);
-			}
+			if (jwtService.verifyToken(token))
+				return ResponseEntity.ok(foods);
 		}
 		return null;
 	}

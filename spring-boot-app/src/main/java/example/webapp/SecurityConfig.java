@@ -57,7 +57,7 @@ public class SecurityConfig {
 		                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				// 3. Authorize requests: This is where the fix lies.
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf", "/", "/food/list").permitAll()
+						.requestMatchers("/signup", "/create", "/users/*", "/login", "/csrf", "/", "/food/list", "/validate").permitAll()
 						.requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
 		return http.build();

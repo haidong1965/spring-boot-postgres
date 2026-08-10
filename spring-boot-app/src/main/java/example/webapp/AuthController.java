@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import example.webapp.UserController.AuthRequest;
+import io.jsonwebtoken.JwtException;
 
 @RestController
 @RequestMapping("/")
@@ -50,6 +52,21 @@ public class AuthController {
 	public CsrfToken csrf(CsrfToken token) {
 		System.out.println("++++++++++++++ csrf-token!  ++++++++++++++");
 	    return token;
+	}
+	
+	@GetMapping("/validate")
+	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+		System.out.println("++++++++++++++ validate +++++++++++++++");
+		String token = null;
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			token = authHeader.substring(7);
+			System.out.println("++++++++++++++ token : " + token);
+		}
+		if (token != null) {
+			if (jwtService.verifyToken(token))
+				return ResponseEntity.ok("");
+		}
+		return null;
 	}
 	
 	@PostMapping("/login")

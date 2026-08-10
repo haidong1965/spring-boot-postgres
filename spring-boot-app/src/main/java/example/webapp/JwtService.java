@@ -26,7 +26,7 @@ import java.security.PublicKey;
 public class JwtService {
 
 	private final ResourceLoader resourceLoader;
-	
+
 	private final JwtProperties jwtProperties;
 
 	private PrivateKey signingKey;
@@ -41,25 +41,19 @@ public class JwtService {
 		this.signingKey = loadPrivateKeyFromPem();
 		System.out.println("+++++++++++++++ expiration:" + jwtProperties.getExpiration());
 	}
-	
+
 	public String extractSubject(String token) {
-		Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token);
+		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
 
-        Claims claims = claimsJws.getBody();
-        return claims.getSubject();
+		Claims claims = claimsJws.getBody();
+		return claims.getSubject();
 	}
-	
-	public String extractExpiration(String token) {
-		Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token);
 
-        Claims claims = claimsJws.getBody();
-        return claims.getExpiration().toGMTString();
+	public String extractExpiration(String token) {
+		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
+
+		Claims claims = claimsJws.getBody();
+		return claims.getExpiration().toGMTString();
 	}
 
 	private PrivateKey loadPrivateKeyFromPem() throws Exception {
@@ -100,10 +94,9 @@ public class JwtService {
 			throw new IllegalStateException("Signing key has not been initialized correctly.");
 		}
 
-		Date now = new Date();		
+		Date now = new Date();
 		String jwtToken = Jwts.builder().setSubject(subject) // e.g., User ID
-				.setId(UUID.randomUUID().toString()) 
-				.setIssuedAt(now)
+				.setId(UUID.randomUUID().toString()).setIssuedAt(now)
 				.setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
 				// --- THE CRITICAL STEP: Signing with the loaded PrivateKey ---
 				.signWith(signingKey, SignatureAlgorithm.RS256).compact();
@@ -116,9 +109,10 @@ public class JwtService {
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = publkicKeyResource.getContentAsString(StandardCharsets.UTF_8);
 		PublicKey publicKey = loadPublicKeyFromPem(pemContent);
-		if(Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token) != null) {
+
+		if (Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token) != null) {
 			Date exDate = new Date(extractExpiration(token));
-			if(exDate.before(new Date()))
+			if (exDate.before(new Date()))
 				return false;
 			return true;
 		}
@@ -127,15 +121,14 @@ public class JwtService {
 
 	private PublicKey loadPublicKeyFromPem(String pemKeyString) throws Exception {
 		String cleanBase64 = pemKeyString;
-		
-		cleanBase64 =  pemKeyString
-                .replaceAll("-----BEGIN PUBLIC KEY-----", "") // Remove start header
-                .replaceAll("-----END PUBLIC KEY-----", "")   // Remove end footer
-                .replaceAll("\\s+", "");  
+
+		cleanBase64 = pemKeyString.replaceAll("-----BEGIN PUBLIC KEY-----", "") // Remove start header
+				.replaceAll("-----END PUBLIC KEY-----", "") // Remove end footer
+				.replaceAll("\\s+", "");
 		if (!cleanBase64.isEmpty()) {
 			byte[] decodedKeyBytes = Base64.getDecoder().decode(cleanBase64);
-			X509EncodedKeySpec  keySpec = new X509EncodedKeySpec (decodedKeyBytes);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA"); 
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKeyBytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			return keyFactory.generatePublic(keySpec);
 		}
 		return null;
@@ -145,7 +138,8 @@ public class JwtService {
 		ResourceLoader mockResourceLoader = new ResourceLoader() {
 			@Override
 			public Resource getResource(String location) {
-				String osPath = location.replace("file:/", ""); // Result: "/C:/spring_courses/webapp/bin/main/authz.pem"
+				String osPath = location.replace("file:/", ""); // Result:
+																// "/C:/spring_courses/webapp/bin/main/authz.pem"
 				// Note: Windows paths might need better sanitization depending on the OS
 				// running the code!
 				// Use Paths.get() which handles OS-specific path separators robustly.
@@ -174,12 +168,11 @@ public class JwtService {
 		System.out.println("===============================================");
 
 		// 3. Demonstrate verification (requires public key setup)
-		if(service.verifyToken(token)) {
+		if (service.verifyToken(token)) {
 			System.out.println("\n===============================================");
 			System.out.println("✨ TOKEN VALIDATION SUCCESSFUL for subject : " + service.extractSubject(token) + " ✨");
 			System.out.println("\n===============================================");
 		}
-		
 
 	}
 
