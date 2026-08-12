@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "FOODS") // Explicitly names the table 'users'
+@Table(name = "foods") // Explicitly names the table 'users'
 public class Food {
 
 	@Id

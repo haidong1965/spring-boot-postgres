@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "USERS") // Explicitly names the table 'users'
+@Table(name = "users") // Explicitly names the table 'users'
 public class User {
 
     @Id

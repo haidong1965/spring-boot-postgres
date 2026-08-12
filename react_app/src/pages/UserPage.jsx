@@ -18,7 +18,7 @@ const UserPage = () => {
     const params = useParams();
     const userIdFromUrl = params.id;
     const [user, setUser] = useState(null);
-    const [foods, setFoods] = useState(null);
+    const [foods, setfoods] = useState(null);
 
     //const [selectedValue, setSelectedValue] = useState("");
 
@@ -83,7 +83,7 @@ const UserPage = () => {
         const fetchOptions = async () => {
             try {
                 const response = await apiClient.get("/food/list");
-                setFoods(response.data);
+                setfoods(response.data);
                 const formattedOptions = response.data.map((item) => ({
                     value: item.name,
                     label: item.name

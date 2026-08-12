@@ -9,19 +9,17 @@ import java.util.List;
 @RequestMapping("/users")
 class UserController {
 
-	private final UserRepository UserRepository;
-	private final UserService userService;
 	private final JwtService jwtService;
+	private final UserService userService;
 
-	private UserController(UserRepository UserRepository, UserService userService, JwtService jwtService) {
-		this.UserRepository = UserRepository;
-		this.userService = userService;
+	private UserController(UserService userService, JwtService jwtService) {
 		this.jwtService = jwtService;
+		this.userService = userService;
 	}
 
 	@GetMapping("/{requestedId}")
 	private ResponseEntity<User> findById(@PathVariable Long requestedId) {
-		User user = UserRepository.getReferenceById(requestedId);
+		User user = userService.getUserRepository().getReferenceById(requestedId);
 		if (user != null) {
 			return ResponseEntity.ok(user);
 		} else {
@@ -32,7 +30,7 @@ class UserController {
 	@GetMapping("/list")
 	private ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
 		
-		List<User> users = UserRepository.findAll();
+		List<User> users = userService.getUserRepository().findAll();
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
