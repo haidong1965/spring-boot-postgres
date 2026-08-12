@@ -27,7 +27,19 @@ public class UserFood {
     )
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Food getFood() {
+		return food;
+	}
+	public void setFood(Food food) {
+		this.food = food;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "food_id",
         referencedColumnName = "id",

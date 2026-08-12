@@ -2,6 +2,7 @@ package example.webapp;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -19,6 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public User createUser(String username, String role,  String rawPassword) {
         // 1. Check for uniqueness (Crucial validation step)
         if (userRepository.findByName(username) != null) {

@@ -67,6 +67,10 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.9</version>
@@ -108,16 +112,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-                <!-- Add your custom properties file here -->
-                <additionalProperties>
-                    <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
-                    <spring.profiles.active>dev</spring.profiles.active>
-                </additionalProperties>
-            </configuration>
-        </plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- Add your custom properties file here -->
+					<additionalProperties>
+						<java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
+						<spring.profiles.active>dev</spring.profiles.active>
+					</additionalProperties>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
