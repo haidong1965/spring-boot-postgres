@@ -2,6 +2,7 @@ package example.webapp;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,41 +20,45 @@ public class UserFood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "user_id",
-        referencedColumnName = "id",
-        nullable = false
-    )
-    private User user;
 
-    public User getUser() {
-		return user;
+
+	@Column(name = "user_id")
+	private Long user_id;
+	
+	@Column(name = "food_id")
+	private Long food_id;
+	
+	public Long getUser_id() {
+		return user_id;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
 	}
-	public Food getFood() {
-		return food;
+	public Long getFood_id() {
+		return food_id;
 	}
-	public void setFood(Food food) {
-		this.food = food;
+	public void setFood_id(Long food_id) {
+		this.food_id = food_id;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "food_id",
-        referencedColumnName = "id",
-        nullable = false
-    )
-    private Food food;
+	
+	public UserFood(Long user_id, Long food_id, int volumn, int unit) {
+		this.volumn = volumn;
+		this.unit = unit;
+		this.user_id = user_id;
+		this.food_id = food_id;
+	}
     
+	@Column(name = "unit")
     private int unit;
+	
     public int getUnit() {
 		return unit;
 	}
 	public void setUnit(int unit) {
 		this.unit = unit;
 	}
+	
+	@Column(name = "volumn")
 	public int getVolumn() {
 		return volumn;
 	}
@@ -62,6 +67,7 @@ public class UserFood {
 	}
 	private int volumn;
     
+	@Column(name = "date")
 	private LocalDate date;
 	public LocalDate getDate() {
 		return date;

@@ -12,14 +12,24 @@ public class UserFoodRequest {
     @NotNull
     private String foodName;
     
-    @PositiveOrZero
-    private int unit;
+
     
 	@NotNull
 	@Positive
 	private int volumn;
-
-    public String getUserName() {
+	
+    @PositiveOrZero
+    private int unit;
+	
+	
+	public UserFoodRequest(String userName, String foodName, int volumn, int unit) {
+		this.userName = userName;
+		this.foodName = foodName;
+		this.volumn = volumn;
+		this.unit = unit;
+	}
+	
+	public String getUserName() {
 		return userName;
 	}
 

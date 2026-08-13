@@ -20,14 +20,63 @@ public class Food {
 	private String name;
 	
 	@Column(nullable = false)
-	private String energy;
+	private int energy;
 	
-	public String getFiber() {
+	@Column(nullable = false)
+	private double protein;
+	
+	@Column(nullable = false)
+	private double fiber;
+	
+	@Column(nullable = false)
+	private double calcium;
+	
+	@Column(nullable = false)
+	private int type;
+	
+	public Food() {
+		
+	}
+		
+	public Food(String name, int energy, double protein, double fiber, double calcium, int type) {
+		this.name = name;
+		this.energy = energy;
+		this.protein = protein;
+		this.fiber = fiber;
+		this.calcium = calcium;
+		this.type = type;
+	}
+
+	public int getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+
+	public double getProtein() {
+		return protein;
+	}
+
+	public void setProtein(double protein) {
+		this.protein = protein;
+	}
+
+	public double getFiber() {
 		return fiber;
 	}
 
-	public void setFiber(String fiber) {
+	public void setFiber(double fiber) {
 		this.fiber = fiber;
+	}
+
+	public double getCalcium() {
+		return calcium;
+	}
+
+	public void setCalcium(double calcium) {
+		this.calcium = calcium;
 	}
 
 	public int getType() {
@@ -37,18 +86,6 @@ public class Food {
 	public void setType(int type) {
 		this.type = type;
 	}
-
-	@Column(nullable = false)
-	private String protein;
-	
-	@Column(nullable = false)
-	private String fiber;
-	
-	@Column(nullable = false)
-	private String calcium;
-	
-	@Column(nullable = false)
-	private int type;
 
 	public Long getId() {
 		return id;
@@ -67,31 +104,6 @@ public class Food {
 	}
 
 	
-
-	public String getEnergy() {
-		return energy;
-	}
-
-	public void setEnergy(String energy) {
-		this.energy = energy;
-	}
-
-	public String getProtein() {
-		return protein;
-	}
-
-	public void setProtein(String protein) {
-		this.protein = protein;
-	}
-
-
-	public String getCalcium() {
-		return calcium;
-	}
-
-	public void setCalcium(String calcium) {
-		this.calcium = calcium;
-	}
 
 
 }

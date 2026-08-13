@@ -21,19 +21,8 @@ public class UserFoodService {
 	}
 
 	@Transactional
-	public boolean addUserFood(UserFoodRequest request) {
-		User user = userRepository.findByName(request.getUserName());
-		Food food = foodRepository.findByName(request.getFoodName());
-
-		if (user == null || food == null)
-			return false;
-
-		UserFood userFood = new UserFood();
-		userFood.setUser(user);
-		userFood.setFood(food);
+	public boolean addUserFood(UserFood userFood) {
 		userFood.setDate(LocalDate.now());
-		userFood.setUnit(request.getUnit());
-		userFood.setVolumn(request.getVolumn());
 		userFoodRepository.save(userFood);
 		return true;
 	}
