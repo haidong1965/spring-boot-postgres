@@ -43,6 +43,10 @@ public class UserFood {
 		this.foodId = foodId;
 	}
 	
+	public  UserFood() {
+		
+	}
+	
 	public UserFood(Long user_id, Long food_id, int volumn, int unit) {
 		this.volumn = volumn;
 		this.unit = unit;

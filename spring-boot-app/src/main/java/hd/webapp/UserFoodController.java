@@ -40,7 +40,7 @@ class UserFoodController {
 	
 	@SuppressWarnings("deprecation")
 	@GetMapping("/{requestedId}")
-	private  ResponseEntity<List<UserFood>> findById(@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId) throws Exception {
+	private  ResponseEntity<List<UserFood>> findByUserId(@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId) throws Exception {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
