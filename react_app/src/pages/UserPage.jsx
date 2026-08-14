@@ -1,5 +1,5 @@
 // src/pages/UserPage.jsx
-
+import '../styles/style.css';
 import { useState, useEffect } from 'react';
 import { getToken, removeToken } from '../utils/authService';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,10 @@ const UserPage = () => {
     const params = useParams();
     const userIdFromUrl = params.id;
     const [user, setUser] = useState(null);
+    const [value] = useState("");
+    const [unit, setUnit] = useState("");
+    const [selectedValue, setSelectedValue] = useState('');
+    
     const [foods, setfoods] = useState(null);
 
     //const [selectedValue, setSelectedValue] = useState("");
@@ -34,6 +38,30 @@ const UserPage = () => {
         console.log("Token successfully cleared.");
         navigate('/login', { replace: true });
     };
+
+    const handleSelectChange = (selectedOption) => {
+        console.log("--------------------" + selectedOption.value);
+
+        setSelectedValue(selectedOption.value);
+        //console.log("-------- selectedValue: " + selectedValue + "---------");
+       // foods.forEach(food => {
+       //     console.log(food.name, food.energy, food.protein, food.fiber, food.calcium, food.type);
+       // });
+        const selectedFood = foods.find(
+            food => food.name === selectedOption.value);
+        console.log("-------- selectedFood:", selectedFood.name, selectedFood.energy, selectedFood.protein, selectedFood.fiber, selectedFood.calcium, selectedFood.type);
+        if (selectedFood.type == 0) {
+            setUnit('gram');
+        } else if (selectedFood.type == 1) {
+            setUnit('pcs');
+        } else if (selectedFood.type == 2) {
+            setUnit('dish');
+        } else {
+            setUnit('');
+        }
+
+    };
+
 
     // Check for Expiry/Stale Token 
     useEffect(() => {
@@ -84,6 +112,9 @@ const UserPage = () => {
             try {
                 const response = await apiClient.get("/food/list");
                 setfoods(response.data);
+                //response.data.forEach((food) => {
+                //  console.log(food.name, food.energy, food.protein, food.fiber, food.calcium, food.type);
+                //});
                 const formattedOptions = response.data.map((item) => ({
                     value: item.name,
                     label: item.name
@@ -112,25 +143,32 @@ const UserPage = () => {
 
     return (
         <div className="user-profile-card">
-            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}><strong> {user?.name} </strong> <span style={{ paddingLeft: '200px' }}></span> {formattedDate}<span style={{ paddingLeft: '200px' }}></span>
-                <button
-                    onClick={handleLogout}
-                    className="logout-button" // Add a class for styling purposes
-                    style={{ marginBottom: '25px', padding: '10px 20px', cursor: 'pointer' }}>
-                    Logout
-                </button>
+            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
+                <p className="verdana-heading"> {user?.name} </p> <span style={{ paddingLeft: '200px' }}></span>
+                <p className="verdana-heading">{formattedDate}</p><span style={{ paddingLeft: '200px' }}></span>
+                <button onClick={handleLogout} className="verdana-button">Logout</button>
             </div>
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <label htmlFor="select" style={{ display: 'inline-block', marginRight: '10px' }}>
-                    Name:
-                </label>
+                <label className="verdana-text">Name:</label><span style={{ paddingLeft: '100px' }}></span>
                 <div style={{ display: 'inline-block', width: '200px' }}>
-                    <Select
-                        id="select"
+                    <Select className="select-verdana"
+                        value={options.find(option => option.value === selectedValue) || null}
+                        onChange={handleSelectChange}
+                        id="Select Food"
                         options={options}
-                        placeholder="Select Food"
                     />
                 </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
+                <label className="verdana-text">Amount:</label><span style={{ paddingLeft: '89px' }}></span>
+                <div style={{ display: 'inline-block', width: '158px' }}>
+					<input  className="input-verdana"
+					  type="text"
+					  defaultValue={value}
+					  maxLength={10}
+					/>
+                </div><span style={{ paddingLeft: '89px' }}></span>
+                <label className="verdana-text">{unit}</label>
             </div>
 
         </div>

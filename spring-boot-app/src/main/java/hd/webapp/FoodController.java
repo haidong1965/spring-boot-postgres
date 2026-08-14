@@ -23,7 +23,7 @@ public class FoodController {
 	
 	@GetMapping("/list")
 	private  ResponseEntity<List<Food>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
-		List<Food> foods = foodService.getFoodRepository().findAll();
+		List<Food> foods = foodService.getAllFoodsSortedByName();
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
