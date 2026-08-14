@@ -18,11 +18,13 @@ const UserPage = () => {
     const params = useParams();
     const userIdFromUrl = params.id;
     const [user, setUser] = useState(null);
-    const [value] = useState("");
+    const [inputValue, setInputValue] = useState("");
     const [unit, setUnit] = useState("");
     const [selectedValue, setSelectedValue] = useState('');
-    
+    const [userFood, setUserFood] = useState('');
     const [foods, setfoods] = useState(null);
+    const [csrfToken, setCsrfToken] = useState('');
+   // const [userfoods, setUserFoods] = useState(null);
 
     //const [selectedValue, setSelectedValue] = useState("");
 
@@ -39,17 +41,34 @@ const UserPage = () => {
         navigate('/login', { replace: true });
     };
 
-    const handleSelectChange = (selectedOption) => {
-        console.log("--------------------" + selectedOption.value);
 
+    const handleAddEntry = async (e) => {
+        e.preventDefault();
+        
+        const payload = {
+            userName: user.name,
+            foodName: userFood.name,
+            volumn: Number(inputValue),
+            unit: Number(userFood.type),
+        };
+		
+        const response = await apiClient.post("/user_food/add",
+			payload, 
+			{
+			    headers: {
+			        'Content-Type': 'application/json',
+			        'X-XSRF-TOKEN': csrfToken,
+			    },
+			    withCredentials: true, // Important for cookies
+            });
+		console.log("--------------------" + response.data);
+		
+    };
+
+    const handleSelectChange = (selectedOption) => {
         setSelectedValue(selectedOption.value);
-        //console.log("-------- selectedValue: " + selectedValue + "---------");
-       // foods.forEach(food => {
-       //     console.log(food.name, food.energy, food.protein, food.fiber, food.calcium, food.type);
-       // });
         const selectedFood = foods.find(
             food => food.name === selectedOption.value);
-        console.log("-------- selectedFood:", selectedFood.name, selectedFood.energy, selectedFood.protein, selectedFood.fiber, selectedFood.calcium, selectedFood.type);
         if (selectedFood.type == 0) {
             setUnit('gram');
         } else if (selectedFood.type == 1) {
@@ -59,9 +78,31 @@ const UserPage = () => {
         } else {
             setUnit('');
         }
-
+        setUserFood(selectedFood);
     };
 
+
+    // Get CSRF token when component mounts
+    useEffect(() => {
+        const fetchCsrfToken = async () => {
+            try {
+                // Make a request to get CSRF token
+                const response = await apiClient.get("/csrf", {
+                    withCredentials: true
+                });
+
+                // If server sends token in response body
+                if (response.data.token) {
+                    setCsrfToken(response.data.token);
+                }
+                console.log('setCsrfToken:', response.data.token);
+            } catch (error) {
+                console.log('CSRF token fetch failed:', error);
+            }
+        };
+
+        fetchCsrfToken();
+    }, []);
 
     // Check for Expiry/Stale Token 
     useEffect(() => {
@@ -79,7 +120,7 @@ const UserPage = () => {
                 navigate('/login', { replace: true });
             }
             console.log("Running background token check...");
-        }, 10 * 60 * 1000); // Check every 10 minutes
+        }, 2 * 60 * 1000); // Check every 10 minutes
 
         return () => clearInterval(intervalId); // Cleanup the interval when component unmounts
     }, []);
@@ -93,6 +134,7 @@ const UserPage = () => {
             try {
                 const response = await apiClient.get(`/users/${userIdFromUrl}`);
                 setUser(response.data);
+				console.log("++++++++++++++++++++++++++++ user : " + response.data);
             } catch (err) {
                 console.error("Failed to fetch user details:", err);
                 console.log("Could not load user profile. Please try again later.");
@@ -162,13 +204,42 @@ const UserPage = () => {
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
                 <label className="verdana-text">Amount:</label><span style={{ paddingLeft: '89px' }}></span>
                 <div style={{ display: 'inline-block', width: '158px' }}>
-					<input  className="input-verdana"
-					  type="text"
-					  defaultValue={value}
-					  maxLength={10}
-					/>
+                    <input className="input-verdana"
+                        type="text"
+                        value={inputValue}
+                        maxLength={10}
+                        onChange={(e) => setInputValue(e.target.value)}
+                    />
                 </div><span style={{ paddingLeft: '89px' }}></span>
                 <label className="verdana-text">{unit}</label>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
+                <button onClick={handleAddEntry} className="verdana-button">Add Entry</button>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
+                <table className="food-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Energy</th>
+                            <th>Protein</th>
+                            <th>Fiber</th>
+                            <th>Calcium</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    {/*
+				  <tbody>
+				    {userfoods.map((userfood) => (
+				      <tr key={userfood.name}>
+				        <td>{userfood.name}</td>
+				        <td>{userfood.energy}</td>
+				        <td>{userfood.type}</td>
+				      </tr>
+				    ))}
+				  </tbody>
+				  */}
+                </table>
             </div>
 
         </div>

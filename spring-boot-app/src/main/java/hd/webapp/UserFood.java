@@ -20,7 +20,9 @@ public class UserFood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+	public Long getId() {
+		return id;
+	}
 
 	@Column(name = "user_id")
 	private Long user_id;

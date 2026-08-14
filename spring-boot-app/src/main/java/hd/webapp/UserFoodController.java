@@ -25,7 +25,7 @@ class UserFoodController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<String> addUserFood(@Valid @RequestBody UserFoodRequest request) throws Exception {
+	public ResponseEntity<Long> addUserFood(@Valid @RequestBody UserFoodRequest request) throws Exception {
 		User user = userService.getUserByName(request.getUserName());
         Food food = foodService.getFoodByName(request.getFoodName());
         int unit = request.getUnit();
@@ -33,7 +33,7 @@ class UserFoodController {
         
         UserFood userFood = new UserFood(user.getId(), food.getId(), unit, volumn);
         userFoodService.addUserFood(userFood);
-		return ResponseEntity.ok("");
+		return ResponseEntity.ok(userFood.getId());
 	}
 
 }
