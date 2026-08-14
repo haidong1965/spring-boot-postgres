@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-
-import hd.webapp.UserController.AuthRequest;
-import io.jsonwebtoken.JwtException;
 
 @RestController
 @RequestMapping("/")
@@ -69,12 +65,10 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request) throws Exception {
-		String token = "";
 		String url = "";
 		System.out.println("++++++++++++++ login   ++++++++++++++");
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			User user = userService.getUserByName(request.getName());
-		    token = jwtService.generateToken(request.getName());
 		    if(user.getRole().equalsIgnoreCase("ADMIN"))
 		        url = "/admin";
 		    else
