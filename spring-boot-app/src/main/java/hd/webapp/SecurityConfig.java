@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 import java.util.Arrays;
 import java.util.List;

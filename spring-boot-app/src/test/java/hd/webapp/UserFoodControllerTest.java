@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;

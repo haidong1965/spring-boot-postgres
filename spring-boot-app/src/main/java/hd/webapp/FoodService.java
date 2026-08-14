@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 import org.springframework.stereotype.Service;
 

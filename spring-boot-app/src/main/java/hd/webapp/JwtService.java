@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;

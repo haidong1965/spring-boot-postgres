@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 public class LoginResponse {
     private boolean  success;

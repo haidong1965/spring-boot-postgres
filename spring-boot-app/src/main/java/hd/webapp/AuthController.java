@@ -1,4 +1,4 @@
-package example.webapp;
+package hd.webapp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
-import example.webapp.UserController.AuthRequest;
+import hd.webapp.UserController.AuthRequest;
 import io.jsonwebtoken.JwtException;
 
 @RestController
