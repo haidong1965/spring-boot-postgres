@@ -47,7 +47,7 @@ class UserFoodController {
 		}
 		if (token != null) {
 			User user = userService.getUserRepository().getById(requestedId);
-			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByName(user.getName());
+			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByUserId(requestedId);
 			if (jwtService.verifyToken(token))
 				return ResponseEntity.ok(userFoods);
 		}	

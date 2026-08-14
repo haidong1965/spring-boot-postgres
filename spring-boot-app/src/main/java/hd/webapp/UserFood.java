@@ -25,29 +25,29 @@ public class UserFood {
 	}
 
 	@Column(name = "user_id")
-	private Long user_id;
+	private Long userId;
 	
 	@Column(name = "food_id")
-	private Long food_id;
+	private Long foodId;
 	
-	public Long getUser_id() {
-		return user_id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setUser_id(Long userId) {
+		this.userId = userId;
 	}
-	public Long getFood_id() {
-		return food_id;
+	public Long getFoodId() {
+		return foodId;
 	}
-	public void setFood_id(Long food_id) {
-		this.food_id = food_id;
+	public void setFoodId(Long foodId) {
+		this.foodId = foodId;
 	}
 	
 	public UserFood(Long user_id, Long food_id, int volumn, int unit) {
 		this.volumn = volumn;
 		this.unit = unit;
-		this.user_id = user_id;
-		this.food_id = food_id;
+		this.userId = user_id;
+		this.foodId = food_id;
 	}
     
 	@Column(name = "unit")

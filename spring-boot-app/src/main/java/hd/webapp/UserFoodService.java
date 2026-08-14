@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserFoodService {
 
 	private final UserFoodRepository userFoodRepository;
+	public UserFoodRepository getUserFoodRepository() {
+		return userFoodRepository;
+	}
+
 	private final UserRepository userRepository;
 	private final FoodRepository foodRepository;
 

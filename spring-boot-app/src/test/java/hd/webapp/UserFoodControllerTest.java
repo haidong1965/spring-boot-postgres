@@ -63,10 +63,10 @@ public class UserFoodControllerTest {
 
          for (UserFood userFood : userFoods) {
              System.out.println(
-                 "food_id=" + userFood.getFood_id() +
-                 ", user_id=" + userFood.getUser_id() + ", date=" + userFood.getDate()
+                 "foodId=" + userFood.getFoodId() +
+                 ", userId=" + userFood.getUserId() + ", date=" + userFood.getDate()
              );
-             if(userService.getUserById(userFood.getUser_id()).getId() == user1.getId()) {
+             if(userService.getUserById(userFood.getUserId()).getId() == user1.getId()) {
             	 existUser = true;
             	 break;
              }
