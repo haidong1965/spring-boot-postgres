@@ -1,6 +1,6 @@
 // src/pages/UserPage.jsx
 import '../styles/style.css';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getToken, removeToken } from '../utils/authService';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -28,9 +28,6 @@ const UserPage = () => {
     const [foods, setfoods] = useState(null);
     const [csrfToken, setCsrfToken] = useState('');
     const [foodList, setFoodList] = useState([]);
-
-    //const [selectedValue, setSelectedValue] = useState("");
-
     const currentDate = new Date();
     const formattedDate = format(currentDate, 'MMMM dd, yyyy');
     const [options, setOptions] = useState([]);
@@ -44,7 +41,21 @@ const UserPage = () => {
         navigate('/login', { replace: true });
     };
 
+	const totalEnergy = useMemo(() => {
+	    return foodList.reduce((sum, item) => sum + Number(item.energy || 0), 0);
+	}, [foodList]);
 
+	const totalProtein = useMemo(() => {
+	    return foodList.reduce((sum, item) => sum + Number(item.protein || 0), 0).toFixed(1);
+	}, [foodList]);
+
+	const totalFiber = useMemo(() => {
+	    return foodList.reduce((sum, item) => sum + Number(item.fiber || 0), 0);
+	}, [foodList]);
+
+	const totalCalcium = useMemo(() => {
+	    return foodList.reduce((sum, item) => sum + Number(item.calcium || 0), 0).toFixed(1);
+	}, [foodList]);
 
     const fetchFoodList = useCallback(async () => {
         try {
@@ -56,6 +67,8 @@ const UserPage = () => {
             if (response.data) {
                 setFoodList(response.data);
             }
+			
+			
             console.log('foodListn:', response.data);
         } catch (error) {
             console.log('Food list fetch failed:', error);
@@ -66,6 +79,7 @@ const UserPage = () => {
         fetchFoodList();
     }, [fetchFoodList]);
 
+	
 
     const handleAddEntry = async (e) => {
         e.preventDefault();
@@ -242,7 +256,7 @@ const UserPage = () => {
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
                 <button onClick={handleAddEntry} className="verdana-button">Add Entry</button>
             </div>
-            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
+            <div>
                 <table className="food-table">
                     <thead>
                         <tr>
@@ -264,6 +278,30 @@ const UserPage = () => {
                                     <td>{userfood.calcium}</td>
                                 </tr>
                             ))}
+                        </tbody>
+                    }
+                </table>
+            </div>
+            <div>
+                <table className="food-table">
+                    <thead>
+                        <tr>
+                            <th>Total</th>
+                            <th>Energy</th>
+                            <th>Protein</th>
+                            <th>Fiber</th>
+                            <th>Calcium</th>
+                        </tr>
+                    </thead>
+                    {
+                        <tbody>
+                            <tr>
+                                <td></td>
+								<td>{totalEnergy}</td>
+								<td>{totalProtein}</td>
+								<td>{totalFiber}</td>
+								<td>{totalCalcium}</td>
+                            </tr>
                         </tbody>
                     }
                 </table>

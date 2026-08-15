@@ -20,20 +20,14 @@ CREATE TABLE IF NOT EXISTS user_food (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     food_id BIGINT NOT NULL,
-    name VARCHAR(150) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
     energy INT NOT NULL,
     protein DECIMAL(7, 2),
     fiber DECIMAL(7, 2),
     calcium DECIMAL(9, 2),
     date Date,
     unit SMALLINT,
-    volumn INT,
-    CONSTRAINT fk_user_food_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id),
-    CONSTRAINT fk_user_food_food
-        FOREIGN KEY (food_id)
-        REFERENCES foods(id)
+    volumn INT
 );
 
 
