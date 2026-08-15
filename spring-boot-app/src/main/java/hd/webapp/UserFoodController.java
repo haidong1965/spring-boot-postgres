@@ -33,7 +33,7 @@ class UserFoodController {
         int unit = request.getUnit();
         int volumn = request.getVolumn();
         
-        UserFood userFood = new UserFood(user.getId(), food.getId(), unit, volumn);
+        UserFood userFood = new UserFood(user.getId(), food.getId(), volumn,  unit);
         userFoodService.addUserFood(userFood);
 		return ResponseEntity.ok(userFood.getId());
 	}

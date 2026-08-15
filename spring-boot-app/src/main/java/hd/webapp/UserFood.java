@@ -23,6 +23,53 @@ public class UserFood {
 	public Long getId() {
 		return id;
 	}
+	
+	@Column(name = "name")
+	private String name;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "energy")
+	private int energy;
+    public int getEnergy() {
+		return energy;
+	}
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+	public double getProtein() {
+		return protein;
+	}
+	public void setProtein(double protein) {
+		this.protein = protein;
+	}
+	public double getFiber() {
+		return fiber;
+	}
+	public void setFiber(double fiber) {
+		this.fiber = fiber;
+	}
+	public double getCalcium() {
+		return calcium;
+	}
+	public void setCalcium(double calcium) {
+		this.calcium = calcium;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	@Column(name = "protein")
+	private double protein;
+	@Column(name = "fiber")
+	private double fiber;
+	@Column(name = "calcium")
+	private double calcium;
 
 	@Column(name = "user_id")
 	private Long userId;

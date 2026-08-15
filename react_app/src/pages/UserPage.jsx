@@ -1,6 +1,6 @@
 // src/pages/UserPage.jsx
 import '../styles/style.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getToken, removeToken } from '../utils/authService';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,9 @@ import apiClient from '../api/apiClient';
  * This component serves as the base structure for an empty page.
  * You should build out all your content, layout, and logic here.
  */
+
+
+
 const UserPage = () => {
     const params = useParams();
     const userIdFromUrl = params.id;
@@ -24,7 +27,7 @@ const UserPage = () => {
     const [userFood, setUserFood] = useState('');
     const [foods, setfoods] = useState(null);
     const [csrfToken, setCsrfToken] = useState('');
-   // const [userfoods, setUserFoods] = useState(null);
+    const [foodList, setFoodList] = useState([]);
 
     //const [selectedValue, setSelectedValue] = useState("");
 
@@ -42,27 +45,49 @@ const UserPage = () => {
     };
 
 
+
+    const fetchFoodList = useCallback(async () => {
+        try {
+            const response = await apiClient.get("/user_food/" + userIdFromUrl, {
+                withCredentials: true
+            });
+
+            // If server sends token in response body
+            if (response.data) {
+                setFoodList(response.data);
+            }
+            console.log('foodListn:', response.data);
+        } catch (error) {
+            console.log('Food list fetch failed:', error);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchFoodList();
+    }, [fetchFoodList]);
+
+
     const handleAddEntry = async (e) => {
         e.preventDefault();
-        
+
         const payload = {
             userName: user.name,
             foodName: userFood.name,
             volumn: Number(inputValue),
             unit: Number(userFood.type),
         };
-		
+
         const response = await apiClient.post("/user_food/add",
-			payload, 
-			{
-			    headers: {
-			        'Content-Type': 'application/json',
-			        'X-XSRF-TOKEN': csrfToken,
-			    },
-			    withCredentials: true, // Important for cookies
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                },
+                withCredentials: true, // Important for cookies
             });
-		console.log("--------------------" + response.data);
-		
+        console.log("--------------------" + response.data);
+        fetchFoodList();
     };
 
     const handleSelectChange = (selectedOption) => {
@@ -104,6 +129,7 @@ const UserPage = () => {
         fetchCsrfToken();
     }, []);
 
+
     // Check for Expiry/Stale Token 
     useEffect(() => {
         const token = getToken();
@@ -134,7 +160,7 @@ const UserPage = () => {
             try {
                 const response = await apiClient.get(`/users/${userIdFromUrl}`);
                 setUser(response.data);
-				console.log("++++++++++++++++++++++++++++ user : " + response.data);
+                console.log("++++++++++++++++++++++++++++ user : " + response.data);
             } catch (err) {
                 console.error("Failed to fetch user details:", err);
                 console.log("Could not load user profile. Please try again later.");
@@ -225,20 +251,21 @@ const UserPage = () => {
                             <th>Protein</th>
                             <th>Fiber</th>
                             <th>Calcium</th>
-                            <th>Unit</th>
                         </tr>
                     </thead>
-                    {/*
-				  <tbody>
-				    {userfoods.map((userfood) => (
-				      <tr key={userfood.name}>
-				        <td>{userfood.name}</td>
-				        <td>{userfood.energy}</td>
-				        <td>{userfood.type}</td>
-				      </tr>
-				    ))}
-				  </tbody>
-				  */}
+                    {
+                        <tbody>
+                            {foodList.map((userfood) => (
+                                <tr key={userfood.name}>
+                                    <td>{userfood.name}</td>
+                                    <td>{userfood.energy}</td>
+                                    <td>{userfood.protein}</td>
+                                    <td>{userfood.fiber}</td>
+                                    <td>{userfood.calcium}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    }
                 </table>
             </div>
 
