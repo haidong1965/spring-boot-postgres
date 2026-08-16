@@ -31,7 +31,6 @@ const UserPage = () => {
     const currentDate = new Date();
     const formattedDate = format(currentDate, 'MMMM dd, yyyy');
     const [options, setOptions] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
     const handleLogout = () => {

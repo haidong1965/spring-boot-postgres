@@ -59,4 +59,9 @@ public class UserService {
         // The compare method checks if the provided password matches the stored hash
         return passwordEncoder.matches(password, user.getPassword());
     }
+
+	public void deleteUserById(Long id) {
+		userRepository.deleteById(id);
+		
+	}
 }

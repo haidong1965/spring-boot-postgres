@@ -8,7 +8,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -110,6 +112,22 @@ public class AuthController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Void> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long id) throws Exception {
+		System.out.println("++++++++++++++ deleteUser " + id + " ++++++++++++++");
+		String token = null;
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			token = authHeader.substring(7);
+		}
+		if (token != null) {
+			if (jwtService.verifyToken(token)) {
+				userService.deleteUserById(id);	
+				return ResponseEntity.noContent().build(); 
+			}
+		}
+		return null;
+	}
 	
 	static class SignupRequest {
 	    private String username;

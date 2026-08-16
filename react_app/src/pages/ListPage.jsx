@@ -1,6 +1,6 @@
 // src/pages/ListPage.jsx
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setToken } from '../utils/authService';
 import apiClient from '../api/apiClient';
@@ -13,11 +13,26 @@ const ListPage = () => {
 
     // State to hold the list of users
     const [users, setUsers] = useState([]);
-    // State to manage loading status
-    const [isLoading, setIsLoading] = useState(true);
+
     // State to manage any errors during fetching
     const [error, setError] = useState(null);
+
+    const [csrfToken, setCsrfToken] = useState('');
+
     const navigate = useNavigate();
+
+    const fetchUsers = useCallback(async () => {
+        try {
+            const response = await apiClient.get('/users/list');
+            setUsers(response.data);
+        } catch (fetchError) {
+            console.error("Fetching error:", fetchError);
+            setError('Failed to load users. Please check the server is running.');
+        }
+
+    }, []);
+
+
     const handleLogout = () => {
         console.log("--- Initiating Logout Process ---");
 
@@ -26,37 +41,47 @@ const ListPage = () => {
         navigate('/login', { replace: true });
     };
 
+
+    const handleDeleteUser = async (userId) => {
+        console.log(" +++++++ Deleting id:", userId);
+        const response = await apiClient.delete("/delete/" + userId,
+            {
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken,
+                },
+                withCredentials: true, // Important for cookies
+            });
+        console.log("--------------------" + response.status);
+        if (response.status == 204) {
+            fetchUsers();
+        }
+    };
+
+    // Get CSRF token when component mounts
     useEffect(() => {
-        const fetchUsers = async () => {
-            setIsLoading(true); // Set loading state to true before the request
-            setError(null);    // Clear previous errors
-
+        const fetchCsrfToken = async () => {
             try {
-                const response = await apiClient.get('/users/list');
-                setUsers(response.data);
-            } catch (fetchError) {
-                console.error("Fetching error:", fetchError);
-                setError('Failed to load users. Please check the server is running.');
-            } finally {
-                // This runs regardless of success or failure
-                setIsLoading(false);
-            }
+                // Make a request to get CSRF token
+                const response = await apiClient.get("/csrf", {
+                    withCredentials: true
+                });
 
+                // If server sends token in response body
+                if (response.data.token) {
+                    setCsrfToken(response.data.token);
+                }
+                console.log('setCsrfToken:', response.data.token);
+            } catch (error) {
+                console.log('CSRF token fetch failed:', error);
+            }
         };
 
-        fetchUsers();
-    }, []); // The empty dependency array [] ensures this runs ONLY ONCE after mounting
+        fetchCsrfToken();
+    }, []);
 
-    // --- Rendering Logic ---
-
-    if (isLoading) {
-        return <div className="list-page">Loading users...</div>;
-    }
-
-    if (error) {
-        return <div className="list-page error"><p>{error}</p></div>;
-    }
-
+    useEffect(() => {
+        fetchUsers();   // TODO: fix it later maybe use Query instead of useEffet
+    }, [fetchUsers]);
 
     return (
         <div className="page-container">
@@ -68,11 +93,8 @@ const ListPage = () => {
             >
                 Logout
             </button>
-            <h1>Welcome to This Page!</h1>
-            <p>
-                This is your new, empty page component. All content specific to this view
-                should be placed inside this component's JSX structure.
-            </p>
+            <h1>Welcome to ADMIN Page</h1>
+
 
 
             <div className="list-page">
@@ -85,12 +107,12 @@ const ListPage = () => {
                             <ul>
                                 {users.map((user) => (
                                     <li key={user.id || user._id}>
-                                        <strong>{user.name}</strong> ({user.email}) - Role: {user.role}
+                                        <strong>{user.name}</strong> ({user.email}) - Role: {user.role} <button className="trash-btn" onClick={() => handleDeleteUser(user.id)}>🗑️</button>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-                            !isLoading && !error && <p>No users found in the system.</p>
+                            !error && <p>No users found in the system.</p>
                         )}
                     </ul>
                 )}
