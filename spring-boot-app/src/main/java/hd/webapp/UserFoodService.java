@@ -1,6 +1,7 @@
 package hd.webapp;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserFoodService {
 
+	private static final ZoneId APP_ZONE = ZoneId.of("Europe/Copenhagen");
 	private final UserFoodRepository userFoodRepository;
 	public UserFoodRepository getUserFoodRepository() {
 		return userFoodRepository;
@@ -29,7 +31,8 @@ public class UserFoodService {
 		double weight = 1.0;
 		if(userFood.getUnit() == 0)
 			weight = 100.0;
-		userFood.setDate(LocalDate.now());
+		userFood.setDate(LocalDate.now(APP_ZONE));
+		System.out.println("+++++++++++++ add user food at date " + LocalDate.now(APP_ZONE));
 		userFood.setEnergy((int)(foodRepository.getById(userFood.getFoodId()).getEnergy()*userFood.getVolumn()/weight));
 		userFood.setProtein(foodRepository.getById(userFood.getFoodId()).getProtein()*userFood.getVolumn()/weight);
 		userFood.setFiber(foodRepository.getById(userFood.getFoodId()).getFiber()*userFood.getVolumn()/weight);
