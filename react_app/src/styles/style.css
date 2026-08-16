@@ -172,6 +172,7 @@
 .food-table th,
 .food-summary-table th,
 .food-table td {
+  font-weight: bold;
   padding: 10px 10px;
   text-align: left;
   border: 1px solid #ddd;
@@ -197,7 +198,7 @@ tbody tr:nth-child(odd) {
   cursor: pointer;
 }
 
-
+.food-table,
 .food-summary-table td {
   width: 20%;
   font-weight: bold;
