@@ -58,6 +58,7 @@ const UserPage = () => {
 	}, [foodList]);
 
     const fetchFoodList = useCallback(async () => {
+		setLoading(true);
         try {
             const response = await apiClient.get("/user_food/" + userIdFromUrl, {
                 withCredentials: true
@@ -67,16 +68,15 @@ const UserPage = () => {
             if (response.data) {
                 setFoodList(response.data);
             }
-			
-			
             console.log('foodListn:', response.data);
+			setLoading(false);
         } catch (error) {
             console.log('Food list fetch failed:', error);
         }
     }, []);
 
     useEffect(() => {
-        fetchFoodList();
+        fetchFoodList();   // TODO: fix it later maybe use Query instead of useEffet
     }, [fetchFoodList]);
 
 	
@@ -228,21 +228,22 @@ const UserPage = () => {
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
                 <p className="verdana-heading"> {user?.name} </p> <span style={{ paddingLeft: '200px' }}></span>
                 <p className="verdana-heading">{formattedDate}</p><span style={{ paddingLeft: '200px' }}></span>
-                <button onClick={handleLogout} className="verdana-button">Logout</button>
+                <button onClick={handleLogout} className="verdana-top-button">Logout</button>
             </div>
+			<br/>
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <label className="verdana-text">Name:</label><span style={{ paddingLeft: '100px' }}></span>
+                <label className="verdana-lading-label">Food:</label>
                 <div style={{ display: 'inline-block', width: '200px' }}>
                     <Select className="select-verdana"
                         value={options.find(option => option.value === selectedValue) || null}
                         onChange={handleSelectChange}
-                        id="Select Food"
+                        id="Choose"
                         options={options}
                     />
                 </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <label className="verdana-text">Amount:</label><span style={{ paddingLeft: '89px' }}></span>
+                <label  className="verdana-lading-label">Amount:</label>
                 <div style={{ display: 'inline-block', width: '158px' }}>
                     <input className="input-verdana"
                         type="text"
@@ -253,9 +254,11 @@ const UserPage = () => {
                 </div><span style={{ paddingLeft: '89px' }}></span>
                 <label className="verdana-text">{unit}</label>
             </div>
-            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <button onClick={handleAddEntry} className="verdana-button">Add Entry</button>
+            <div className="verdana-div">
+                <span style={{ paddingLeft: '200px' }}></span>
+				<button onClick={handleAddEntry} className="verdana-button"  disabled={loading}>{loading ? 'Loading…' : 'Add Food'}</button>
             </div>
+			<br/>
             <div>
                 <table className="food-table">
                     <thead>
@@ -282,8 +285,9 @@ const UserPage = () => {
                     }
                 </table>
             </div>
+			<br/>
             <div>
-                <table className="food-table">
+                <table className="food-summary-table">
                     <thead>
                         <tr>
                             <th>Total</th>
@@ -297,7 +301,7 @@ const UserPage = () => {
                         <tbody>
                             <tr>
                                 <td></td>
-								<td>{totalEnergy}</td>
+								<td><text name="verdana-table-text">{totalEnergy}</text></td>
 								<td>{totalProtein}</td>
 								<td>{totalFiber}</td>
 								<td>{totalCalcium}</td>

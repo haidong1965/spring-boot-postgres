@@ -1,47 +1,89 @@
-
+.verdana-div {
+  padding-block: 12px;    /* vertical padding */
+  text-align: left;
+  padding-inline: 0;   /* horizontal padding */
+  display: 'flex';
+}
 .verdana-text {
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 16px;
   font-weight: normal;
   line-height: 1.6;
-  color: #4caf50;
+  color: #005638;
+}
+
+.verdana-table-text {
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #005638;
 }
 
 .verdana-heading {
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 16px;
   font-weight: bold;
-  color: #4caf50;
+  color: #00563B;
 }
 
-.verdana-button {
+.verdana-top-button {
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
-  background-color:#4caf50;
+  background-color:#005638;
   padding: 12px 24px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
+
+.verdana-button {
+  box-sizing: border-box;
+  padding: 8px 16px;
+  width:190px;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color:#005638;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.verdana-lading-label {
+  width: 200px;      /* box width */
+  padding-block: 8px; 
+  display: inline-block;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #005638;
+}
+
 .verdana-button:hover {
-  background-color: #4caf50;
+  background-color: #005638;
 }
 
 .select-verdana {
-  color: #4caf50;
+  width: 190px;
+  padding-block: 8px; 
+  color: #005638;
   border: none;
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
-  padding: 5px;
   border: 0px solid #ddd;
   border-radius: 4px;
 }
 
 .custom-select option:disabled {
-  color: #4caf50;
+  color: #005638;
+  width: 195px;   
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
   padding: 5px;
@@ -50,8 +92,8 @@
 .input-verdana {
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
-  
-  color: #4caf50;
+  width: 200px;      
+  color: #005638;
   padding: 10px 14px;
   border: 2px solid #ddd;
   border-radius:4px;
@@ -59,6 +101,7 @@
   max-width: 300px;
 }
 
+.food-summary-table,
 .food-table {
   width: 100%;
   border-collapse: collapse;
@@ -67,6 +110,7 @@
 }
 
 .food-table th,
+.food-summary-table th,
 .food-table td {
   width: 20%;
   padding: 10px 10px;
@@ -78,9 +122,10 @@ tbody tr:nth-child(odd) {
   background-color: #cccccc;
 }
 
+.food-summary-table,  
 .food-table thead th {
   z-index: 9999;
-  background-color: #4caf50;
+  background-color: #005638;
   color: white;
 }
 
@@ -93,3 +138,13 @@ tbody tr:nth-child(odd) {
   cursor: pointer;
 }
 
+
+.food-summary-table td {
+  width: 20%;
+  font-weight: bold;
+  padding: 10px 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  color: #005638;
+  background-color: white;
+}
