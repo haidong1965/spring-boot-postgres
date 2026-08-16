@@ -29,4 +29,8 @@ public class FoodService {
 	public List<Food> getAllFoodsSortedByName() {
 		 return foodRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 	}
+
+	public void deleteById(Long id) {
+		foodRepository.deleteById(id);
+	}
 }

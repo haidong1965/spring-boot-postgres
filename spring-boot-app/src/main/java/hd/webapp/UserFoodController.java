@@ -16,11 +16,9 @@ class UserFoodController {
 	private final FoodService foodService;
 	private final JwtService jwtService;
 
-	private UserFoodController(UserFoodService userFoodService, 
-	    UserService userService,
-        FoodService foodService,  
-		JwtService jwtService) {
-		this.userService = userService; 
+	private UserFoodController(UserFoodService userFoodService, UserService userService, FoodService foodService,
+			JwtService jwtService) {
+		this.userService = userService;
 		this.foodService = foodService;
 		this.userFoodService = userFoodService;
 		this.jwtService = jwtService;
@@ -29,18 +27,20 @@ class UserFoodController {
 	@PostMapping("/add")
 	public ResponseEntity<Long> addUserFood(@Valid @RequestBody UserFoodRequest request) throws Exception {
 		User user = userService.getUserByName(request.getUserName());
-        Food food = foodService.getFoodByName(request.getFoodName());
-        int unit = request.getUnit();
-        int volumn = request.getVolumn();
-        
-        UserFood userFood = new UserFood(user.getId(), food.getId(), volumn,  unit);
-        userFoodService.addUserFood(userFood);
+		Food food = foodService.getFoodByName(request.getFoodName());
+		int unit = request.getUnit();
+		int volumn = request.getVolumn();
+
+		UserFood userFood = new UserFood(user.getId(), food.getId(), volumn, unit);
+		userFoodService.addUserFood(userFood);
 		return ResponseEntity.ok(userFood.getId());
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	@GetMapping("/{requestedId}")
-	private  ResponseEntity<List<UserFood>> findByUserId(@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId) throws Exception {
+	@GetMapping("/user/{requestedId}")
+	private ResponseEntity<List<UserFood>> findByUserId(
+			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId)
+			throws Exception {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
@@ -50,8 +50,13 @@ class UserFoodController {
 			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByUserId(requestedId);
 			if (jwtService.verifyToken(token))
 				return ResponseEntity.ok(userFoods);
-		}	
+		}
 		return null;
 	}
 
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteUserFood(@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long id) {
+		userFoodService.deleteById(id);
+		return ResponseEntity.noContent().build(); // 204 No Content
+	}
 }

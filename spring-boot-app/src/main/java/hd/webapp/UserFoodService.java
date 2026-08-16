@@ -38,4 +38,8 @@ public class UserFoodService {
 		userFoodRepository.save(userFood);
 		return true;
 	}
+
+	public void deleteById(Long id) {
+		userFoodRepository.deleteById(id);	
+	}
 }

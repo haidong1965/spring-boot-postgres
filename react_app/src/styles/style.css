@@ -148,3 +148,16 @@ tbody tr:nth-child(odd) {
   color: #005638;
   background-color: white;
 }
+
+.trash-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  line-height: 1;
+}
+
+.trash-btn:hover {
+  transform: scale(1.1);
+}
