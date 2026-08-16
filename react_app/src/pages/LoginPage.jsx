@@ -1,3 +1,5 @@
+import '../styles/style.css';
+
 import { useState , useEffect} from 'react';
 import apiClient from '../api/apiClient'; 
 import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
@@ -75,14 +77,13 @@ function LoginPage() {
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Login</h2>
       
       {/* Display Error Message */}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-
+	  <br/>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>Username</label>
+          <label htmlFor="username" className="verdana-lading-label">Username</label>
           <input 
             id="username" 
             type="text" 
@@ -92,9 +93,8 @@ function LoginPage() {
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
         </div>
-
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Password</label>
+          <label htmlFor="password"  className="verdana-lading-label">Password</label>
           <input 
             id="password" 
             type="password" 
@@ -104,10 +104,11 @@ function LoginPage() {
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
         </div>
-        
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}>
+		<br/>
+        <button className="verdana-home-button"  type="submit">
           Log In
         </button>
+		<br/><br/>
       </form>
     </div>
   );

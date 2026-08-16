@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import '../styles/style.css';
+
+import  { useState, useEffect } from 'react';
 import apiClient from '../api/apiClient'; 
-import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
+
 
 function SignupPage() {
   // 1. State to hold input values
@@ -9,12 +11,8 @@ function SignupPage() {
   const [csrfToken, setCsrfToken] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null); // For displaying errors
-  const navigate = useNavigate(); 
   
   console.log('SignupPage : create new user and password');
-  
-  const csrf = import.meta.env.VITE_API_CSRF;
-  const signup = import.meta.env.VITE_API_SIGNUP;
   
   const isValidusername = (username) => {
     if (!username || typeof username !== 'string') {
@@ -58,7 +56,7 @@ function SignupPage() {
     }, []);
 
   // 2. Handler for form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     event.preventDefault(); // Prevents the form from doing a default page reload
     if(isValidusername(username)) {  
       if (isPasswordMatch && password && isValidusername(username)) {
@@ -82,7 +80,7 @@ function SignupPage() {
                          );
                         
         
-          //setMessage(`Success: ${response.data}`); 
+          console.log(response.data); 
           window.location.replace("/dashboard");
         } catch (err) {
           console.log('Signup failed : ', err.response);
@@ -101,15 +99,15 @@ function SignupPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Register User</h2>
+    <div style={{ maxWidth: '600px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+      <h1 className="verdana-h1">Register User</h1>
       
       {/* Display Error Message */}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>Username</label>
+          <label htmlFor="username" className="verdana-lading-label">Username</label>
           <input 
             id="username" 
             type="text" 
@@ -121,7 +119,7 @@ function SignupPage() {
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Password</label>
+          <label htmlFor="password" className="verdana-lading-label">Password</label>
           <input 
             id="password" 
             type="password" 
@@ -132,7 +130,7 @@ function SignupPage() {
           />
         </div>
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="confirmPassword" style={{ display: 'block', marginBottom: '5px' }}>Confirm Password</label>
+          <label htmlFor="confirmPassword" className="verdana-long-lading-label">Confirm Password</label>
           <input 
             id="confirmPassword" 
             type="password" 
@@ -142,10 +140,11 @@ function SignupPage() {
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
         </div>
-        
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}>
+        <br/>
+        <button type="submit" className="verdana-home-button" >
           Sign up
         </button>
+		<br/><br/>
       </form>
     </div>
   );

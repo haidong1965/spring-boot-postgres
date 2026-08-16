@@ -1,3 +1,4 @@
+import '../styles/style.css';
 
 const HomePage = () => {
 
@@ -5,14 +6,19 @@ const HomePage = () => {
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Welcome to the App!</h1>
-      <a href={apiClientUrl + 'login'} target="_self">
-         Login
-      </a>
+      <h1 className="verdana-h1">Welcome to Dong's' dietary App!</h1>
+
       <br/>
-      <a href={apiClientUrl + 'signup'} target="_self">
-         Sign up 
-      </a>
+	  <button className="verdana-home-button" 	  onClick={() => {
+	            window.location.href = `${apiClientUrl}login`;
+	          }}>Login</button>
+	  <br/>
+	  <br/>
+
+	  <button className="verdana-home-button" onClick={() => {
+	          window.location.href = `${apiClientUrl}signup`;
+	        }}>Sign up
+	 </button>
     </div>
   );
 };

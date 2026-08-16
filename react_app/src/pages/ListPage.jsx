@@ -1,4 +1,4 @@
-// src/pages/ListPage.jsx
+import '../styles/style.css';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -88,26 +88,20 @@ const ListPage = () => {
             {/* --- LOGOUT BUTTON ADDITION --- */}
             <button
                 onClick={handleLogout}
-                className="logout-button" // Add a class for styling purposes
-                style={{ marginBottom: '25px', padding: '10px 20px', cursor: 'pointer' }}
-            >
-                Logout
-            </button>
-            <h1>Welcome to ADMIN Page</h1>
-
-
-
+                className="verdana-top-right-button"
+            >Logout</button>
+           
             <div className="list-page">
-                <h1>User List</h1>
+                <h1 className="verdana-h1">User List</h1>
                 {users.length === 0 ? (
                     <p>No users found in the system.</p>
                 ) : (
                     <ul>
                         {Array.isArray(users) && users.length > 0 ? (
-                            <ul>
+                            <ul className="verdana-extralong-lading-label">
                                 {users.map((user) => (
                                     <li key={user.id || user._id}>
-                                        <strong>{user.name}</strong> ({user.email}) - Role: {user.role} <button className="trash-btn" onClick={() => handleDeleteUser(user.id)}>🗑️</button>
+                                        <strong>{user.name}</strong> - Role: {user.role} <button className="trash-btn" onClick={() => handleDeleteUser(user.id)}>🗑️</button>
                                     </li>
                                 ))}
                             </ul>
