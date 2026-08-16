@@ -261,19 +261,21 @@ const UserPage = () => {
     }
 
     return (
-        <div className="user-profile-card">
-            <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <p className="verdana-heading"> {user?.name} </p> <span style={{ paddingLeft: '200px' }}></span>
+        <div>
+		    <div class="right-container">
+			    <p></p>
+			</div>
+			<div>
                 <p className="verdana-heading">
-                    <button onClick={handleDateBack}>Back</button><span style={{ paddingLeft: '20px' }}></span>
+                    <button onClick={handleDateBack}  className="verdana-top-button">&laquo;</button><span style={{ paddingLeft: '20px' }}></span>
                     {formattedDate}<span style={{ paddingLeft: '20px' }}></span>
-                    <button onClick={handleDateNext}>Next</button></p> <span style={{ paddingLeft: '200px' }}></span>
-                <button onClick={handleLogout} className="verdana-top-button">Logout</button>
-            </div>
-            <br />
+                    <button onClick={handleDateNext}  className="verdana-top-button"> &raquo;</button><span style={{ paddingLeft: '65px' }}></span>
+					<button onClick={handleLogout} className="verdana-top-right-button">Logout</button>
+				</p>
+			</div>
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
-                <label className="verdana-lading-label">Food:</label>
-                <div style={{ display: 'inline-block', width: '200px' }}>
+                <label className="verdana-lading-label">Item:</label>
+                <div style={{ display: 'inline-block', width: '50px' }}>
                     <Select className="select-verdana"
                         value={options.find(option => option.value === selectedValue) || null}
                         onChange={handleSelectChange}
@@ -291,12 +293,12 @@ const UserPage = () => {
                         maxLength={10}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
-                </div><span style={{ paddingLeft: '89px' }}></span>
+                </div><span style={{ paddingLeft: '50px' }}></span>
                 <label className="verdana-text">{unit}</label>
             </div>
             <div className="verdana-div">
-                <span style={{ paddingLeft: '200px' }}></span>
-                <button onClick={handleAddEntry} className="verdana-button">Add Food</button>
+                <span style={{ paddingLeft: '80px' }}></span>
+                <button onClick={handleAddEntry} className="verdana-button">Add</button>
             </div>
             <br />
             <div>
