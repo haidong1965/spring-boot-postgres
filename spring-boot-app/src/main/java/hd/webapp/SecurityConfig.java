@@ -50,7 +50,6 @@ public class SecurityConfig {
 		http
 				// 1. Apply the CORS configuration first and most generally
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-				// 2. Disable CSRF (Good for API testing)
 				.csrf(csrf -> csrf
 			         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
