@@ -18,65 +18,46 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
-	
+
 	@Value("${server.port}")
 	private String serverPort;
+	@Value("${client.port}")
+	private String clientPort;
 	@Value("${server.public}")
 	private String serverPublic;
 	@Value("${server.private}")
 	private String serverPrivate;
 
-	/*public CorsConfigurationSource corsConfigurationSource() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-		// -----------------------------------------------
-		// FIX: Build a single, permissive configuration object first.
+	@Bean CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		String corsAllowed = "https://" + serverPrivate + ":" + serverPort +" : "+ "https://" + serverPublic + ":" + serverPort;
-		System.out.println("++++++++++++ CORSALLOWED: " + corsAllowed);
-		config.setAllowedOrigins(Arrays.asList("https://" + serverPrivate + ":" + serverPort, "https://" + serverPublic + ":" + serverPort, "https://2.106.164.55:8444", "https://2.106.164.55:5174"));
+		config.setAllowedOriginPatterns(Arrays.asList(
+				"https://" + serverPublic + ":" + serverPort, 
+				"https://" + serverPublic + ":" + clientPort
+		));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		config.setAllowedHeaders(List.of("*"));
+		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowCredentials(true);
+		config.setMaxAge(3600L);
 
-		// 🚀 Register the entire configuration object against ALL paths ("/**")
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
 		return source;
-	}*/
-	
-	 @Bean
-	    public CorsConfigurationSource corsConfigurationSource() {
-	        CorsConfiguration config = new CorsConfiguration();
-	        config.setAllowedOriginPatterns(Arrays.asList(
-	            "https://2.106.164.55:*",  // Your public IP with any port
-	            "https://192.168.1.81:*",  // Your local IP with any port
-	            "https://localhost:*"      // Localhost with any port
-	        ));
-	        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-	        config.setAllowedHeaders(Arrays.asList("*"));
-	        config.setAllowCredentials(true);
-	        config.setMaxAge(3600L);
-	        
-	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	        source.registerCorsConfiguration("/**", config);
-	        return source;
-	    }
+	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http)
-			throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				// 1. Apply the CORS configuration first and most generally
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				// 2. Disable CSRF (Good for API testing)
-				.csrf(csrf -> csrf.disable())
-		                // CSRF is enabled by default
-		               // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-		               // .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-				// 3. Authorize requests: This is where the fix lies.
+				.csrf(csrf -> csrf
+			         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", "/login", "/csrf", "/", "/food/list", "/validate", "/user_food/*", "/user_food/*/*").permitAll()
-						.requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
+						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", "/login", "/csrf", "/",
+								"/food/list", "/validate", "/user_food/*", "/user_food/*/*")
+						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
 		return http.build();
 	}

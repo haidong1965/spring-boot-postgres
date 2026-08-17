@@ -44,5 +44,14 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 			User mvcTest = new User(name2, role2, hashedPassword2);
 			userRepository.save(mvcTest);
 		}
+		
+		String dummy = "dummy";
+		String role3 = "USER";
+		String rawPassword3 = "1"; 
+		String hashedPassword3 = passwordEncoder.encode(rawPassword2);
+		if (userRepository.findByName(dummy) == null) {
+			User dummy1 = new User(dummy, role3, hashedPassword3);
+			userRepository.save(dummy1);
+		}
 	}
 }
