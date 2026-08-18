@@ -161,7 +161,7 @@
   max-width: 300px;
 }
 
-.food-summary-table,
+
 .food-table {
   width: 100%;
   border-collapse: collapse;
@@ -169,8 +169,13 @@
   font-size: 12px;
 }
 
-.food-table th,
-.food-summary-table th,
+.food-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+}
+
 .food-table td {
   font-weight: bold;
   padding: 10px 10px;
@@ -182,9 +187,18 @@ tbody tr:nth-child(odd) {
   background-color: #cccccc;
 }
 
-.food-summary-table,  
-.food-table thead th {
+.food-summary-table thead th {
+  border: 1px solid #ddd;
   z-index: 9999;
+  text-align: left;
+  background-color: #005638;
+  color: white;
+}
+
+.food-table thead th {
+  border: 1px solid #ddd;
+  z-index: 9999;
+  text-align: left;
   background-color: #005638;
   color: white;
 }
@@ -200,7 +214,6 @@ tbody tr:nth-child(odd) {
 
 .food-table,
 .food-summary-table td {
-  width: 20%;
   font-weight: bold;
   padding: 10px 10px;
   text-align: left;
