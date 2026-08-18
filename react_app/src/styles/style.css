@@ -54,6 +54,7 @@
 
 .verdana-top-right-button {
   font-family: 'Verdana', 'Geneva', sans-serif;
+  text-align: right;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
@@ -65,12 +66,25 @@
 }
 
 
+.verdana-top-home-button {
+  color: #ffffff;
+  border: 2px solid currentColor;
+  background-color:#005638;
+  padding: 8px 16px;
+  width:150px;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .verdana-home-button {
   color:#005638;
   border: 2px solid currentColor;
   background: transparent;
   padding: 8px 16px;
-  width:190px;
+  width:150px;
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -81,7 +95,7 @@
 .verdana-button {
   box-sizing: border-box;
   padding: 8px 16px;
-  width:190px;
+  width:150px;
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
   font-weight: 600;
