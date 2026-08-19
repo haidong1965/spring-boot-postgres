@@ -1,35 +1,38 @@
 import axios from 'axios';
-import { getToken } from '../utils/authService'; 
+import { getToken } from '../utils/authService';
 // 1. Create an instance configured with your base URL
 
 
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // <-- CHANGE THIS to your actual backend URL
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    baseURL: import.meta.env.VITE_API_URL, // <-- CHANGE THIS to your actual backend URL
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 // 2. THE INTERCEPTOR: This runs BEFORE every request is sent
 apiClient.interceptors.request.use(
-  (config) => {
-    // --- Retrieve the Token ---
-    // IMPORTANT: Replace this with your actual method of token retrieval!
-    const token = getToken(); 
+    (config) => {
+        if (config.data instanceof FormData) {
+            return config;
+        }
+        // --- Retrieve the Token ---
+        // IMPORTANT: Replace this with your actual method of token retrieval!
+        const token = getToken();
 
-    if (token) {
-      // Set the Authorization header for every request
-      config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-      console.warn("Authentication Token not found. Request might fail.");
+        if (token) {
+            // Set the Authorization header for every request
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            console.warn("Authentication Token not found. Request might fail.");
+        }
+        return config;
+    },
+    (error) => {
+        // Handle request error (e.g., if the token retrieval failed)
+        return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
-    // Handle request error (e.g., if the token retrieval failed)
-    return Promise.reject(error);
-  }
 );
 
 // 3. Response Interceptor (Optional but recommended for handling logout)
@@ -42,7 +45,7 @@ apiClient.interceptors.response.use(
             // --- CRITICAL SECURITY STEP ---
             localStorage.removeItem('accessToken'); // Clear the token
             // Redirect the user to the login page
-            window.location.href = '/login'; 
+            window.location.href = '/login';
         }
         return Promise.reject(error);
     }

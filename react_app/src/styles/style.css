@@ -92,6 +92,20 @@
   cursor: pointer;
 }
 
+
+.verdana-left-button {
+  color:#005638;
+  border: 2px solid currentColor;
+  background: transparent;
+  padding: 8px 16px;
+  width:150px;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .verdana-button {
   box-sizing: border-box;
   padding: 8px 16px;
@@ -247,4 +261,29 @@ tbody tr:nth-child(odd) {
 
 .trash-btn:hover {
   transform: scale(1.1);
+}
+
+.styled-file-input {
+  /* Style the text area showing the file name */
+  text-align: left;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Style the actual button inside the input */
+.styled-file-input::file-selector-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #005638;
+  background-color: white;
+  border: 2px solid #005638;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.styled-file-input::file-selector-button:hover {
+  background-color: white;
 }

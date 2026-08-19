@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // --- IMPORT YOUR PAGES HERE ---
@@ -7,6 +6,7 @@ import SignupPage from './pages/SignupPage';
 import HomePage from './pages/HomePage';   // Assuming you created this file in Step 1
 import UserPage from './pages/UserPage'; 
 import ListPage from './pages/ListPage'; 
+import FilePage from './pages/FilePage'; 
 import Dashboard from './pages/Dashboard'; // <-- Import the new component!
 
 function App() {
@@ -25,6 +25,8 @@ function App() {
         
         <Route path="/users/:id" element={<UserPage />} />
         <Route path="/admin" element={<ListPage />} />
+		
+		<Route path="/file" element={<FilePage />} />
 
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
