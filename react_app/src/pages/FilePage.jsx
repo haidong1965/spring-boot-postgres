@@ -2,6 +2,8 @@ import '../styles/style.css';
 
 import { useState , useEffect} from 'react';
 import apiClient from '../api/apiClient'; 
+import { useNavigate } from 'react-router-dom';
+import { getToken, removeToken } from '../utils/authService';
 
 
 function FilePage() {
@@ -9,6 +11,8 @@ function FilePage() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
   const [csrfToken, setCsrfToken] = useState('');
+  
+  const navigate = useNavigate();
 
   console.log('FilePage : start file page');
     
@@ -34,7 +38,25 @@ function FilePage() {
           fetchCsrfToken();
       }, []);
    
-  
+	  useEffect(() => {
+	          const token = getToken();
+	          if (token) {
+	              console.log(" .................  got token ...................");
+	          } else {
+	              console.log(" .................  no token ...................");
+	          }
+	          const intervalId = setInterval(async () => {
+	              try {
+	                  await apiClient.get("/validate");
+	              } catch (err) {
+	                  console.log("validate failed:", err);
+	                  navigate('/login', { replace: true });
+	              }
+	              console.log("Running background token check...");
+	          }, 30 * 60 * 1000); // Check every 30 minutes
+			  return () => clearInterval(intervalId); // Cleanup the interval when component unmounts
+			     }, []);
+
   
   // 1. Handle file selection
   const handleFileChange = (e) => {
@@ -87,14 +109,14 @@ function FilePage() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h2  >Upload a File</h2>
+      <h1 className="verdana-h1" >File Upload</h1>
       <form onSubmit={handleSubmit}>
-        <input 
+        <input className="styled-file-input"
           type="file" 
           onChange={handleFileChange} 
           disabled={uploading}
         />
-        <button type="submit" disabled={uploading || !file}>
+        <button className="verdana-left-button" type="submit" disabled={uploading || !file}>
           {uploading ? 'Uploading...' : 'Upload'}
         </button>
       </form>
