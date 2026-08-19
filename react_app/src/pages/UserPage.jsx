@@ -263,7 +263,7 @@ const UserPage = () => {
                     <button onClick={handleDateBack}  className="verdana-top-button">&laquo;</button><span style={{ paddingLeft: '20px' }}></span>
                     {formattedDate}<span style={{ paddingLeft: '20px' }}></span>
                     <button onClick={handleDateNext}  className="verdana-top-button"> &raquo;</button><span style={{ paddingLeft: '65px' }}></span>
-					<button className="verdana-home-button" 	  onClick={() => { window.location.href = `${apiClientUrl}file`;}}>File</button>
+					<button  className="verdana-top-right-button"	  onClick={() => { window.location.href = `${apiClientUrl}file`;}}>File</button><span style={{ paddingLeft: '20px' }}></span>
 					<button onClick={handleLogout} className="verdana-top-right-button">Logout</button>
 				</p>
 			</div>
