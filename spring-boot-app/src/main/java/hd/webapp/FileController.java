@@ -12,7 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/file")
@@ -21,7 +24,29 @@ public class FileController {
 
     // Define where you want to save the files
     private final String uploadDir = "uploads/";
+    
+    
+    @GetMapping("/list")
+    public List<String> getFileList() throws IOException {
+    	System.out.println("++++++++++++++ " + uploadDir + " ++++++++++++++");
+        Path folder = Paths.get(uploadDir);
 
+        // Optional: Create the directory if it doesn't exist yet
+        if (!Files.exists(folder)) {
+            Files.createDirectories(folder);
+        }
+
+        // Use Java NIO Streams to read the folder
+        try (Stream<Path> paths = Files.list(folder)) {
+            return paths
+                    .filter(Files::isRegularFile) // Filter out sub-directories
+                    .map(Path::getFileName)       // Get just the file name
+                    .map(Path::toString)          // Convert to String
+                    .sorted()                     // Sort alphabetically
+                    .collect(Collectors.toList());
+        }
+    }
+   
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("myFile") MultipartFile file) {
         Map<String, String> response = new HashMap<>();

@@ -8,6 +8,7 @@ import { getToken, removeToken } from '../utils/authService';
 
 function FilePage() {
     const [file, setFile] = useState(null);
+	const [files, setFiles] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
     const [csrfToken, setCsrfToken] = useState('');
@@ -24,6 +25,25 @@ function FilePage() {
 
 
     console.log('FilePage : start file page');
+
+    useEffect(() => {
+        const fetchFilesn = async () => {
+            try {
+                // Make a request to get CSRF token
+                const response = await apiClient.get("/file/list", {
+                    withCredentials: true
+                });
+				setFiles(response.data);
+				        setUploading(false);
+                console.log(response.data);
+            } catch (error) {
+                console.log('CSRF token fetch failed:', error);
+            }
+        };
+
+        fetchFilesn();
+    }, []);
+
 
     // Get CSRF token when component mounts
     useEffect(() => {
@@ -138,6 +158,12 @@ function FilePage() {
             {message && <p style={{ color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
 
             {file && <p>Selected file: <strong>{file.name}</strong></p>}
+			<br/>
+			<ul>
+			            {files.map((file, index) => (
+			                <li key={index}>{file}</li>
+			            ))}
+			        </ul>
         </div>
     );
 }
