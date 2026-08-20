@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +29,9 @@ public class FileController {
     
     @GetMapping("/list")
     public List<String> getFileList() throws IOException {
-    	System.out.println("++++++++++++++ " + uploadDir + " ++++++++++++++");
+    	System.out.println("++++++++++++++ show files under " + uploadDir + " ++++++++++++++");
         Path folder = Paths.get(uploadDir);
-
+        List<String> files = new ArrayList<String>();
         // Optional: Create the directory if it doesn't exist yet
         if (!Files.exists(folder)) {
             Files.createDirectories(folder);
@@ -38,12 +39,13 @@ public class FileController {
 
         // Use Java NIO Streams to read the folder
         try (Stream<Path> paths = Files.list(folder)) {
-            return paths
+        	files = paths
                     .filter(Files::isRegularFile) // Filter out sub-directories
                     .map(Path::getFileName)       // Get just the file name
                     .map(Path::toString)          // Convert to String
                     .sorted()                     // Sort alphabetically
                     .collect(Collectors.toList());
+            return files;
         }
     }
    

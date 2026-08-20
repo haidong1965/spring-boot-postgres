@@ -8,8 +8,8 @@ import { getToken, removeToken } from '../utils/authService';
 
 function FilePage() {
     const [file, setFile] = useState(null);
-	const [files, setFiles] = useState(null);
-    const [uploading, setUploading] = useState(false);
+    const [files, setFiles] = useState(null);
+
     const [message, setMessage] = useState('');
     const [csrfToken, setCsrfToken] = useState('');
 
@@ -28,13 +28,14 @@ function FilePage() {
 
     useEffect(() => {
         const fetchFilesn = async () => {
+            console.log("------------fetchFilesn----------------------");
             try {
                 // Make a request to get CSRF token
                 const response = await apiClient.get("/file/list", {
                     withCredentials: true
                 });
-				setFiles(response.data);
-				        setUploading(false);
+                setFiles(response.data);
+
                 console.log(response.data);
             } catch (error) {
                 console.log('CSRF token fetch failed:', error);
@@ -103,7 +104,6 @@ function FilePage() {
             return;
         }
 
-        setUploading(true);
         setMessage('');
 
         // 3. Create FormData and append the file
@@ -131,8 +131,6 @@ function FilePage() {
         } catch (error) {
             console.error('Error uploading file:', error);
             setMessage('An error occurred during upload.');
-        } finally {
-            setUploading(false);
         }
     };
 
@@ -148,22 +146,22 @@ function FilePage() {
                 <input className="styled-file-input"
                     type="file"
                     onChange={handleFileChange}
-                    disabled={uploading}
                 />
-                <button className="verdana-left-button" type="submit" disabled={uploading || !file}>
-                    {uploading ? 'Uploading...' : 'Upload'}
+                <button className="verdana-left-button" type="submit">
+                    {'Upload'}
                 </button>
             </form>
 
             {message && <p style={{ color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
 
             {file && <p>Selected file: <strong>{file.name}</strong></p>}
-			<br/>
-			<ul>
-			            {files.map((file, index) => (
-			                <li key={index}>{file}</li>
-			            ))}
-			        </ul>
+            <br />
+		
+            <ul>
+                {files && files.map((myfile, index) => (
+                    <li key={index}>{myfile}</li>
+                ))}
+            </ul>
         </div>
     );
 }
