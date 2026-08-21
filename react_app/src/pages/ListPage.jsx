@@ -88,8 +88,7 @@ const ListPage = () => {
             {/* --- LOGOUT BUTTON ADDITION --- */}
             <button
                 onClick={handleLogout}
-                className="verdana-top-right-button"
-            >Logout</button>
+                className="verdana-top-right-button">Logout</button>
            
             <div className="list-page">
                 <h1 className="verdana-h1">User List</h1>

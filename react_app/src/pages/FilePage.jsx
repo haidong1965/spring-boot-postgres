@@ -1,8 +1,9 @@
 import '../styles/style.css';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../api/apiClient';
 import { useNavigate } from 'react-router-dom';
+
 import { getToken, removeToken } from '../utils/authService';
 
 
@@ -23,28 +24,28 @@ function FilePage() {
         navigate('/login', { replace: true });
     };
 
+    const fetchFilesn = useCallback(async () => {
+        console.log("------------fetchFilesn----------------------");
+        const token = getToken();
+        try {
+            // Make a request to get CSRF token
+            const response = await apiClient.get("/file/list", {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                },
 
-    console.log('FilePage : start file page');
-
-    useEffect(() => {
-        const fetchFilesn = async () => {
-            console.log("------------fetchFilesn----------------------");
-            try {
-                // Make a request to get CSRF token
-                const response = await apiClient.get("/file/list", {
-                    withCredentials: true
-                });
-                setFiles(response.data);
-
-                console.log(response.data);
-            } catch (error) {
-                console.log('CSRF token fetch failed:', error);
-            }
-        };
-
-        fetchFilesn();
+                withCredentials: true
+            });
+            setFiles(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log('CSRF token fetch failed:', error);
+        }
     }, []);
 
+
+    console.log('FilePage : start file page');
 
     // Get CSRF token when component mounts
     useEffect(() => {
@@ -95,6 +96,23 @@ function FilePage() {
         }
     };
 
+    const handleDeleteFile = async (filename) => {
+        console.log(" +++++++ Deleting id:", filename);
+		const token = getToken();
+        const response = await apiClient.delete("/file/delete/" + filename,
+            {
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken,
+					'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true, // Important for cookies
+            });
+        console.log("--------------------" + response.status);
+        if (response.status == 204) {
+            fetchFilesn();
+        }
+    };
+
     // 2. Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -111,12 +129,15 @@ function FilePage() {
         // 'myFile' is the key name your backend will look for
         formData.append('myFile', file);
 
+        const token = getToken();
+
         try {
             // 4. Send the request
             const response = await apiClient.post("/file/upload", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'X-XSRF-TOKEN': csrfToken // Send CSRF token
+                    'Authorization': `Bearer ${token}`,
+                    'X-XSRF-TOKEN': csrfToken
                 },
                 withCredentials: true
             });
@@ -133,6 +154,11 @@ function FilePage() {
             setMessage('An error occurred during upload.');
         }
     };
+	
+	useEffect(() => {
+	        fetchFilesn();   // TODO: fix it later maybe use Query instead of useEffet
+	    }, [fetchFilesn]);
+
 
     return (
         <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
@@ -156,10 +182,12 @@ function FilePage() {
 
             {file && <p>Selected file: <strong>{file.name}</strong></p>}
             <br />
-		
+
             <ul>
                 {files && files.map((myfile, index) => (
-                    <li key={index}>{myfile}</li>
+                    <li key={index}>{myfile}
+                        <button className="trash-btn" onClick={() => handleDeleteFile(myfile)}>🗑️</button>
+                    </li>
                 ))}
             </ul>
         </div>
