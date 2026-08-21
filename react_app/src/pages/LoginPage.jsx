@@ -7,6 +7,9 @@ import { setToken } from '../utils/authService';
 
 
 function LoginPage() {
+	
+  const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
+	
   // 1. State to hold input values
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -76,8 +79,12 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      
+	
+    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', borderRadius: '8px' }}>
+	    <div>
+		    <button className="verdana-top-right-button" onClick={() => { window.location.href = `${apiClientUrl}`;}}>Home</button>
+		</div>
+		  <br/>
       {/* Display Error Message */}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 	  <br/>

@@ -79,3 +79,4 @@ insert into foods(name, energy, protein, fiber, calcium, type) values ('chorizo_
 insert into foods(name, energy, protein, fiber, calcium, type) values ('smoked_mackerel',210,22.5,1,95,0) ON CONFLICT (name) DO NOTHING;
 insert into foods(name, energy, protein, fiber, calcium, type) values ('filet_o_fish_big',1200,23,6,215,1) ON CONFLICT (name) DO NOTHING;
 insert into foods(name, energy, protein, fiber, calcium, type) values ('cod',105,23,1,15,0) ON CONFLICT (name) DO NOTHING;
+insert into foods(name, energy, protein, fiber, calcium, type) values ('flour',364,10.3,3.4,15.0,0) ON CONFLICT (name) DO NOTHING;

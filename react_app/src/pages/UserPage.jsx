@@ -9,15 +9,8 @@ import Select from 'react-select';
 import LoginPage from './LoginPage';
 import apiClient from '../api/apiClient';
 
-
-/**
- * This component serves as the base structure for an empty page.
- * You should build out all your content, layout, and logic here.
- */
-
-
-
 const UserPage = () => {
+	const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
     const params = useParams();
     const userIdFromUrl = params.id;
     const [user, setUser] = useState(null);
@@ -270,6 +263,7 @@ const UserPage = () => {
                     <button onClick={handleDateBack}  className="verdana-top-button">&laquo;</button><span style={{ paddingLeft: '20px' }}></span>
                     {formattedDate}<span style={{ paddingLeft: '20px' }}></span>
                     <button onClick={handleDateNext}  className="verdana-top-button"> &raquo;</button><span style={{ paddingLeft: '65px' }}></span>
+					<button  className="verdana-top-right-button"	  onClick={() => { window.location.href = `${apiClientUrl}file`;}}>File</button><span style={{ paddingLeft: '20px' }}></span>
 					<button onClick={handleLogout} className="verdana-top-right-button">Logout</button>
 				</p>
 			</div>

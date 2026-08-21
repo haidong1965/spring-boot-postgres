@@ -54,6 +54,7 @@
 
 .verdana-top-right-button {
   font-family: 'Verdana', 'Geneva', sans-serif;
+  text-align: right;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
@@ -65,12 +66,39 @@
 }
 
 
+.verdana-top-home-button {
+  color: #ffffff;
+  border: 2px solid currentColor;
+  background-color:#005638;
+  padding: 8px 16px;
+  width:150px;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .verdana-home-button {
   color:#005638;
   border: 2px solid currentColor;
   background: transparent;
   padding: 8px 16px;
-  width:190px;
+  width:150px;
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.verdana-left-button {
+  color:#005638;
+  border: 2px solid currentColor;
+  background: transparent;
+  padding: 8px 16px;
+  width:150px;
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -81,7 +109,7 @@
 .verdana-button {
   box-sizing: border-box;
   padding: 8px 16px;
-  width:190px;
+  width:150px;
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -161,7 +189,7 @@
   max-width: 300px;
 }
 
-.food-summary-table,
+
 .food-table {
   width: 100%;
   border-collapse: collapse;
@@ -169,8 +197,13 @@
   font-size: 12px;
 }
 
-.food-table th,
-.food-summary-table th,
+.food-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+}
+
 .food-table td {
   font-weight: bold;
   padding: 10px 10px;
@@ -182,9 +215,18 @@ tbody tr:nth-child(odd) {
   background-color: #cccccc;
 }
 
-.food-summary-table,  
-.food-table thead th {
+.food-summary-table thead th {
+  border: 1px solid #ddd;
   z-index: 9999;
+  text-align: left;
+  background-color: #005638;
+  color: white;
+}
+
+.food-table thead th {
+  border: 1px solid #ddd;
+  z-index: 9999;
+  text-align: left;
   background-color: #005638;
   color: white;
 }
@@ -200,7 +242,6 @@ tbody tr:nth-child(odd) {
 
 .food-table,
 .food-summary-table td {
-  width: 20%;
   font-weight: bold;
   padding: 10px 10px;
   text-align: left;
@@ -220,4 +261,29 @@ tbody tr:nth-child(odd) {
 
 .trash-btn:hover {
   transform: scale(1.1);
+}
+
+.styled-file-input {
+  /* Style the text area showing the file name */
+  text-align: left;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Style the actual button inside the input */
+.styled-file-input::file-selector-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #005638;
+  background-color: white;
+  border: 2px solid #005638;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.styled-file-input::file-selector-button:hover {
+  background-color: white;
 }
