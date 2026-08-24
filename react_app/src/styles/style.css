@@ -16,6 +16,16 @@
   padding-inline: 0;   /* horizontal padding */
   display: 'flex';
 }
+
+.verdana-bold-text {
+  font-family: 'Verdana', 'Geneva', sans-serif;
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #005638;
+}
+
 .verdana-text {
   font-family: 'Verdana', 'Geneva', sans-serif;
   font-size: 16px;
