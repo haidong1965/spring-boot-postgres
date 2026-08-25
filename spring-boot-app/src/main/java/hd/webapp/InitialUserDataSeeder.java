@@ -1,12 +1,24 @@
 package hd.webapp;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Component // This makes Spring detect this class as a component
+@Component 
 public class InitialUserDataSeeder implements CommandLineRunner {
-
+	
+	@Value("${admin.name}")
+    private String adminName;
+	@Value("${admin.password}")
+    private String adminPassword;
+	
+	@Autowired
+    private Environment env;
+	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
@@ -17,12 +29,15 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		String name = "admin@dietarydiary.com";
+		
+		String myVar = env.getProperty("ADMIN_NAME");
+		System.out.println("+++++++++++ admin user name : " + myVar);
+		
+		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
-		String rawPassword = "rpass"; // <-- CHANGE THIS!
-		String hashedPassword = passwordEncoder.encode(rawPassword);
-		if (userRepository.findByName("admin@dietarydiary.com") == null) {
-			User adminUser = new User(name, role, hashedPassword);
+		String hashedPassword = passwordEncoder.encode(adminPassword);
+		if (userRepository.findByName(adminName) == null) {
+			User adminUser = new User(adminName, role, hashedPassword);
 			userRepository.save(adminUser);
 		}
 
