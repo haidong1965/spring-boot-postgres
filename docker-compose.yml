@@ -6,7 +6,7 @@ services:
       context: ./react_app
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "5175:5175"
   #  volumes:
   #    - ./certs:/app/certs
 
@@ -49,9 +49,11 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       JWT_SECRET: ${JWT_SECRET:-your-secret-key-for-jwt-token-generation-1234567890}
+      ADMIN_NAME: admin@dietarydiary.com
+      ADMIN_PASSWORD: rpass
      # JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
     ports:
-      - "8443:8443"
+      - "8445:8445"
     networks:
       - spring-network
     depends_on:
