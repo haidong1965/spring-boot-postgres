@@ -10,7 +10,7 @@ import LoginPage from './LoginPage';
 import apiClient from '../api/apiClient';
 
 const UserPage = () => {
-	const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
+    const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
     const params = useParams();
     const userIdFromUrl = params.id;
     const [user, setUser] = useState(null);
@@ -23,6 +23,7 @@ const UserPage = () => {
     const [foodList, setFoodList] = useState([]);
     const [formattedDate, setformattedDate] = useState([format(new Date(), 'yyyy-MM-dd')]);
     const [currentDate, setCurrentDate] = useState([new Date()]);
+
     const [options, setOptions] = useState([]);
 
     const navigate = useNavigate();
@@ -33,34 +34,34 @@ const UserPage = () => {
         console.log("Token successfully cleared.");
         navigate('/login', { replace: true });
     };
-	
-	
-	const totals = useMemo(() => {
-	  const targetDate = String(formattedDate).trim();
-	  return foodList.reduce(
-	    (acc, item) => {
-	      const itemDate = String(item.date).trim();
 
-	      if (itemDate === targetDate) {
-	        acc.totalItem += 1;
-	        acc.totalEnergy += Number(item.energy || 0);
-	        acc.totalProtein += Number(item.protein || 0);
-	        acc.totalFiber += Number(item.fiber || 0);
-	        acc.totalCalcium += Number(item.calcium || 0);
-	      }
 
-	      return acc;
-	    },
-	    {
-	      totalItem: 0,
-	      totalEnergy: 0,
-	      totalProtein: 0,
-	      totalFiber: 0,
-	      totalCalcium: 0
-	    }
-	  );
-	}, [foodList, formattedDate]);
-	
+    const totals = useMemo(() => {
+        const targetDate = String(formattedDate).trim();
+        return foodList.reduce(
+            (acc, item) => {
+                const itemDate = String(item.date).trim();
+
+                if (itemDate === targetDate) {
+                    acc.totalItem += 1;
+                    acc.totalEnergy += Number(item.energy || 0);
+                    acc.totalProtein += Number(item.protein || 0);
+                    acc.totalFiber += Number(item.fiber || 0);
+                    acc.totalCalcium += Number(item.calcium || 0);
+                }
+
+                return acc;
+            },
+            {
+                totalItem: 0,
+                totalEnergy: 0,
+                totalProtein: 0,
+                totalFiber: 0,
+                totalCalcium: 0
+            }
+        );
+    }, [foodList, formattedDate]);
+
     const fetchFoodList = useCallback(async () => {
         try {
             const response = await apiClient.get("/user_food/user/" + userIdFromUrl, {
@@ -78,20 +79,20 @@ const UserPage = () => {
     }, []);
 
     useEffect(() => {
-		//setCurrentDate(new Date());
-		//setformattedDate(format(currentDate, 'yyyy-MM-dd'));   // TODO: fix it later maybe use Query instead of useEffet
-		console.log('+++++++++++++++++++++ currentDate:', formattedDate);
+        //setCurrentDate(new Date());
+        //setformattedDate(format(currentDate, 'yyyy-MM-dd'));   // TODO: fix it later maybe use Query instead of useEffet
+        console.log('+++++++++++++++++++++ currentDate:', formattedDate);
         fetchFoodList();   // TODO: fix it later maybe use Query instead of useEffet
     }, [fetchFoodList]);
 
     const handleAddEntry = async (e) => {
         e.preventDefault();
-
         const payload = {
             userName: user.name,
             foodName: userFood.name,
             volumn: Number(inputValue),
             unit: Number(userFood.type),
+            date: String(formattedDate).trim()
         };
 
         const response = await apiClient.post("/user_food/add",
@@ -110,17 +111,18 @@ const UserPage = () => {
     const handleDateBack = async () => {
         const yesterday = new Date(currentDate);
         yesterday.setDate(yesterday.getDate() - 1);
+        console.log(" +++++++ Date : " + format(yesterday, 'yyyy-MM-dd'));
         setCurrentDate(yesterday);
         setformattedDate(format(yesterday, 'yyyy-MM-dd'));
     };
 
     const handleDateNext = async () => {
-       
-            const today = new Date(currentDate);
-            today.setDate(today.getDate() + 1);
-            console.log(" +++++++ Date : " + format(today, 'yyyy-MM-dd'));
-            setCurrentDate(today);
-            setformattedDate(format(today, 'yyyy-MM-dd'));
+
+        const today = new Date(currentDate);
+        today.setDate(today.getDate() + 1);
+        console.log(" +++++++ Date : " + format(today, 'yyyy-MM-dd'));
+        setCurrentDate(today);
+        setformattedDate(format(today, 'yyyy-MM-dd'));
     };
 
 
@@ -255,18 +257,18 @@ const UserPage = () => {
 
     return (
         <div>
-		    <div class="right-container">
-			    <p></p>
-			</div>
-			<div>
+            <div class="right-container">
+                <p></p>
+            </div>
+            <div>
                 <p className="verdana-heading">
-                    <button onClick={handleDateBack}  className="verdana-top-button">&laquo;</button><span style={{ paddingLeft: '20px' }}></span>
+                    <button onClick={handleDateBack} className="verdana-top-button">&laquo;</button><span style={{ paddingLeft: '20px' }}></span>
                     {formattedDate}<span style={{ paddingLeft: '20px' }}></span>
-                    <button onClick={handleDateNext}  className="verdana-top-button"> &raquo;</button><span style={{ paddingLeft: '65px' }}></span>
-					<button  className="verdana-top-right-button"	  onClick={() => { window.location.href = `${apiClientUrl}file`;}}>File</button><span style={{ paddingLeft: '20px' }}></span>
-					<button onClick={handleLogout} className="verdana-top-right-button">Logout</button>
-				</p>
-			</div>
+                    <button onClick={handleDateNext} className="verdana-top-button"> &raquo;</button><span style={{ paddingLeft: '65px' }}></span>
+                    <button className="verdana-top-right-button" onClick={() => { window.location.href = `${apiClientUrl}file`; }}>File</button><span style={{ paddingLeft: '20px' }}></span>
+                    <button onClick={handleLogout} className="verdana-top-right-button">Logout</button>
+                </p>
+            </div>
             <div style={{ display: 'flex', alignItems: 'left', textAlign: 'left' }}>
                 <label className="verdana-lading-label">Item:</label>
                 <div style={{ display: 'inline-block', width: '50px' }}>
@@ -310,18 +312,18 @@ const UserPage = () => {
                     {
                         <tbody>
                             {foodList.filter(userfood => userfood.date === String(formattedDate).trim())
-								.map(
-								(userfood) => (
-                                <tr key={userfood.name}>
-                                    <td>{userfood.name}</td>
-                                    <td>{userfood.energy}</td>
-                                    <td>{userfood.protein}</td>
-                                    <td>{userfood.fiber}</td>
-                                    <td>{userfood.calcium}</td>
-                                    <td><button className="trash-btn" onClick={() => handleDeleteEntry(userfood.id)}>🗑️</button></td>
+                                .map(
+                                    (userfood) => (
+                                        <tr key={userfood.name}>
+                                            <td>{userfood.name}</td>
+                                            <td>{userfood.energy}</td>
+                                            <td>{userfood.protein}</td>
+                                            <td>{userfood.fiber}</td>
+                                            <td>{userfood.calcium}</td>
+                                            <td><button className="trash-btn" onClick={() => handleDeleteEntry(userfood.id)}>🗑️</button></td>
 
-                                </tr>
-                            ))}
+                                        </tr>
+                                    ))}
                         </tbody>
                     }
                 </table>
@@ -342,11 +344,11 @@ const UserPage = () => {
                     {
                         <tbody>
                             <tr>
-							<td>{totals.totalItem}</td>
-							<td>{totals.totalEnergy}</td>
-							<td>{totals.totalProtein.toFixed(1)}</td>
-							<td>{totals.totalFiber.toFixed(1)}</td>
-							<td>{totals.totalCalcium.toFixed(1)}</td>
+                                <td>{totals.totalItem}</td>
+                                <td>{totals.totalEnergy}</td>
+                                <td>{totals.totalProtein.toFixed(1)}</td>
+                                <td>{totals.totalFiber.toFixed(1)}</td>
+                                <td>{totals.totalCalcium.toFixed(1)}</td>
                                 <td />
                             </tr>
                         </tbody>
