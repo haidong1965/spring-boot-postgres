@@ -16,50 +16,60 @@ import jakarta.persistence.Table;
 @Table(name = "user_food")
 public class UserFood {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	public Long getId() {
 		return id;
 	}
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	@Column(name = "energy")
 	private int energy;
-    public int getEnergy() {
+
+	public int getEnergy() {
 		return energy;
 	}
+
 	public void setEnergy(int energy) {
 		this.energy = energy;
 	}
+
 	public double getProtein() {
 		return protein;
 	}
+
 	public void setProtein(double protein) {
 		this.protein = protein;
 	}
+
 	public double getFiber() {
 		return fiber;
 	}
+
 	public void setFiber(double fiber) {
 		this.fiber = fiber;
 	}
+
 	public double getCalcium() {
 		return calcium;
 	}
+
 	public void setCalcium(double calcium) {
 		this.calcium = calcium;
 	}
+
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
@@ -73,58 +83,66 @@ public class UserFood {
 
 	@Column(name = "user_id")
 	private Long userId;
-	
+
 	@Column(name = "food_id")
 	private Long foodId;
-	
+
 	public Long getUserId() {
 		return userId;
 	}
+
 	public void setUser_id(Long userId) {
 		this.userId = userId;
 	}
+
 	public Long getFoodId() {
 		return foodId;
 	}
+
 	public void setFoodId(Long foodId) {
 		this.foodId = foodId;
 	}
-	
-	public  UserFood() {
-		
+
+	public UserFood() {
+
 	}
-	
+
 	public UserFood(Long user_id, Long food_id, int volumn, int unit) {
 		this.volumn = volumn;
 		this.unit = unit;
 		this.userId = user_id;
 		this.foodId = food_id;
 	}
-    
+
 	@Column(name = "unit")
-    private int unit;
-	
-    public int getUnit() {
+	private int unit;
+
+	public int getUnit() {
 		return unit;
 	}
+
 	public void setUnit(int unit) {
 		this.unit = unit;
 	}
-	
+
 	@Column(name = "volumn")
 	public int getVolumn() {
 		return volumn;
 	}
+
 	public void setVolumn(int volumn) {
 		this.volumn = volumn;
 	}
+
 	private int volumn;
-    
+
 	@Column(name = "date")
 	private LocalDate date;
+
 	public LocalDate getDate() {
 		return date;
 	}
+
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}

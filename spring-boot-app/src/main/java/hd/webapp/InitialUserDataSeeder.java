@@ -16,6 +16,12 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	@Value("${admin.password}")
     private String adminPassword;
 	
+	@Value("#{{environment.OWNER?:'UNKNOWN'}}")
+	private String owner;
+	
+	@Value("#{${jwt.expiration} > 86400000 ? 'Long' : 'Short'}")
+	private String expireLevel;
+	
 	@Autowired
     private Environment env;
 	
@@ -29,6 +35,9 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		System.out.println("+++++++++++ Owner name : " + owner);
+		System.out.println("+++++++++++ expire level :" + expireLevel);
 		
 		String myVar = env.getProperty("ADMIN_NAME");
 		System.out.println("+++++++++++ admin user name : " + myVar);

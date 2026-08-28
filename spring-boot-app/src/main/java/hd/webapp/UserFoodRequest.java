@@ -1,5 +1,7 @@
 package hd.webapp;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -8,12 +10,19 @@ public class UserFoodRequest {
 
     @NotNull
     private String userName;
-    
     @NotNull
     private String foodName;
+    @NotNull
+    private LocalDate date;
     
+	public LocalDate getDate() {
+		return date;
+	}
 
-    
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
 	@NotNull
 	@Positive
 	private int volumn;
