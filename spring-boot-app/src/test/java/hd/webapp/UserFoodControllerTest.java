@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,13 @@ public class UserFoodControllerTest {
     	 User user1 = userService.getUserByName("mvctest@yahoo.com");
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
+    	 
+    	 LocalDate today = LocalDate.now();
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+         String formattedDate = today.format(formatter);
+    	 
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
+    	 userFoodRequest1.setDate(formattedDate);
          mockMvc.perform(post("/user_food/add")
         		 .with(csrf())
                  .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +115,7 @@ public class UserFoodControllerTest {
     	 uf.setProtein(food1.getProtein());
     	 uf.setCalcium(food1.getCalcium());
     	 uf.setFiber(food1.getFiber());
-    	 uf.setDate(LocalDate.now());
+    	 uf.setDate(LocalDate.now().toString());
     	 uf.setName(food1.getName());
     	 userFoodRepository.save(uf);
     	 mockMvc.perform(delete("/user_food/" + uf.getId())

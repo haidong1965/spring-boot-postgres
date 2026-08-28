@@ -137,13 +137,13 @@ public class UserFood {
 	private int volumn;
 
 	@Column(name = "date")
-	private LocalDate date;
+	private String date;
 
-	public LocalDate getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
