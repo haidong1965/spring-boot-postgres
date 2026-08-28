@@ -35,12 +35,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		System.out.println("+++++++++++ Owner name : " + owner);
-		System.out.println("+++++++++++ expire level :" + expireLevel);
-		
 		String myVar = env.getProperty("ADMIN_NAME");
-		System.out.println("+++++++++++ admin user name : " + myVar);
 		
 		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";

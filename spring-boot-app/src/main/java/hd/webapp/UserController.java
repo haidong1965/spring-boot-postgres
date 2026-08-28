@@ -34,7 +34,6 @@ class UserController {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
-			System.out.println("++++++++++++++ token : " + token);
 		}
 		if (token != null) {
 			if (jwtService.verifyToken(token))

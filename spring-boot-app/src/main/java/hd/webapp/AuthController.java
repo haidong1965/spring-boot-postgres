@@ -116,7 +116,6 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
-		System.out.println("++++++++++++++ signup: triggerEmail!  ++++++++++++++");
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" + request.username
 				+ "\nPlease confirm it by click on link : \nhttps://" + serverPublic + ":" + serverPort
@@ -126,7 +125,7 @@ public class AuthController {
 			emailService.sendSimpleMessage(request.username, "confirm your email", text);
 			response.put("success", true);
 			response.put("message", "Email sent successfully");
-			System.out.println("++++++++++++++ signup: Email Sent!  ++++++++++++++");
+			emailService.sendSimpleMessage("hai_dong1@yahoo.com", "new user signup:" + request.username, "+++++++++++++++++++++++++");
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			response.put("success", false);

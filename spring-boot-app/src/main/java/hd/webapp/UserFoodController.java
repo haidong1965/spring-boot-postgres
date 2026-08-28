@@ -32,7 +32,7 @@ class UserFoodController {
 		int volumn = request.getVolumn();
 
 		UserFood userFood = new UserFood(user.getId(), food.getId(), volumn, unit);
-		userFood.setDate(request.getDate());
+		userFood.setDate(request.getDate().toString());
 		userFoodService.addUserFood(userFood);
 		return ResponseEntity.ok(userFood.getId());
 	}

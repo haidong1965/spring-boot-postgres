@@ -59,6 +59,8 @@ public class UserFoodControllerTest {
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
+    	 LocalDate today = LocalDate.now();
+    	 userFoodRequest1.setDate(today.toString());
          mockMvc.perform(post("/user_food/add")
         		 .with(csrf())
                  .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +110,7 @@ public class UserFoodControllerTest {
     	 uf.setProtein(food1.getProtein());
     	 uf.setCalcium(food1.getCalcium());
     	 uf.setFiber(food1.getFiber());
-    	 uf.setDate(LocalDate.now());
+    	 uf.setDate(LocalDate.now().toString());
     	 uf.setName(food1.getName());
     	 userFoodRepository.save(uf);
     	 mockMvc.perform(delete("/user_food/" + uf.getId())

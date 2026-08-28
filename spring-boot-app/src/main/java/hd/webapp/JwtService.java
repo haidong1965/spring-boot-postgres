@@ -38,7 +38,6 @@ public class JwtService {
 		this.resourceLoader = resourceLoader;
 		this.jwtProperties = jwtProperties;
 		this.signingKey = loadPrivateKeyFromPem();
-		System.out.println("+++++++++++++++ expiration:" + jwtProperties.getExpiration());
 	}
 
 	public String extractSubject(String token) {

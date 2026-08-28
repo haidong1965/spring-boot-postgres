@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS user_food (
     protein DECIMAL(7, 2),
     fiber DECIMAL(7, 2),
     calcium DECIMAL(9, 2),
-    date Date,
+    date VARCHAR(150) NOT NULL,
     unit SMALLINT,
     volumn INT
 );
