@@ -11,10 +11,6 @@ import org.springframework.stereotype.Component;
 @Component 
 public class InitialUserDataSeeder implements CommandLineRunner {
 	
-	@Value("${admin.name}")
-    private String adminName;
-	@Value("${admin.password}")
-    private String adminPassword;
 	
 	@Value("#{{environment.OWNER?:'UNKNOWN'}}")
 	private String owner;
@@ -36,12 +32,12 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		String myVar = env.getProperty("ADMIN_NAME");
-		
+		String mypass = env.getProperty("ADMIN_NAME");
 		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
-		String hashedPassword = passwordEncoder.encode(adminPassword);
-		if (userRepository.findByName(adminName) == null) {
-			User adminUser = new User(adminName, role, hashedPassword);
+		String hashedPassword = passwordEncoder.encode(mypass);
+		if (userRepository.findByName(myVar) == null) {
+			User adminUser = new User(myVar, role, hashedPassword);
 			userRepository.save(adminUser);
 		}
 
