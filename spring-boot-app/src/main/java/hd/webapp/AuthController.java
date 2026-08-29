@@ -32,9 +32,9 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
 
 	@Value("${server.port}")
-	public String serverPort;
+	private String serverPort;
 	@Value("${server.public}")
-	public String serverPublic;
+	private String serverPublic;
 	
 	public static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
