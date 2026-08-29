@@ -36,7 +36,7 @@ public class AuthController {
 	@Value("${server.public}")
 	private String serverPublic;
 	
-	public static final Logger log = LoggerFactory.getLogger(AuthController.class);
+	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
 	public final UserSessionTracker tracker;
 	public final UserService userService;
