@@ -38,18 +38,17 @@ public class AuthController {
 	
 	public static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-	@Autowired
-	public UserSessionTracker tracker;
-
+	public final UserSessionTracker tracker;
 	public final UserService userService;
 	public final JwtService jwtService;
 	public final EmailService emailService;
 
 	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
-			EmailService emailService) {
+			EmailService emailService, UserSessionTracker tracker) {
 		this.userService = userService;
 		this.jwtService = jwtService;
 		this.emailService = emailService;
+		this.tracker = tracker;
 	}
 
 	@GetMapping("/")
