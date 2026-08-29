@@ -32,20 +32,20 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
 
 	@Value("${server.port}")
-	private String serverPort;
+	public String serverPort;
 	@Value("${server.public}")
-	private String serverPublic;
+	public String serverPublic;
 	
-	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+	public static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
-	private UserSessionTracker tracker;
+	public UserSessionTracker tracker;
 
-	private final UserService userService;
-	private final JwtService jwtService;
-	private final EmailService emailService;
+	public final UserService userService;
+	public final JwtService jwtService;
+	public final EmailService emailService;
 
-	private AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
+	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
 			EmailService emailService) {
 		this.userService = userService;
 		this.jwtService = jwtService;

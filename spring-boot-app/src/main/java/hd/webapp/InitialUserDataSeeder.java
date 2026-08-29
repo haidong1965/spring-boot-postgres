@@ -23,7 +23,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	private String expireLevel;
 	
 	@Autowired
-    private Environment env;
+    public Environment env;
 	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
