@@ -47,6 +47,11 @@ public class UserService implements InitializingBean, DisposableBean {
 	public User getUserById(Long id) {
     	return userRepository.getUserById(id);
     }
+	
+	public boolean validateId(Long id) {
+		System.out.println("------------- validateId : " + id + " -----------------");
+		return id > 7;
+	}
     
     public User getUserByName(String username) {
     	User user = userRepository.findByName(username);
@@ -61,6 +66,7 @@ public class UserService implements InitializingBean, DisposableBean {
         if (user == null) {
             return false; // User does not exist
         }
+        validateId(user.getId());
         // The compare method checks if the provided password matches the stored hash
         return passwordEncoder.matches(password, user.getPassword());
     }
