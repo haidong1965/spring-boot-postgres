@@ -37,7 +37,6 @@ class UserFoodController {
 		return ResponseEntity.ok(userFood.getId());
 	}
 
-	@SuppressWarnings("deprecation")
 	@GetMapping("/user/{requestedId}")
 	private ResponseEntity<List<UserFood>> findByUserId(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId)
@@ -47,7 +46,6 @@ class UserFoodController {
 			token = authHeader.substring(7);
 		}
 		if (token != null) {
-			User user = userService.getUserRepository().getById(requestedId);
 			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByUserId(requestedId);
 			if (jwtService.verifyToken(token))
 				return ResponseEntity.ok(userFoods);
