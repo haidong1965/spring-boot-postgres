@@ -1,0 +1,6 @@
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+
+export ADMIN_NAME=admin@dietarydiary.com
+export ADMIN_PASSWOD=rpass
+
+ psql -d my_webapp_db  -U app_user

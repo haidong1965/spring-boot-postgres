@@ -77,7 +77,7 @@ public class UserFoodControllerTest {
                  "foodId=" + userFood.getFoodId() +
                  ", userId=" + userFood.getUserId() + ", date=" + userFood.getDate()
              );
-             if(userService.getUserById(userFood.getUserId()).getId() == user1.getId()) {
+             if(userService.getUserReferenceById(userFood.getUserId()).getId() == user1.getId()) {
             	 existUser = true;
             	 break;
              }
@@ -106,12 +106,12 @@ public class UserFoodControllerTest {
     	 User user1 = userService.getUserByName("mvctest@yahoo.com");
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood uf = new UserFood(user1.getId(), food1.getId(), 1, 1);
-    	 uf.setEnergy(food1.getEnergy());
+    	 /*uf.setEnergy(food1.getEnergy());
     	 uf.setProtein(food1.getProtein());
     	 uf.setCalcium(food1.getCalcium());
     	 uf.setFiber(food1.getFiber());
     	 uf.setDate(LocalDate.now().toString());
-    	 uf.setName(food1.getName());
+    	 uf.setName(food1.getName());*/
     	 userFoodRepository.save(uf);
     	 mockMvc.perform(delete("/user_food/" + uf.getId())
         		 .with(csrf()))

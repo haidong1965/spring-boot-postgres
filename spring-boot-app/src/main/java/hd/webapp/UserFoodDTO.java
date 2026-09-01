@@ -8,27 +8,18 @@ import lombok.Setter;
 public class UserFoodDTO {
 	
 	private final Long id;
-	private final Long userId;
-	private final Long foodId;
-	private final String userName;
-	private final String foodName;
+	private final String name;
 	private final int energy;
 	private final double protein;
 	private final double fiber;
 	private final double calcium;
     
-    public UserFoodDTO(Long id, Long userId, Long foodId, String userName, String foodName, int energy, double protein, double fiber, double calcium) {
+    public UserFoodDTO(Long id, String name, int energy, double protein, double fiber, double calcium) {
     	this.id = id;
-    	this.userId = userId;
-    	this.foodId = foodId;
-        this.userName = userName;
-        this.foodName = foodName;
+        this.name = name;
         this.energy = energy;
         this.protein = protein;
         this.fiber = fiber;
         this.calcium = calcium;
     }
-
-
-
 }
