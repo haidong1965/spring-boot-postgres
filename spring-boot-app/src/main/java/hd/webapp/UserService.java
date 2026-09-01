@@ -13,6 +13,7 @@ public class UserService implements InitializingBean, DisposableBean {
 
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final UserFoodRepository userFoodRepository;
     
     public UserRepository getUserRepository() {
 		return userRepository;
@@ -20,9 +21,10 @@ public class UserService implements InitializingBean, DisposableBean {
 
 	private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserFoodRepository userFoodRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userFoodRepository = userFoodRepository;
     }
 
     @Transactional
@@ -73,6 +75,7 @@ public class UserService implements InitializingBean, DisposableBean {
 
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
+		userFoodRepository.deleteAllByUserId(id);
 		
 	}
 
