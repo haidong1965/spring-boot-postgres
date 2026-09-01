@@ -54,7 +54,6 @@ class UserFoodController {
 				if(uf.getUnit() == 0)
 					weight = 100.0;
 				Long id = uf.getId();
-				User userReference = userService.getUserReferenceById(uf.getUserId());
 				Food foodReference = foodService.getFoodReferenceById(uf.getFoodId());
 				UserFoodDTO userFoodDTO = new UserFoodDTO(
 						id,
