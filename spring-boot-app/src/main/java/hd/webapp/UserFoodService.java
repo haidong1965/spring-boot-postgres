@@ -28,6 +28,7 @@ public class UserFoodService {
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
+		/*
 		double weight = 1.0;
 		if(userFood.getUnit() == 0)
 			weight = 100.0;
@@ -37,7 +38,7 @@ public class UserFoodService {
 		userFood.setFiber(foodRepository.getReferenceById(userFood.getFoodId()).getFiber()*userFood.getVolumn()/weight);
 		userFood.setCalcium(foodRepository.getReferenceById(userFood.getFoodId()).getCalcium()*userFood.getVolumn()/weight);
 		userFood.setName(foodRepository.getReferenceById(userFood.getFoodId()).getName());
-		
+		*/
 		userFoodRepository.save(userFood);
 		return true;
 	}

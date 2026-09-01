@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS user_food (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     food_id BIGINT NOT NULL,
+    date VARCHAR(150) NOT NULL,
+    unit SMALLINT,
+    volumn INT
+);
+
+/*
+CREATE TABLE IF NOT EXISTS user_food (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    food_id BIGINT NOT NULL,
     name VARCHAR(150) NOT NULL,
     energy INT NOT NULL,
     protein DECIMAL(7, 2),
@@ -29,7 +39,7 @@ CREATE TABLE IF NOT EXISTS user_food (
     unit SMALLINT,
     volumn INT
 );
-
+*/
 
 insert into foods(name, energy, protein, fiber, calcium, type) values ('egg',72,6.3,0,21.5,1) ON CONFLICT (name) DO NOTHING;
 insert into foods(name, energy, protein, fiber, calcium, type) values ('oatmeal',389,16.9,10.6,40.0,0) ON CONFLICT (name) DO NOTHING;

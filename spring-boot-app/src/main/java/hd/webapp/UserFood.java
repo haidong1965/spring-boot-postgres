@@ -24,7 +24,7 @@ public class UserFood {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name")
+	/*@Column(name = "name")
 	private String name;
 
 	public String getName() {
@@ -40,7 +40,7 @@ public class UserFood {
 	private double fiber;
 	@Column(name = "calcium")
 	private double calcium;
-
+    */
 	@Column(name = "user_id")
 	private Long userId;
 
