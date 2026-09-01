@@ -1,8 +1,11 @@
 package hd.webapp;
 
-import jakarta.persistence.*; 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter; 
 
-
+@Setter
+@Getter
 @Entity
 @Table(name = "users") // Explicitly names the table 'users'
 public class User {
@@ -32,19 +35,6 @@ public class User {
         this.role = role;
         this.password = password; // This should already be hashed!
     }
-
-    // --- Getters and Setters (Crucial for JPA/Hibernate to work) ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
 
     // Optional: Override toString for easy debugging
     @Override
