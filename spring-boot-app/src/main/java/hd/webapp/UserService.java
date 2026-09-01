@@ -44,8 +44,8 @@ public class UserService implements InitializingBean, DisposableBean {
         return userRepository.save(newUser);
     }
     
-	public User getUserById(Long id) {
-    	return userRepository.getUserById(id);
+	public User getUserReferenceById(Long id) {
+    	return userRepository.getUserReferenceById(id);
     }
 	
 	public boolean validateId(Long id) {
