@@ -58,11 +58,15 @@ class UserFoodController {
 				Food foodReference = foodService.getFoodReferenceById(uf.getFoodId());
 				UserFoodDTO userFoodDTO = new UserFoodDTO(
 						id,
+						uf.getUserId(),
 						foodReference.getName(),
 						(int)(foodReference.getEnergy()*uf.getVolumn()/weight),
 						foodReference.getProtein()*uf.getVolumn()/weight,
 						foodReference.getFiber()*uf.getVolumn()/weight,
-						foodReference.getCalcium()*uf.getVolumn()/weight
+						foodReference.getCalcium()*uf.getVolumn()/weight,
+						uf.getDate(),
+						uf.getUnit(),
+						uf.getVolumn()
 						);
 				userFoodsDTO.add(userFoodDTO);
 			}
