@@ -55,7 +55,7 @@ public class SecurityConfig {
 				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", "/login", "/csrf", "/", "/actuator","/actuator/**",
-								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*")
+								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*", "/audits", "/audits/**")
 						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
 
 		return http.build();

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/")
@@ -42,13 +43,15 @@ public class AuthController {
 	public final UserService userService;
 	public final JwtService jwtService;
 	public final EmailService emailService;
+	public final AuditService auditService;
 
 	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
-			EmailService emailService, UserSessionTracker tracker) {
+			EmailService emailService, UserSessionTracker tracker, AuditService auditService) {
 		this.userService = userService;
 		this.jwtService = jwtService;
 		this.emailService = emailService;
 		this.tracker = tracker;
+		this.auditService = auditService;
 	}
 
 	@GetMapping("/")
@@ -103,11 +106,13 @@ public class AuthController {
 	}
 
 	@GetMapping("/create")
+	@Transactional
 	public ResponseEntity<String> addNewUser(@RequestParam("name") String name, @RequestParam("token") String token)
 			throws Exception {
-		System.out.println("++++++++++++++ addNewUser!  ++++++++++++++");
 		String password = jwtService.extractSubject(token);
+		
 		userService.createUser(name, "USER", password);
+		auditService.createAudit(new CreateAuditRequest("+++++ create request from new User : " + name + " ++++", AuditLevel.INFO));
 		String response = "<html><body>Congratulations " + name
 				+ "! <br/>You can go to the login page to login  now<br/> </body></html>";
 		return ResponseEntity.ok(response);

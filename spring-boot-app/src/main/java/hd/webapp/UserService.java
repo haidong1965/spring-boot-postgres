@@ -7,6 +7,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 public class UserService implements InitializingBean, DisposableBean {
@@ -31,7 +32,9 @@ public class UserService implements InitializingBean, DisposableBean {
     public User createUser(String username, String role,  String rawPassword) {
         // 1. Check for uniqueness (Crucial validation step)
         if (userRepository.findByName(username) != null) {
-            throw new IllegalArgumentException("Error: Username '" + username + "' is already taken.");
+        	System.out.println("++++++++ " + username + " ALREADY EXISTS IN DATABASE +++++++");
+        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
         }
 
         // 2. HASH THE PASSWORD using BCrypt

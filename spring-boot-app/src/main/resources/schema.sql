@@ -25,6 +25,25 @@ CREATE TABLE IF NOT EXISTS user_food (
     volumn INT
 );
 
+-- Create the audit table
+CREATE TABLE IF NOT EXISTS audit (
+    -- Primary key using PostgreSQL's auto-incrementing big integer
+    id BIGSERIAL PRIMARY KEY,
+    
+    -- The actual log message (TEXT has no length limit in Postgres)
+    message TEXT NOT NULL,
+    
+    -- Timestamp of the event. TIMESTAMPTZ is recommended for audit logs 
+    -- to prevent timezone ambiguity across different server regions.
+    audit_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    -- The severity level (e.g., 'INFO', 'WARN', 'ERROR', 'DEBUG')
+    auditlevel VARCHAR(50) NOT NULL
+);
+
+-- Optional but highly recommended: Add indexes for common query patterns
+-- Audit logs are frequently queried by date ranges or filtered by level
+
 /*
 CREATE TABLE IF NOT EXISTS user_food (
     id BIGSERIAL PRIMARY KEY,

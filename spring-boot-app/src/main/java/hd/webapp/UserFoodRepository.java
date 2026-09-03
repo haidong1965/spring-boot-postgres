@@ -13,7 +13,6 @@ interface UserFoodRepository extends JpaRepository<UserFood, Long> {
 	List<UserFood> findByUserId(Long userId);
 	
 	@Modifying
-    @Transactional
     // Notice we use "uf.userId" (Java field), NOT "uf.user_id" (DB column)
     @Query("DELETE FROM UserFood uf WHERE uf.userId = :userId")
     void deleteAllByUserId(@Param("userId") Long userId);

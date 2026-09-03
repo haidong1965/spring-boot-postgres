@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,20 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional 
 public class UserFoodControllerTest {
 	
 	private final UserFoodRepository userFoodRepository;
@@ -36,8 +29,6 @@ public class UserFoodControllerTest {
 	private final FoodService foodService;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JwtService jwtService;
-
     @Autowired
     public UserFoodControllerTest(
             UserFoodRepository userFoodRepository,
@@ -50,7 +41,6 @@ public class UserFoodControllerTest {
         this.userService = userService;
         this.foodService = foodService;
         this.mockMvc = mockMvc;
-        this.jwtService = jwtService;
     }
      
      @Test
