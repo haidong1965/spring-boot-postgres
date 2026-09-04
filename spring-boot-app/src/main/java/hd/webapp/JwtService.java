@@ -4,6 +4,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.IOException;
 
@@ -102,6 +105,7 @@ public class JwtService {
 		return jwtToken;
 	}
 
+	@Transactional
 	public boolean verifyToken(String token) throws Exception {
 		URL resourceURL = getClass().getClassLoader().getResource("authz.pub");
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());

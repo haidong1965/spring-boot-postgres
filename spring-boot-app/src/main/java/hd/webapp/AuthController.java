@@ -10,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.*;
 
 @RestController
 @RequestMapping("/")
@@ -106,7 +109,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/create")
-	@Transactional
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.REPEATABLE_READ)
 	public ResponseEntity<String> addNewUser(@RequestParam("name") String name, @RequestParam("token") String token)
 			throws Exception {
 		String password = jwtService.extractSubject(token);
@@ -139,6 +142,7 @@ public class AuthController {
 	}
 
 	@DeleteMapping("/delete/{id}")
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.REPEATABLE_READ)
 	public ResponseEntity<Void> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Long id) throws Exception {
 		System.out.println("++++++++++++++ deleteUser " + id + " ++++++++++++++");

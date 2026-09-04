@@ -6,6 +6,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -58,6 +59,7 @@ public class UserService implements InitializingBean, DisposableBean {
 		return id > 7;
 	}
     
+	@Transactional(readOnly = true)
     public User getUserByName(String username) {
     	User user = userRepository.findByName(username);
         if (user == null) {
@@ -76,6 +78,7 @@ public class UserService implements InitializingBean, DisposableBean {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
+    @Transactional(propagation = Propagation.NESTED)
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
 		userFoodRepository.deleteAllByUserId(id);
