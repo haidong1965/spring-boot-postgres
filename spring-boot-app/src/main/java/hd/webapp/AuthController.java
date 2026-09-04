@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +37,8 @@ import org.springframework.transaction.annotation.*;
 @RestController
 @RequestMapping("/")
 public class AuthController {
+	
+    private final ObjectMapper objectMapper;
 
 	@Value("${server.port}")
 	private String serverPort;
@@ -49,12 +54,13 @@ public class AuthController {
 	public final AuditService auditService;
 
 	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
-			EmailService emailService, UserSessionTracker tracker, AuditService auditService) {
+			EmailService emailService, UserSessionTracker tracker, AuditService auditService, ObjectMapper objectMapper) {
 		this.userService = userService;
 		this.jwtService = jwtService;
 		this.emailService = emailService;
 		this.tracker = tracker;
 		this.auditService = auditService;
+		this.objectMapper = objectMapper;
 	}
 
 	@GetMapping("/")
@@ -102,8 +108,7 @@ public class AuthController {
 
 			LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url,
 					request.getName());
-			Gson gson = new Gson();
-			return new ResponseEntity<>(gson.toJson(response), HttpStatus.OK);
+			return new ResponseEntity<>( objectMapper.writeValueAsString(response), HttpStatus.OK);
 		}
 		return new ResponseEntity<>("incorrect username or password", HttpStatus.FORBIDDEN);
 	}
