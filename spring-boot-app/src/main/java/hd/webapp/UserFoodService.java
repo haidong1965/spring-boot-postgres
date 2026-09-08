@@ -1,5 +1,6 @@
 package hd.webapp;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ public class UserFoodService {
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
+		System.out.println("nnnnnnnnnnnnnnnnnnnn " + SecurityContextHolder.getContext().getAuthentication().getName() + " nnnnnnnnnnnnnnnnnnn");
 		userFoodRepository.save(userFood);
 		return true;
 	}
