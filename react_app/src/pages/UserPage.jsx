@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 import Select from 'react-select';
 import LoginPage from './LoginPage';
 import apiClient from '../api/apiClient';
-import axios from 'axios';
 
 const UserPage = () => {
     const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
@@ -34,7 +33,7 @@ const UserPage = () => {
         console.log("--- Initiating Logout Process ---" + user.name + " token " + token);
 		
 		try {
-			 const response = await axios.post("https://2.106.164.55:8445/api/auth/logout",  {username: user.name},
+			 const response = await apiClient.post("/api/auth/logout",  {username: user.name},
 				            {
 			                 headers: {
 			                     'Content-Type': 'application/json',
