@@ -13,6 +13,8 @@ import org.springframework.core.io.ResourceLoader;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.Gson;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.transaction.annotation.*;
 
@@ -88,12 +91,21 @@ public class AuthController {
 		}
 		return null;
 	}
+	
+	@PostMapping("/api/auth/logout")
+	public ResponseEntity<String> logout(@RequestBody String username) throws Exception {
+		System.out.println("!!!!!!!!!!!!!!!! logout !!!!!!!!!!!!!!!!!!!!!");
+		//log.info("**** logout session ID:" +  session.getId() + " ****");
+		//tracker.unregisterSession(session.getId());
+		return new ResponseEntity<>( "logout sussessfully.", HttpStatus.OK);
+	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpSession session) throws Exception {
+	public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpServletRequest servRequest, HttpSession session) throws Exception {
 
 		String url = "";
-		log.info("**** login session ID:" + session.getId() + " ****");
+		log.info("**** login session ID:" +  session.getId() + " ****");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			User user = userService.getUserByName(request.getName());
 			if (user.getRole().equalsIgnoreCase("ADMIN"))
@@ -101,11 +113,15 @@ public class AuthController {
 			else
 				url = "/users/" + user.getId();
 			
+			
+			
+			tracker.registerSession(session.getId(), auth.getName(),  getClientIp(servRequest),  servRequest.getHeader("User-Agent"));
+			/*
 			tracker.setSessionId(session.getId());
 			tracker.setUsername(user.getName());
 			tracker.setLoginTime(LocalDateTime.now());
 			tracker.logActivity("User logged in");
-
+            */
 			LoginResponse response = new LoginResponse(true, jwtService.generateToken(request.getName()), url,
 					request.getName());
 			return new ResponseEntity<>( objectMapper.writeValueAsString(response), HttpStatus.OK);
@@ -164,11 +180,12 @@ public class AuthController {
 		return null;
 	}
 
+	/*
 	@GetMapping("/session/activity")
 	public List<String> getActivity() {
 		tracker.logActivity("Viewed activity log");
 		return tracker.getActivityLog();
-	}
+	}*/
 
 	static class SignupRequest {
 		private String username;
@@ -211,5 +228,31 @@ public class AuthController {
 		public void setPassword(String password) {
 			this.password = password;
 		}
+	}
+	
+	public static String getClientIp(HttpServletRequest request) {
+	    String[] headers = {
+	        "X-Forwarded-For",
+	        "Proxy-Client-IP",
+	        "WL-Proxy-Client-IP",
+	        "HTTP_X_FORWARDED_FOR",
+	        "HTTP_X_FORWARDED",
+	        "HTTP_X_CLUSTER_CLIENT_IP",
+	        "HTTP_CLIENT_IP",
+	        "HTTP_FORWARDED_FOR",
+	        "HTTP_FORWARDED",
+	        "HTTP_VIA",
+	        "REMOTE_ADDR"
+	    };
+
+	    for (String header : headers) {
+	        String ip = request.getHeader(header);
+	        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+	            // X-Forwarded-For can contain multiple IPs; take the first
+	            return ip.split(",")[0].trim();
+	        }
+	    }
+
+	    return request.getRemoteAddr();
 	}
 }

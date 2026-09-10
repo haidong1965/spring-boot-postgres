@@ -19,7 +19,7 @@ public class UserFoodService {
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
-		System.out.println("nnnnnnnnnnnnnnnnnnnn " + SecurityContextHolder.getContext().getAuthentication().getName() + " nnnnnnnnnnnnnnnnnnn");
+		System.out.println("xxxxxxxxxxxxxxxx " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString() + " xxxxxxxxxxxxxxxxxx");
 		userFoodRepository.save(userFood);
 		return true;
 	}

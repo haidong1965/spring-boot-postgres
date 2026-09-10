@@ -41,7 +41,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 // 2. If username is found and no authentication exists yet
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    
                     // Create Authentication object
                     // Note: We pass an empty list of authorities here. 
                     // If your JwtService extracts roles, add them here.
@@ -49,8 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             username, 
                             null, 
                             new ArrayList<>() 
-                    );
-                    
+                    ); 
                     // Set details if needed (e.g., IP address)
                     authToken.setDetails(new org.springframework.security.web.authentication.WebAuthenticationDetailsSource().buildDetails(request));
                     // 3. Set the context

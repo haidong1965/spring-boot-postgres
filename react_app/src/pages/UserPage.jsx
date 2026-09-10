@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import Select from 'react-select';
 import LoginPage from './LoginPage';
 import apiClient from '../api/apiClient';
+import axios from 'axios';
 
 const UserPage = () => {
     const apiClientUrl = import.meta.env.VITE_API_CLIENT_URL;
@@ -28,8 +29,26 @@ const UserPage = () => {
 
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        console.log("--- Initiating Logout Process ---");
+    const handleLogout = async () => {
+		const token = getToken();
+        console.log("--- Initiating Logout Process ---" + user.name + " token " + token);
+		
+		try {
+			 const response = await axios.post("https://2.106.164.55:8445/api/auth/logout",  {username: user.name},
+				            {
+			                 headers: {
+			                     'Content-Type': 'application/json',
+			                     'Authorization': `Bearer ${token}`,
+			                     'X-XSRF-TOKEN': csrfToken
+			                 },
+			                 withCredentials: true
+			             });
+			 console.log(response);
+			 console.log("--- Post Logout Done ---");
+		   } catch (err) {
+		     console.error('Logout request failed:', err);
+		   }
+		
         removeToken();
         console.log("Token successfully cleared.");
         navigate('/login', { replace: true });
