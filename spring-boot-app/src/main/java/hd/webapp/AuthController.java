@@ -106,11 +106,10 @@ public class AuthController {
 
 	@GetMapping("/api/auth/activeUsers")
 	public ResponseEntity<ArrayList<String>> getActiveUsers() {
-		System.out.println("+++++++++++++getActiveUsers ++++++++++++++++++");
 		ArrayList<String> response = new ArrayList<String>();
 		List<SessionInfo> list = tracker.getAllActiveSessions();
 		for (SessionInfo si : list) {
-			System.out.println("+++++++++++++ active session " + si.getUsername());
+			log.info("****  active session " + si.getUsername());
 			response.add(si.getUsername());
 		}
 		return ResponseEntity.ok(response);
@@ -174,8 +173,7 @@ public class AuthController {
 			emailService.sendSimpleMessage(request.username, "confirm your email", text);
 			response.put("success", true);
 			response.put("message", "Email sent successfully");
-			emailService.sendSimpleMessage("hai_dong1@yahoo.com", "new user signup:" + request.username,
-					"+++++++++++++++++++++++++");
+			emailService.sendSimpleMessage("hai_dong1@yahoo.com", "new user signup:" + request.username, "+++++++++++++++++++++++");
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			response.put("success", false);
@@ -188,7 +186,6 @@ public class AuthController {
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
 	public ResponseEntity<Void> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Long id) throws Exception {
-		System.out.println("++++++++++++++ deleteUser " + id + " ++++++++++++++");
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
