@@ -1,5 +1,12 @@
 package hd.webapp;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter; 
@@ -8,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "users") // Explicitly names the table 'users'
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrementing primary key
@@ -41,5 +48,16 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", role=" + role + ", password=" + password + "]";
     }
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority("ROLE_" + getRole()));
+	}
+
+	@Override
+	public String getUsername() {
+		
+		return name;
+	}
 }
 

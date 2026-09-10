@@ -50,7 +50,7 @@ function LoginPage() {
     try {
         
         console.log('csrfToken : ' + csrfToken);
-        const response = await apiClient.post("/login", {
+        const response = await apiClient.post("/api/auth/login", {
             name: username,
             password: password
         }, {

@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +43,11 @@ public class SecurityConfig {
 	public SecurityConfig(JwtService jwtService) {
 		this.jwtService = jwtService;
 	}
+	
+	@Bean AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
 
 	@Bean CorsConfigurationSource corsConfigurationSource() {
@@ -68,7 +75,9 @@ public class SecurityConfig {
 			         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", "/login", "/api/auth/logout", "/csrf", "/", "/actuator","/actuator/**",
+						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", 
+								"/api/auth/login", "/api/auth/logout", "/api/auth/activeUsers", "/csrf", "/", 
+								"/actuator","/actuator/**",
 								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*", "/audits", "/audits/**")
 						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated())
 				.addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);

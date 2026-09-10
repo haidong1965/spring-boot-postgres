@@ -14,13 +14,10 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 public class UserSessionTracker {
     
-    private String sessionId;
-    private String username;
-    private LocalDateTime loginTime;
-    
-    private final Map<String, SessionInfo> sessions = new ConcurrentHashMap<>();
+    private static Map<String, SessionInfo> sessions = new ConcurrentHashMap<>();
     
     public void registerSession(String sessionId, String username, String ip, String userAgent) {
+    	System.out.println("+++++++ registerSession : " + username);
         sessions.put(sessionId, new SessionInfo(
             sessionId, username, ip, userAgent,
             Instant.now(), true
@@ -32,6 +29,16 @@ public class UserSessionTracker {
     }
 
     public List<SessionInfo> getAllActiveSessions() {
+    	List<SessionInfo> active = new ArrayList<SessionInfo>();
+    	if(sessions.isEmpty())
+    	    System.out.println("+++++++ empty map +++++++++++++++");
+    	sessions.forEach((key, value) -> {
+    		active.add(value);
+    		System.out.println("+++++++ " + value.getUserAgent());
+    	});
+    	//sessions.forEach((value, key) => {
+    	//	active.add(value); // Alice, Bob, Charlie
+    	//	});
         return new ArrayList<>(sessions.values());
     }
 
