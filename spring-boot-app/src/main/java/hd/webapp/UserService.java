@@ -78,7 +78,8 @@ public class UserService implements InitializingBean, DisposableBean {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
-    @Transactional(propagation = Propagation.NESTED)
+    //@Transactional(propagation = Propagation.NESTED)
+    @Transactional
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
 		userFoodRepository.deleteAllByUserId(id);

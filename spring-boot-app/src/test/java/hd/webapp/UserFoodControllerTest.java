@@ -15,18 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test") 
+@Transactional
 public class UserFoodControllerTest {
 	
 	private final UserFoodRepository userFoodRepository;
 	private final UserService userService;
 	private final FoodService foodService;
+	@Autowired
+	FoodRepository foodRepository;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
@@ -45,7 +52,10 @@ public class UserFoodControllerTest {
      
      @Test
      void testAddUserFood() throws JsonProcessingException, Exception {
-    	 User user1 = userService.getUserByName("mvctest@yahoo.com");
+    	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
+    	 foodRepository.deleteAll();
+ 		 foodRepository.flush();
+ 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
@@ -93,7 +103,10 @@ public class UserFoodControllerTest {
      
      @Test
      void testDeleteUserFood() throws JsonProcessingException, Exception {
-    	 User user1 = userService.getUserByName("mvctest@yahoo.com");
+    	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
+    	 foodRepository.deleteAll();
+ 		 foodRepository.flush();
+ 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood uf = new UserFood(user1.getId(), food1.getId(), 1, 1);
     	 /*uf.setEnergy(food1.getEnergy());

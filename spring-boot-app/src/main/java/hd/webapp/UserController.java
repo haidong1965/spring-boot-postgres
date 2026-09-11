@@ -19,7 +19,7 @@ class UserController {
 
 	@GetMapping("/{requestedId}")
 	private ResponseEntity<User> findById(@PathVariable Long requestedId) {
-		User user = userService.getUserRepository().getReferenceById(requestedId);
+		User user = userService.getUserReferenceById(requestedId);
 		if (user != null) {
 			return ResponseEntity.ok(user);
 		} else {
