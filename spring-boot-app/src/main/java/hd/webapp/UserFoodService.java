@@ -1,7 +1,9 @@
 package hd.webapp;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -27,5 +29,11 @@ public class UserFoodService {
 	@Transactional
 	public void deleteById(Long id) {
 		userFoodRepository.deleteById(id);	
+	}
+
+	@Transactional
+	//@Transactional(propagation = Propagation.NESTED)
+    void deleteAllByUserId(@Param("userId") Long userId) {
+		userFoodRepository.deleteAllByUserId(userId);
 	}
 }
