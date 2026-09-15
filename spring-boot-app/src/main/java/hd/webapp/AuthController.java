@@ -51,6 +51,8 @@ import org.springframework.transaction.annotation.*;
 public class AuthController {
 
 	private final ObjectMapper objectMapper;
+	private final CustomSpringEventPublisher publisher;
+
 
 	@Value("${server.port}")
 	private String serverPort;
@@ -68,7 +70,7 @@ public class AuthController {
 
 	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
 			EmailService emailService, UserSessionTracker tracker, AuditService auditService, ObjectMapper objectMapper,
-			AuthenticationManager authenticationManager) {
+			AuthenticationManager authenticationManager, CustomSpringEventPublisher publisher) {
 		this.userService = userService;
 		this.jwtService = jwtService;
 		this.emailService = emailService;
@@ -76,6 +78,7 @@ public class AuthController {
 		this.auditService = auditService;
 		this.objectMapper = objectMapper;
 		this.authenticationManager = authenticationManager;
+		this.publisher = publisher;
 	}
 
 	@GetMapping("/")
@@ -117,6 +120,7 @@ public class AuthController {
 
 	@PostMapping("/api/auth/logout")
 	public ResponseEntity<String> logout(@RequestBody String username, HttpSession session) throws Exception {
+		publisher.publishEvent("user " + username + " logout event");
 		log.info("**** logout session ID:" + session.getId() + " ****");
 		tracker.unregisterSession(session.getId());
 		return new ResponseEntity<>("logout sussessfully.", HttpStatus.OK);
@@ -126,6 +130,9 @@ public class AuthController {
 	public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpServletRequest servRequest,
 			HttpSession session) throws Exception {
 		String url = "";
+		
+		publisher.publishEvent("user " + request.getName() + " login ");
+		
 		log.info("**** login session ID:" + session.getId() + " ****");
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			Authentication authentication = authenticationManager.authenticate(
@@ -164,6 +171,9 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
+		
+		publisher.publishEvent("--------- user " + request.username + " signup event -----------");
+		
 		String token = jwtService.generateToken(request.password);
 		String text = "You have signup with email address : \n" + request.username
 				+ "\nPlease confirm it by click on link : \nhttps://" + serverPublic + ":" + serverPort
