@@ -13,6 +13,7 @@ const ListPage = () => {
 
     // State to hold the list of users
     const [users, setUsers] = useState([]);
+	const [activeUsers, setActiveUsers] = useState([]);
 
     // State to manage any errors during fetching
     const [error, setError] = useState(null);
@@ -32,6 +33,19 @@ const ListPage = () => {
 
     }, []);
 
+	
+	const fetchActiveUsers = useCallback(async () => {
+		console.log("--- Initiating fetchActiveUsers Process ---");
+	    try {
+	        const response = await apiClient.get('/api/auth/activeUsers');
+	        setActiveUsers(response.data);
+			console.log("--- fetchActiveUsers : " + response.data);
+	    } catch (fetchError) {
+	        console.error("Fetching error:", fetchError);
+	        setError('Failed to load users. Please check the server is running.');
+	    }
+
+	    }, []);
 
     const handleLogout = () => {
         console.log("--- Initiating Logout Process ---");
@@ -80,9 +94,13 @@ const ListPage = () => {
     }, []);
 
     useEffect(() => {
-        fetchUsers();   // TODO: fix it later maybe use Query instead of useEffet
+        fetchUsers();   // TODO: fix it later maybe use Query instead of useEffet 
     }, [fetchUsers]);
 
+	useEffect(() => {
+	    fetchActiveUsers(); 
+	}, [fetchActiveUsers]);
+	
     return (
         <div className="page-container">
             {/* --- LOGOUT BUTTON ADDITION --- */}
@@ -110,7 +128,20 @@ const ListPage = () => {
                     </ul>
                 )}
             </div>
-
+			<div>
+			      <h2>Active Users ({activeUsers.length})</h2>
+				  {Array.isArray(activeUsers) && activeUsers.length > 0 ? (
+			      <ul>
+			        {activeUsers.map((user) => (
+			          // The 'key' prop is required by React for lists
+			          <li key={user}>{user}</li> 
+			        ))}
+			      </ul>):(
+					<p>No active users found in the system.</p>
+				  )}
+			      
+			    </div>
+			
         </div>
 
     );

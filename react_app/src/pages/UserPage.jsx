@@ -28,8 +28,26 @@ const UserPage = () => {
 
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        console.log("--- Initiating Logout Process ---");
+    const handleLogout = async () => {
+		const token = getToken();
+        console.log("--- Initiating Logout Process ---" + user.name + " token " + token);
+		
+		try {
+			 const response = await apiClient.post("/api/auth/logout",  {username: user.name},
+				            {
+			                 headers: {
+			                     'Content-Type': 'application/json',
+			                     'Authorization': `Bearer ${token}`,
+			                     'X-XSRF-TOKEN': csrfToken
+			                 },
+			                 withCredentials: true
+			             });
+			 console.log(response);
+			 console.log("--- Post Logout Done ---");
+		   } catch (err) {
+		     console.error('Logout request failed:', err);
+		   }
+		
         removeToken();
         console.log("Token successfully cleared.");
         navigate('/login', { replace: true });

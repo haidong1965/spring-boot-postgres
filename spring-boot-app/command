@@ -1,0 +1,9 @@
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+
+export ADMIN_NAME=admin@dietarydiary.com
+export ADMIN_PASSWOD=rpass
+
+docker-compose up -d
+docker-compose exec postgres psql -U postgres -d token_auth_db
+
+ psql -d my_webapp_db  -U app_user

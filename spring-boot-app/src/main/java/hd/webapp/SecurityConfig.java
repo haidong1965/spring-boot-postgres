@@ -1,20 +1,28 @@
 package hd.webapp;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import io.jsonwebtoken.security.Keys;
 
 @Configuration
 public class SecurityConfig {
@@ -27,6 +35,19 @@ public class SecurityConfig {
 	private String serverPublic;
 	@Value("${server.private}")
 	private String serverPrivate;
+	@Value("${jwt.secret}")
+	private String jwtSecret;
+	
+	private final JwtService jwtService;
+	
+	public SecurityConfig(JwtService jwtService) {
+		this.jwtService = jwtService;
+	}
+	
+	@Bean AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
 
 	@Bean CorsConfigurationSource corsConfigurationSource() {
@@ -54,9 +75,13 @@ public class SecurityConfig {
 			         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", "/login", "/csrf", "/",
-								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*")
-						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated());
+						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", 
+								"/api/auth/login", "/api/auth/logout", "/api/auth/activeUsers", "/csrf", "/", 
+								"/actuator","/actuator/**",
+								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*", "/audits", "/audits/**")
+						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated())
+				.addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+;
 
 		return http.build();
 	}

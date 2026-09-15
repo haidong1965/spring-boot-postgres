@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,10 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +26,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional 
+@ActiveProfiles("test") 
+@Transactional
 public class UserFoodControllerTest {
 	
 	private final UserFoodRepository userFoodRepository;
 	private final UserService userService;
 	private final FoodService foodService;
+	@Autowired
+	FoodRepository foodRepository;
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JwtService jwtService;
-
     @Autowired
     public UserFoodControllerTest(
             UserFoodRepository userFoodRepository,
@@ -51,12 +49,14 @@ public class UserFoodControllerTest {
         this.userService = userService;
         this.foodService = foodService;
         this.mockMvc = mockMvc;
-        this.jwtService = jwtService;
     }
      
      @Test
      void testAddUserFood() throws JsonProcessingException, Exception {
-    	 User user1 = userService.getUserByName("mvctest@yahoo.com");
+    	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
+    	 foodRepository.deleteAll();
+ 		 foodRepository.flush();
+ 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
     	 
@@ -65,7 +65,7 @@ public class UserFoodControllerTest {
          String formattedDate = today.format(formatter);
     	 
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
-    	 userFoodRequest1.setDate(formattedDate);
+    	 userFoodRequest1.setDate(today.toString());
          mockMvc.perform(post("/user_food/add")
         		 .with(csrf())
                  .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,7 @@ public class UserFoodControllerTest {
                  "foodId=" + userFood.getFoodId() +
                  ", userId=" + userFood.getUserId() + ", date=" + userFood.getDate()
              );
-             if(userService.getUserById(userFood.getUserId()).getId() == user1.getId()) {
+             if(userService.getUserReferenceById(userFood.getUserId()).getId() == user1.getId()) {
             	 existUser = true;
             	 break;
              }
@@ -108,15 +108,13 @@ public class UserFoodControllerTest {
      
      @Test
      void testDeleteUserFood() throws JsonProcessingException, Exception {
-    	 User user1 = userService.getUserByName("mvctest@yahoo.com");
+    	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
+    	 foodRepository.deleteAll();
+ 		 foodRepository.flush();
+ 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood uf = new UserFood(user1.getId(), food1.getId(), 1, 1);
-    	 uf.setEnergy(food1.getEnergy());
-    	 uf.setProtein(food1.getProtein());
-    	 uf.setCalcium(food1.getCalcium());
-    	 uf.setFiber(food1.getFiber());
-    	 uf.setDate(LocalDate.now().toString());
-    	 uf.setName(food1.getName());
+
     	 userFoodRepository.save(uf);
     	 mockMvc.perform(delete("/user_food/" + uf.getId())
         		 .with(csrf()))

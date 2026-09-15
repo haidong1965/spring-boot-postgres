@@ -20,6 +20,35 @@ CREATE TABLE IF NOT EXISTS user_food (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     food_id BIGINT NOT NULL,
+    date VARCHAR(150) NOT NULL,
+    unit SMALLINT,
+    volumn INT
+);
+
+-- Create the audit table
+CREATE TABLE IF NOT EXISTS audit (
+    -- Primary key using PostgreSQL's auto-incrementing big integer
+    id BIGSERIAL PRIMARY KEY,
+    
+    -- The actual log message (TEXT has no length limit in Postgres)
+    message TEXT NOT NULL,
+    
+    -- Timestamp of the event. TIMESTAMPTZ is recommended for audit logs 
+    -- to prevent timezone ambiguity across different server regions.
+    audit_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    -- The severity level (e.g., 'INFO', 'WARN', 'ERROR', 'DEBUG')
+    auditlevel VARCHAR(50) NOT NULL
+);
+
+-- Optional but highly recommended: Add indexes for common query patterns
+-- Audit logs are frequently queried by date ranges or filtered by level
+
+/*
+CREATE TABLE IF NOT EXISTS user_food (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    food_id BIGINT NOT NULL,
     name VARCHAR(150) NOT NULL,
     energy INT NOT NULL,
     protein DECIMAL(7, 2),
@@ -29,7 +58,7 @@ CREATE TABLE IF NOT EXISTS user_food (
     unit SMALLINT,
     volumn INT
 );
-
+*/
 
 insert into foods(name, energy, protein, fiber, calcium, type) values ('egg',72,6.3,0,21.5,1) ON CONFLICT (name) DO NOTHING;
 insert into foods(name, energy, protein, fiber, calcium, type) values ('oatmeal',389,16.9,10.6,40.0,0) ON CONFLICT (name) DO NOTHING;

@@ -19,7 +19,7 @@ class UserController {
 
 	@GetMapping("/{requestedId}")
 	private ResponseEntity<User> findById(@PathVariable Long requestedId) {
-		User user = userService.getUserRepository().getReferenceById(requestedId);
+		User user = userService.getUserReferenceById(requestedId);
 		if (user != null) {
 			return ResponseEntity.ok(user);
 		} else {
@@ -34,7 +34,6 @@ class UserController {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
-			System.out.println("++++++++++++++ token : " + token);
 		}
 		if (token != null) {
 			if (jwtService.verifyToken(token))

@@ -25,6 +25,11 @@ public class FoodService {
 		}
 		return food;
 	}
+	
+	public Food getFoodReferenceById(Long id) {
+		return foodRepository.getReferenceById(id);
+	}
+	
 
 	public List<Food> getAllFoodsSortedByName() {
 		 return foodRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));

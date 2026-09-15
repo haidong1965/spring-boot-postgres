@@ -3,18 +3,16 @@ package hd.webapp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component 
+@Profile("!test") 
 public class InitialUserDataSeeder implements CommandLineRunner {
 	
-	@Value("${admin.name}")
-    private String adminName;
-	@Value("${admin.password}")
-    private String adminPassword;
 	
 	@Value("#{{environment.OWNER?:'UNKNOWN'}}")
 	private String owner;
@@ -23,7 +21,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	private String expireLevel;
 	
 	@Autowired
-    private Environment env;
+    public Environment env;
 	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -35,18 +33,13 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		System.out.println("+++++++++++ Owner name : " + owner);
-		System.out.println("+++++++++++ expire level :" + expireLevel);
-		
 		String myVar = env.getProperty("ADMIN_NAME");
-		System.out.println("+++++++++++ admin user name : " + myVar);
-		
+		String mypass = env.getProperty("ADMIN_NAME");
 		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
-		String hashedPassword = passwordEncoder.encode(adminPassword);
-		if (userRepository.findByName(adminName) == null) {
-			User adminUser = new User(adminName, role, hashedPassword);
+		String hashedPassword = passwordEncoder.encode(mypass);
+		if (userRepository.findByName(myVar) == null) {
+			User adminUser = new User(myVar, role, hashedPassword);
 			userRepository.save(adminUser);
 		}
 

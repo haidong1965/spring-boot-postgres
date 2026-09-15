@@ -1,5 +1,6 @@
 package hd.webapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -37,9 +38,8 @@ class UserFoodController {
 		return ResponseEntity.ok(userFood.getId());
 	}
 
-	@SuppressWarnings("deprecation")
 	@GetMapping("/user/{requestedId}")
-	private ResponseEntity<List<UserFood>> findByUserId(
+	private ResponseEntity<List<UserFoodDTO>> findByUserId(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId)
 			throws Exception {
 		String token = null;
@@ -47,10 +47,30 @@ class UserFoodController {
 			token = authHeader.substring(7);
 		}
 		if (token != null) {
-			User user = userService.getUserRepository().getById(requestedId);
 			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByUserId(requestedId);
+			List<UserFoodDTO> userFoodsDTO = new ArrayList<UserFoodDTO>();
+			for(UserFood uf : userFoods) {
+				double weight = 1.0;
+				if(uf.getUnit() == 0)
+					weight = 100.0;
+				Long id = uf.getId();
+				Food foodReference = foodService.getFoodReferenceById(uf.getFoodId());
+				UserFoodDTO userFoodDTO = new UserFoodDTO(
+						id,
+						uf.getUserId(),
+						foodReference.getName(),
+						(int)(foodReference.getEnergy()*uf.getVolumn()/weight),
+						foodReference.getProtein()*uf.getVolumn()/weight,
+						foodReference.getFiber()*uf.getVolumn()/weight,
+						foodReference.getCalcium()*uf.getVolumn()/weight,
+						uf.getDate(),
+						uf.getUnit(),
+						uf.getVolumn()
+						);
+				userFoodsDTO.add(userFoodDTO);
+			}
 			if (jwtService.verifyToken(token))
-				return ResponseEntity.ok(userFoods);
+				return ResponseEntity.ok(userFoodsDTO);
 		}
 		return null;
 	}
