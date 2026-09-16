@@ -77,8 +77,8 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", 
 								"/api/auth/login", "/api/auth/logout", "/api/auth/activeUsers", "/csrf", "/", 
-								"/actuator","/actuator/**",
-								"/food/list", "/validate", "/user_food/*", "/user_food/*/*", "/file/*", "/file/*/*", "/audits", "/audits/**")
+								"/actuator/**",
+								"/food/list", "/validate", "/user_food/*", "/user_food/**", "/file/*", "/file/**", "/audits", "/audits/**")
 						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated())
 				.addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 ;
