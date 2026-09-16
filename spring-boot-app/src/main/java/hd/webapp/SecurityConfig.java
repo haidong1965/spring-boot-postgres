@@ -39,8 +39,11 @@ public class SecurityConfig {
 	private String jwtSecret;
 	
 	private final JwtService jwtService;
+	private final  CustomUserDetailsService customUserDetailsService;
+
 	
-	public SecurityConfig(JwtService jwtService) {
+	public SecurityConfig(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
+		this.customUserDetailsService = customUserDetailsService;
 		this.jwtService = jwtService;
 	}
 	
@@ -75,12 +78,13 @@ public class SecurityConfig {
 			         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/signup", "/delete/*", "/create", "/users/*", 
-								"/api/auth/login", "/api/auth/logout", "/api/auth/activeUsers", "/csrf", "/", 
+						.requestMatchers("/users/list", "/delete/*", "/api/auth/activeUsers").hasRole("ADMIN")
+						.requestMatchers("/signup", "/create", "/users/*", 
+								"/api/auth/login", "/api/auth/logout", "/csrf", "/", 
 								"/actuator/**",
 								"/food/list", "/validate", "/user_food/*", "/user_food/**", "/file/*", "/file/**", "/audits", "/audits/**")
 						.permitAll().requestMatchers("/api/public/**").permitAll().anyRequest().authenticated())
-				.addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(new JwtAuthFilter(jwtService, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 ;
 
 		return http.build();

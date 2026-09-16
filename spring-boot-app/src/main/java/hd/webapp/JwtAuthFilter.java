@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -14,9 +15,11 @@ import java.util.ArrayList;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final  CustomUserDetailsService customUserDetailsService;
 
-    public JwtAuthFilter(JwtService jwtService) {
+    public JwtAuthFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
         this.jwtService = jwtService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -38,21 +41,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // 1. Use YOUR service to validate and extract username
             if (jwtService.verifyToken(jwt)) {
                 String username = jwtService.extractSubject(jwt);
+                if (username != null) {
+                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-                // 2. If username is found and no authentication exists yet
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Create Authentication object
-                    // Note: We pass an empty list of authorities here. 
-                    // If your JwtService extracts roles, add them here.
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    // 2. If username is found and no authentication exists yet
+                    if(SecurityContextHolder.getContext().getAuthentication() == null) {
+                        // Create Authentication object
+                        // Note: We pass an empty list of authorities here. 
+                        // If your JwtService extracts roles, add them here.
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             username, 
                             null, 
-                            new ArrayList<>() 
-                    ); 
-                    // Set details if needed (e.g., IP address)
-                    authToken.setDetails(new org.springframework.security.web.authentication.WebAuthenticationDetailsSource().buildDetails(request));
-                    // 3. Set the context
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                            userDetails.getAuthorities() 
+                        ); 
+                        // Set details if needed (e.g., IP address)
+                        authToken.setDetails(new org.springframework.security.web.authentication.WebAuthenticationDetailsSource().buildDetails(request));
+                        // 3. Set the context
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
             }
         } catch (Exception e) {
