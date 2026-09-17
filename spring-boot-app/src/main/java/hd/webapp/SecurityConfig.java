@@ -57,6 +57,7 @@ public class SecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOriginPatterns(Arrays.asList(
 				"https://" + serverPublic + ":" + serverPort, 
+				"http://127.0.0.1:8081", 
 				"https://" + serverPublic + ":" + clientPort
 		));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
