@@ -18,13 +18,17 @@ public class CorsConfig implements WebMvcConfigurer {
 	private String serverPublic;
 	@Value("${server.private}")
 	private String serverPrivate;
+	@Value("${management.server.address}")
+	private String actuatorAddress;
+	@Value("${management.server.port}")
+	private String actuatorPort;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) { 
     	registry.addMapping("/**") 
                 .allowedOrigins(
                 		"https://" + serverPublic + ":" + serverPort, 
-                		"http://127.0.0.1:8081", 
+                		"http://"  + actuatorAddress + ":" + actuatorPort, // actuator specific
         				"https://" + serverPublic + ":" + clientPort)     
         		.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);

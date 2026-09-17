@@ -37,6 +37,10 @@ public class SecurityConfig {
 	private String serverPrivate;
 	@Value("${jwt.secret}")
 	private String jwtSecret;
+	@Value("${management.server.address}")
+	private String actuatorAddress;
+	@Value("${management.server.port}")
+	private String actuatorPort;
 	
 	private final JwtService jwtService;
 	private final  CustomUserDetailsService customUserDetailsService;
@@ -57,7 +61,7 @@ public class SecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOriginPatterns(Arrays.asList(
 				"https://" + serverPublic + ":" + serverPort, 
-				"http://127.0.0.1:8081", 
+				"http://" + actuatorAddress + ":" + actuatorPort, // actuator specific
 				"https://" + serverPublic + ":" + clientPort
 		));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
