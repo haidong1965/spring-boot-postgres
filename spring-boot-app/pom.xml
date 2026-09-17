@@ -199,6 +199,15 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                     <!-- ✅ ADD THESE TWO LINES -->
+                     <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                     <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+        
+                     <!-- Optional: Generate a git.properties file -->
+                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                </configuration>
             </plugin>
 		</plugins>
 	</build>
