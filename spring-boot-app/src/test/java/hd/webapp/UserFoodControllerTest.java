@@ -1,6 +1,6 @@
 package hd.webapp;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -30,36 +30,42 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 public class UserFoodControllerTest {
 	
-	private final UserFoodRepository userFoodRepository;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
 	private final UserService userService;
+	private final UserFoodService userFoodService;
 	private final FoodService foodService;
-	@Autowired
-	FoodRepository foodRepository;
+	private final JwtService jwtService;
+
     private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
+    
+    private String jwtToken;
+    
+    @Autowired 
     public UserFoodControllerTest(
-            UserFoodRepository userFoodRepository,
+    		UserFoodService userFoodService,
             UserService userService,
             FoodService foodService,
             MockMvc mockMvc,
+          
             JwtService jwtService
     ) {
-        this.userFoodRepository = userFoodRepository;
         this.userService = userService;
         this.foodService = foodService;
+        this.userFoodService = userFoodService;
         this.mockMvc = mockMvc;
+        this.jwtService = jwtService;
     }
      
      @Test
      void testAddUserFood() throws JsonProcessingException, Exception {
     	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
-    	 foodRepository.deleteAll();
- 		 foodRepository.flush();
- 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
+    	 foodService.deleteAll();
+    	 foodService.add(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
+ 
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
-    	 
+    	 jwtToken = jwtService.generateToken(user1.getName());
     	 LocalDate today = LocalDate.now();
          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
          String formattedDate = today.format(formatter);
@@ -67,14 +73,15 @@ public class UserFoodControllerTest {
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
     	 userFoodRequest1.setDate(today.toString());
          mockMvc.perform(post("/user_food/add")
+        		 .header("Authorization", "Bearer " + jwtToken)
         		 .with(csrf())
                  .contentType(MediaType.APPLICATION_JSON)
                  .content(objectMapper.writeValueAsString(userFoodRequest1)))
                  .andExpect(status().isOk());
-         assertThat(!userFoodRepository.findAll().isEmpty());
+         assertFalse(userFoodService.findAll().isEmpty());
          
          
-         List<UserFood> userFoods = userFoodRepository.findAll();
+         List<UserFood> userFoods = userFoodService.findAll();
          boolean existUser = false;
 
          for (UserFood userFood : userFoods) {
@@ -109,14 +116,14 @@ public class UserFoodControllerTest {
      @Test
      void testDeleteUserFood() throws JsonProcessingException, Exception {
     	 User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
-    	 foodRepository.deleteAll();
- 		 foodRepository.flush();
- 		 foodRepository.save(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
+    	 foodService.deleteAll();
+    	 foodService.add(new Food("egg", 10, 10.0, 1.0, 10.0, 0));
     	 Food food1 = foodService.getFoodByName("egg");
     	 UserFood uf = new UserFood(user1.getId(), food1.getId(), 1, 1);
-
-    	 userFoodRepository.save(uf);
+    	 jwtToken = jwtService.generateToken(user1.getName());
+    	 userFoodService.add(uf);
     	 mockMvc.perform(delete("/user_food/" + uf.getId())
+    			 .header("Authorization", "Bearer " + jwtToken)
         		 .with(csrf()))
                  .andExpect(status().isNoContent()); 
      }

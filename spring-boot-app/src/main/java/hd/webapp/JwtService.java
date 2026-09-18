@@ -111,7 +111,7 @@ public class JwtService {
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = publkicKeyResource.getContentAsString(StandardCharsets.UTF_8);
 		PublicKey publicKey = loadPublicKeyFromPem(pemContent);
-
+		
 		if (Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token) != null) {
 			Date exDate = new Date(extractExpiration(token));
 			if (exDate.before(new Date()))
@@ -124,8 +124,8 @@ public class JwtService {
 	private PublicKey loadPublicKeyFromPem(String pemKeyString) throws Exception {
 		String cleanBase64 = pemKeyString;
 
-		cleanBase64 = pemKeyString.replaceAll("-----BEGIN PUBLIC KEY-----", "") // Remove start header
-				.replaceAll("-----END PUBLIC KEY-----", "") // Remove end footer
+		cleanBase64 = pemKeyString.replace("-----BEGIN PUBLIC KEY-----", "") // Remove start header
+				.replace("-----END PUBLIC KEY-----", "") // Remove end footer
 				.replaceAll("\\s+", "");
 		if (!cleanBase64.isEmpty()) {
 			byte[] decodedKeyBytes = Base64.getDecoder().decode(cleanBase64);
@@ -162,18 +162,14 @@ public class JwtService {
 		// 2. Generate a token for a sample user String userId = "hdo"; String token
 		String token = service.generateToken(userId);
 
-		System.out.println("\n===============================================");
 		System.out.println("✨ TOKEN GENERATION SUCCESSFUL ✨");
 		System.out.println("User Subject: " + userId);
 		System.out.println("Generated JWT (RS256):");
 		System.out.println(token);
-		System.out.println("===============================================");
 
 		// 3. Demonstrate verification (requires public key setup)
 		if (service.verifyToken(token)) {
-			System.out.println("\n===============================================");
 			System.out.println("✨ TOKEN VALIDATION SUCCESSFUL for subject : " + service.extractSubject(token) + " ✨");
-			System.out.println("\n===============================================");
 		}
 
 	}

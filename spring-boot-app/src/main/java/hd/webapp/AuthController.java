@@ -1,6 +1,5 @@
 package hd.webapp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,22 +7,13 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ResourceLoader;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -50,8 +37,7 @@ import org.springframework.transaction.annotation.*;
 @RequestMapping("/")
 public class AuthController {
 
-	private final ObjectMapper objectMapper;
-	private final CustomSpringEventPublisher publisher;
+	
 
 
 	@Value("${server.port}")
@@ -61,15 +47,19 @@ public class AuthController {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-	public final UserSessionTracker tracker;
-	public final UserService userService;
-	public final JwtService jwtService;
-	public final EmailService emailService;
-	public final AuditService auditService;
+	
+	private final UserService userService;
+	private final JwtService jwtService;
+	private final EmailService emailService;
+	private final UserSessionTracker tracker;
+	private final AuditService auditService;
 	private final AuthenticationManager authenticationManager;
+	private final ObjectMapper objectMapper;
+	private final CustomSpringEventPublisher publisher;
 
-	public AuthController(UserService userService, ResourceLoader resourceLoader, JwtService jwtService,
-			EmailService emailService, UserSessionTracker tracker, AuditService auditService, ObjectMapper objectMapper,
+    AuthController(UserService userService, JwtService jwtService,
+			EmailService emailService, UserSessionTracker tracker, 
+			AuditService auditService, ObjectMapper objectMapper,
 			AuthenticationManager authenticationManager, CustomSpringEventPublisher publisher) {
 		this.userService = userService;
 		this.jwtService = jwtService;

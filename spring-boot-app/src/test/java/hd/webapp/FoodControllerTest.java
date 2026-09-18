@@ -35,16 +35,23 @@ public class FoodControllerTest {
 	FoodRepository foodRepository;
 	
 	@Autowired
+	UserService userService;
+	
+	@Autowired
 	JwtService jwtService;
 	
 	private String validToken;
+	
+	private User user1;
 	
 	@BeforeEach
     void setUp() {
 		foodRepository.deleteAll();
 		foodRepository.flush();
 		foodRepository.save(new Food("food", 10, 10.0, 1.0, 10.0, 0));
-		validToken = jwtService.generateToken("user");
+		user1 = userService.createUser("test@yahoo.com", "USER", "1");
+		validToken = jwtService.generateToken(user1.getName());
+		
 		System.out.println("✅ Food count in setUp: " + foodRepository.count());
 	}
 	
@@ -52,6 +59,8 @@ public class FoodControllerTest {
     @WithMockUser(roles = "USER")
     @DisplayName("GET /food/list")
     void getAllFoods_asUser_returns200() throws Exception {
+		User user1 = userService.createUser("mvctest@yahoo.com", "USER", "1");
+		validToken = jwtService.generateToken(user1.getName());
         mockMvc.perform(get("/food/list")
             .header("Authorization", "Bearer " + validToken))
             .andDo(print())

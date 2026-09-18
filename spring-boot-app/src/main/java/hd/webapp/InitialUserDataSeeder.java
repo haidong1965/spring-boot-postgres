@@ -20,6 +20,9 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	@Value("#{${jwt.expiration} > 86400000 ? 'Long' : 'Short'}")
 	private String expireLevel;
 	
+	@Value("${password.dummy}")
+	private String passwordDummy;
+	
 	@Autowired
     public Environment env;
 	
@@ -46,7 +49,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		// test user
 		String name1 = "test@yahoo.com";
 		String role1 = "USER";
-		String rawPassword1 = "1"; // <-- CHANGE THIS!
+		String rawPassword1 = passwordDummy; 
 		String hashedPassword1 = passwordEncoder.encode(rawPassword1);
 		if (userRepository.findByName("test@yahoo.com") == null) {
 			User test = new User(name1, role1, hashedPassword1);
@@ -55,7 +58,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		// test mvc user
 		String name2 = "mvctest@yahoo.com";
 		String role2 = "USER";
-		String rawPassword2 = "1"; 
+		String rawPassword2 = passwordDummy; 
 		String hashedPassword2 = passwordEncoder.encode(rawPassword2);
 		if (userRepository.findByName("mvctest@yahoo.com") == null) {
 			User mvcTest = new User(name2, role2, hashedPassword2);
@@ -64,7 +67,7 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		
 		String dummy = "dummy";
 		String role3 = "USER";
-		String rawPassword3 = "1"; 
+		String rawPassword3 = passwordDummy; 
 		String hashedPassword3 = passwordEncoder.encode(rawPassword3);
 		if (userRepository.findByName(dummy) == null) {
 			User dummy1 = new User(dummy, role3, hashedPassword3);

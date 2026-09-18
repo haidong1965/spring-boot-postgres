@@ -38,4 +38,12 @@ public class FoodService {
 	public void deleteById(Long id) {
 		foodRepository.deleteById(id);
 	}
+
+	public void deleteAll() {
+		foodRepository.deleteAll();
+	}
+
+	public void add(Food food) {
+		foodRepository.save(food);
+	}
 }
