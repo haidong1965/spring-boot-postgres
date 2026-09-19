@@ -1,10 +1,8 @@
 package hd.webapp;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -38,7 +36,6 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		String myVar = env.getProperty("ADMIN_NAME");
 		String mypass = env.getProperty("ADMIN_PASSWORD");
-		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
 		if (userRepository.findByName(myVar) == null) {
 		    String hashedPassword = passwordEncoder.encode(mypass);
