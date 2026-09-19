@@ -2,6 +2,8 @@ package hd.webapp;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserFoodService {
 
+	private static final Logger log = LoggerFactory.getLogger(UserFoodService.class);
 	private final UserFoodRepository userFoodRepository;
 	public UserFoodRepository getUserFoodRepository() {
 		return userFoodRepository;
@@ -22,7 +25,7 @@ public class UserFoodService {
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
-		System.out.println("xxxxxxxxxxxxxxxx " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString() + " xxxxxxxxxxxxxxxxxx");
+		log.info("xxxxxxxxxxxxxxxx " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString() + " xxxxxxxxxxxxxxxxxx");
 		userFoodRepository.save(userFood);
 		return true;
 	}

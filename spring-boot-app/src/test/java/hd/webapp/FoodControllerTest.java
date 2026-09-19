@@ -1,7 +1,5 @@
 package hd.webapp;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,11 +14,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.Matchers.hasSize;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,8 +46,6 @@ public class FoodControllerTest {
 		foodRepository.save(new Food("food", 10, 10.0, 1.0, 10.0, 0));
 		user1 = userService.createUser("test@yahoo.com", "USER", "1");
 		validToken = jwtService.generateToken(user1.getName());
-		
-		System.out.println("✅ Food count in setUp: " + foodRepository.count());
 	}
 	
 	@Test

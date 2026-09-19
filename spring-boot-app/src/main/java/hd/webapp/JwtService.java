@@ -1,5 +1,7 @@
 package hd.webapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -26,6 +28,8 @@ import java.security.PublicKey;
 
 @Service
 public class JwtService {
+	
+	private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
 	private final ResourceLoader resourceLoader;
 
@@ -162,14 +166,14 @@ public class JwtService {
 		// 2. Generate a token for a sample user String userId = "hdo"; String token
 		String token = service.generateToken(userId);
 
-		System.out.println("✨ TOKEN GENERATION SUCCESSFUL ✨");
-		System.out.println("User Subject: " + userId);
-		System.out.println("Generated JWT (RS256):");
-		System.out.println(token);
+		log.info("✨ TOKEN GENERATION SUCCESSFUL ✨");
+		log.info("User Subject: " + userId);
+		log.info("Generated JWT (RS256):");
+		log.info(token);
 
 		// 3. Demonstrate verification (requires public key setup)
 		if (service.verifyToken(token)) {
-			System.out.println("✨ TOKEN VALIDATION SUCCESSFUL for subject : " + service.extractSubject(token) + " ✨");
+			log.info("✨ TOKEN VALIDATION SUCCESSFUL for subject : " + service.extractSubject(token) + " ✨");
 		}
 
 	}

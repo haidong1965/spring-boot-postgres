@@ -1,10 +1,14 @@
 package hd.webapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CustomSpringEventPublisher {
+	
+	private static final Logger log = LoggerFactory.getLogger(CustomSpringEventPublisher.class);
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -13,7 +17,7 @@ public class CustomSpringEventPublisher {
     }
 
     public void publishEvent(final String message) {
-        System.out.println("Publishing custom event.");
+        log.info("Publishing custom event.");
         CustomSpringEvent customSpringEvent = new CustomSpringEvent(this, message);
         applicationEventPublisher.publishEvent(customSpringEvent);
     }

@@ -7,17 +7,21 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 @Component
 @SessionScope
 public class UserSessionTracker {
+	
+	private static final Logger log = LoggerFactory.getLogger(UserSessionTracker.class);
     
     private static Map<String, SessionInfo> sessions = new ConcurrentHashMap<>();
     
     public void registerSession(String sessionId, String username, String ip, String userAgent) {
-    	System.out.println("+++++++ registerSession : " + username);
+    	log.info("+++++++ registerSession : " + username);
         sessions.put(sessionId, new SessionInfo(
             sessionId, username, ip, userAgent,
             Instant.now(), true
@@ -31,10 +35,10 @@ public class UserSessionTracker {
     public List<SessionInfo> getAllActiveSessions() {
     	List<SessionInfo> active = new ArrayList<SessionInfo>();
     	if(sessions.isEmpty())
-    	    System.out.println("+++++++ empty map +++++++++++++++");
+    	    log.info("+++++++ empty map +++++++++++++++");
     	sessions.forEach((key, value) -> {
     		active.add(value);
-    		System.out.println("+++++++ " + value.getUserAgent());
+    		log.info("+++++++ " + value.getUserAgent());
     	});
     	//sessions.forEach((value, key) => {
     	//	active.add(value); // Alice, Bob, Charlie

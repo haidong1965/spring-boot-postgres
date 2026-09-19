@@ -33,7 +33,7 @@ public class UserService implements InitializingBean, DisposableBean {
     public User createUser(String username, String role,  String rawPassword) {
         // 1. Check for uniqueness (Crucial validation step)
         if (userRepository.findByName(username) != null) {
-        	System.out.println("++++++++ " + username + " ALREADY EXISTS IN DATABASE +++++++");
+        	log.info("++++++++ " + username + " ALREADY EXISTS IN DATABASE +++++++");
         	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
@@ -55,7 +55,7 @@ public class UserService implements InitializingBean, DisposableBean {
     }
 	
 	public boolean validateId(Long id) {
-		System.out.println("------------- validateId : " + id + " -----------------");
+		log.info("------------- validateId : " + id + " -----------------");
 		return id > 7;
 	}
     

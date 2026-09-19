@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,33 +74,30 @@ public class AuthController {
 
 	@GetMapping("/")
 	public String index() {
-		log.info("**** Welcome to the SSL on " + serverPort + "****");
+		log.info("SSL on {} ", serverPort);
 		return "index";
 	}
 
 	@GetMapping("/csrf")
 	public CsrfToken csrf(CsrfToken token) {
-		// log.info("**** csrf-token!****");
 		return token;
 	}
 
 	@GetMapping("/validate")
-	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader)
-			throws Exception {
+	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		}
-		if (token != null) {
-			if (jwtService.verifyToken(token))
-				return ResponseEntity.ok("");
-		}
+		if ((token != null) && jwtService.verifyToken(token))
+		    return ResponseEntity.ok("");
+	
 		return null;
 	}
 
 	@GetMapping("/api/auth/activeUsers")
-	public ResponseEntity<ArrayList<String>> getActiveUsers() {
-		ArrayList<String> response = new ArrayList<String>();
+	public ResponseEntity<List<String>> getActiveUsers() {
+		List<String> response = new ArrayList<>();
 		List<SessionInfo> list = tracker.getAllActiveSessions();
 		for (SessionInfo si : list) {
 			log.info("****  active session " + si.getUsername());
@@ -109,21 +107,22 @@ public class AuthController {
 	}
 
 	@PostMapping("/api/auth/logout")
-	public ResponseEntity<String> logout(@RequestBody String username, HttpSession session) throws Exception {
-		publisher.publishEvent("user " + username + " logout event");
-		log.info("**** logout session ID:" + session.getId() + " ****");
+	public ResponseEntity<String> logout(@RequestBody String username, HttpSession session)  {
+		String eventMessage = String.format("User %s logout event", username);
+		publisher.publishEvent(eventMessage);
+		log.info("logout session ID: {}", session.getId());
 		tracker.unregisterSession(session.getId());
 		return new ResponseEntity<>("logout sussessfully.", HttpStatus.OK);
 	}
 
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpServletRequest servRequest,
-			HttpSession session) throws Exception {
+			HttpSession session) throws JsonProcessingException  {
 		String url = "";
+		String messageEvent = String.format("User %s login", request.getName());
+		publisher.publishEvent(messageEvent);
 		
-		publisher.publishEvent("user " + request.getName() + " login ");
-		
-		log.info("**** login session ID:" + session.getId() + " ****");
+		log.info("login session ID: {}", session.getId());
 		if (userService.verifyPassword(request.getName(), request.getPassword())) {
 			Authentication authentication = authenticationManager.authenticate(
 						new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
@@ -148,32 +147,32 @@ public class AuthController {
 	@GetMapping("/create")
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
 	public ResponseEntity<String> addNewUser(@RequestParam("name") String name, @RequestParam("token") String token)
-			throws Exception {
+			throws IllegalArgumentException {
 		String password = jwtService.extractSubject(token);
 
 		userService.createUser(name, "USER", password);
+		String createMessage = String.format("+++++ create request from new User : %s ++++", name);
 		auditService.createAudit(
-				new CreateAuditRequest("+++++ create request from new User : " + name + " ++++", AuditLevel.INFO));
-		String response = "<html><body>Congratulations " + name
-				+ "! <br/>You can go to the login page to login  now<br/> </body></html>";
+				new CreateAuditRequest(createMessage, AuditLevel.INFO));
+		String response = String.format("<html><body>Congratulations %s! <br/>You can go to the login page to login  now<br/> </body></html>", name);
 		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, Object>> triggerEmail(@RequestBody SignupRequest request) {
-		
-		publisher.publishEvent("--------- user " + request.username + " signup event -----------");
+		String eventMessage = String.format("User %s signup event",  request.username);
+		publisher.publishEvent(eventMessage);
 		
 		String token = jwtService.generateToken(request.password);
-		String text = "You have signup with email address : \n" + request.username
-				+ "\nPlease confirm it by click on link : \nhttps://" + serverPublic + ":" + serverPort
-				+ "/create?name=" + request.username + "&token=" + token;
+		String text = String.format("You have signup with email address : %n %s%nPlease confirm it by click on link : %nhttps://%s:%s/create?name=%s&token=%s", 
+				request.username, serverPublic, serverPort, request.username, token);
 		Map<String, Object> response = new HashMap<>();
 		try {
 			emailService.sendSimpleMessage(request.username, "confirm your email", text);
 			response.put("success", true);
 			response.put("message", "Email sent successfully");
-			emailService.sendSimpleMessage("hai_dong1@yahoo.com", "new user signup:" + request.username, "+++++++++++++++++++++++");
+			String simpleMessage = String.format("new user signup:%s", request.username);
+			emailService.sendSimpleMessage("hai_dong1@yahoo.com", simpleMessage, "+++++++++++++++++++++++");
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			response.put("success", false);
@@ -190,20 +189,13 @@ public class AuthController {
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		}
-		if (token != null) {
-			if (jwtService.verifyToken(token)) {
-				userService.deleteUserById(id);
-				return ResponseEntity.noContent().build();
-			}
+		if ((token != null) && jwtService.verifyToken(token)) {
+			userService.deleteUserById(id);
+			return ResponseEntity.noContent().build();
 		}
+		
 		return null;
 	}
-
-	/*
-	 * @GetMapping("/session/activity") public List<String> getActivity() {
-	 * tracker.logActivity("Viewed activity log"); return tracker.getActivityLog();
-	 * }
-	 */
 
 	static class SignupRequest {
 		private String username;

@@ -85,10 +85,7 @@ public class UserFoodControllerTest {
          boolean existUser = false;
 
          for (UserFood userFood : userFoods) {
-             System.out.println(
-                 "foodId=" + userFood.getFoodId() +
-                 ", userId=" + userFood.getUserId() + ", date=" + userFood.getDate()
-             );
+             
              if(userService.getUserReferenceById(userFood.getUserId()).getId() == user1.getId()) {
             	 existUser = true;
             	 break;
@@ -97,21 +94,7 @@ public class UserFoodControllerTest {
          assertTrue(existUser); 
      }
      
-     /*
-     @Test
-     void testFindByUserId() throws JsonProcessingException, Exception {
-    	 User user1 = userService.getUserByName("mvctest@yahoo.com");
-    	 Food food1 = foodService.getFoodByName("egg");
-    	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
-    	 String token = jwtService.generateToken(user1.getName());
-    	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
-         mockMvc.perform(get("/user_food/" + user1.getId())
-        		 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-        		 .accept(MediaType.APPLICATION_JSON))
-                 .andExpect(status().isOk());
-    	 
-     }
-     */
+    
      
      @Test
      void testDeleteUserFood() throws JsonProcessingException, Exception {

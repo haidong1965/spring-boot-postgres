@@ -1,5 +1,7 @@
 package hd.webapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,8 @@ import java.util.stream.Stream;
 @RequestMapping("/file")
 //@CrossOrigin(origins = {"https://2.106.164.55:5173"}) 
 public class FileController {
+	
+	private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
 	// Define where you want to save the files
 	private final String uploadDir = "uploads/";
@@ -34,7 +38,7 @@ public class FileController {
 
 	@GetMapping("/list")
 	public List<String> getFileList() throws IOException {
-		System.out.println("++++++++++++++ show files under " + uploadDir + " ++++++++++++++");
+		log.info("++++++++++++++ show files under {} +++++++++++++", uploadDir);
 		Path folder = Paths.get(uploadDir);
 		List<String> files = new ArrayList<String>();
 		// Optional: Create the directory if it doesn't exist yet
@@ -56,20 +60,16 @@ public class FileController {
 	@PostMapping("/upload")
 	public ResponseEntity<String> uploadFile(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@RequestParam("myFile") MultipartFile file) throws Exception {
-		System.out.println("++++++++++++++  59  ++++++++++++++");
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		}
-		System.out.println("++++++++++++++  64  ++++++++++++++");
 		if (token == null) {
 			return ResponseEntity.status(500).body("");
 		}
-		System.out.println("++++++++++++++  68  ++++++++++++++");
 		if (!jwtService.verifyToken(token)) {
 			return ResponseEntity.status(500).body("");
 		}
-		System.out.println("++++++++++++++  72  ++++++++++++++");
 		Map<String, String> response = new HashMap<>();
 
 		// 1. Check if the file is empty
@@ -92,7 +92,7 @@ public class FileController {
 			Path filePath = uploadPath.resolve(fileName);
 
 			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("++++++++++++++ " + fileName + " uploaded ++++++++++++++");
+			log.info("++++++++++++++ {} uploaded ++++++++++++++", fileName);
 			return ResponseEntity.ok("File uploaded successfully : " + fileName);
 
 		} catch (IOException e) {
@@ -103,7 +103,7 @@ public class FileController {
 	@DeleteMapping("/delete/{fileName}")
 	public ResponseEntity<String> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable String fileName) throws Exception {
-		System.out.println("++++++++++++++ delete file " + fileName + " ++++++++++++++");
+		log.info("++++++++++++++ delete file {} ++++++++++++", fileName);
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
