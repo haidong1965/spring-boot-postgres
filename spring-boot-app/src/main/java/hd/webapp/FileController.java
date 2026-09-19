@@ -26,7 +26,7 @@ public class FileController {
 	private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
 	// Define where you want to save the files
-	private final String uploadDir = "uploads/";
+	private static final String uploadDir = "uploads/";
 
 	private final Path baseDir = Paths.get("uploads").toAbsolutePath().normalize();
 
@@ -40,7 +40,7 @@ public class FileController {
 	public List<String> getFileList() throws IOException {
 		log.info("++++++++++++++ show files under {} +++++++++++++", uploadDir);
 		Path folder = Paths.get(uploadDir);
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<>();
 		// Optional: Create the directory if it doesn't exist yet
 		if (!Files.exists(folder)) {
 			Files.createDirectories(folder);
@@ -52,7 +52,7 @@ public class FileController {
 					.map(Path::getFileName) // Get just the file name
 					.map(Path::toString) // Convert to String
 					.sorted() // Sort alphabetically
-					.collect(Collectors.toList());
+					.toList();
 			return files;
 		}
 	}
