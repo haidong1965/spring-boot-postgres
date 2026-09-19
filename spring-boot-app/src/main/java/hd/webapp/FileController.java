@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
@@ -26,7 +25,7 @@ public class FileController {
 	private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
 	// Define where you want to save the files
-	private static final String uploadDir = "uploads/";
+	private static final String UPLOAD_DIR = "uploads/";
 
 	private final Path baseDir = Paths.get("uploads").toAbsolutePath().normalize();
 
@@ -38,8 +37,8 @@ public class FileController {
 
 	@GetMapping("/list")
 	public List<String> getFileList() throws IOException {
-		log.info("++++++++++++++ show files under {} +++++++++++++", uploadDir);
-		Path folder = Paths.get(uploadDir);
+		log.info("++++++++++++++ show files under {} +++++++++++++", UPLOAD_DIR);
+		Path folder = Paths.get(UPLOAD_DIR);
 		List<String> files = new ArrayList<>();
 		// Optional: Create the directory if it doesn't exist yet
 		if (!Files.exists(folder)) {
@@ -80,7 +79,7 @@ public class FileController {
 
 		try {
 			// 2. Create the upload directory if it doesn't exist
-			Path uploadPath = Paths.get(uploadDir);
+			Path uploadPath = Paths.get(UPLOAD_DIR);
 			if (!Files.exists(uploadPath)) {
 				Files.createDirectories(uploadPath);
 			}
