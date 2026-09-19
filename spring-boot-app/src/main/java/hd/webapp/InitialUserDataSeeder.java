@@ -40,8 +40,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		String mypass = env.getProperty("ADMIN_PASSWORD");
 		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
-		String hashedPassword = passwordEncoder.encode(mypass);
 		if (userRepository.findByName(myVar) == null) {
+		    String hashedPassword = passwordEncoder.encode(mypass);
 			User adminUser = new User(myVar, role, hashedPassword);
 			userRepository.save(adminUser);
 		}
@@ -50,8 +50,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		String name1 = "test@yahoo.com";
 		String role1 = "USER";
 		String rawPassword1 = passwordDummy; 
-		String hashedPassword1 = passwordEncoder.encode(rawPassword1);
 		if (userRepository.findByName("test@yahoo.com") == null) {
+		    String hashedPassword1 = passwordEncoder.encode(rawPassword1);
 			User test = new User(name1, role1, hashedPassword1);
 			userRepository.save(test);
 		}
@@ -59,8 +59,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		String name2 = "mvctest@yahoo.com";
 		String role2 = "USER";
 		String rawPassword2 = passwordDummy; 
-		String hashedPassword2 = passwordEncoder.encode(rawPassword2);
 		if (userRepository.findByName("mvctest@yahoo.com") == null) {
+		    String hashedPassword2 = passwordEncoder.encode(rawPassword2);
 			User mvcTest = new User(name2, role2, hashedPassword2);
 			userRepository.save(mvcTest);
 		}
@@ -68,8 +68,8 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 		String dummy = "dummy";
 		String role3 = "USER";
 		String rawPassword3 = passwordDummy; 
-		String hashedPassword3 = passwordEncoder.encode(rawPassword3);
 		if (userRepository.findByName(dummy) == null) {
+		    String hashedPassword3 = passwordEncoder.encode(rawPassword3);
 			User dummy1 = new User(dummy, role3, hashedPassword3);
 			userRepository.save(dummy1);
 		}
