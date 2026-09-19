@@ -23,21 +23,21 @@ public class InitialUserDataSeeder implements CommandLineRunner {
 	@Value("${password.dummy}")
 	private String passwordDummy;
 	
-	@Autowired
-    public Environment env;
+	public final Environment env;
 	
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public InitialUserDataSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public InitialUserDataSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder, Environment env) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.env = env;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		String myVar = env.getProperty("ADMIN_NAME");
-		String mypass = env.getProperty("ADMIN_NAME");
+		String mypass = env.getProperty("ADMIN_PASSWORD");
 		//String name = "admin@dietarydiary.com";
 		String role = "ADMIN";
 		String hashedPassword = passwordEncoder.encode(mypass);
