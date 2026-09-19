@@ -12,13 +12,13 @@ class UserController {
 	private final JwtService jwtService;
 	private final UserService userService;
 
-	private UserController(UserService userService, JwtService jwtService) {
+	public UserController(UserService userService, JwtService jwtService) {
 		this.jwtService = jwtService;
 		this.userService = userService;
 	}
 
 	@GetMapping("/{requestedId}")
-	private ResponseEntity<User> findById(@PathVariable Long requestedId) {
+	public ResponseEntity<User> findById(@PathVariable Long requestedId) {
 		User user = userService.getUserReferenceById(requestedId);
 		if (user != null) {
 			return ResponseEntity.ok(user);
@@ -28,7 +28,7 @@ class UserController {
 	}
 
 	@GetMapping("/list")
-	private ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	public ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
 		
 		List<User> users = userService.getUserRepository().findAll();
 		String token = null;

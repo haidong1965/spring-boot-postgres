@@ -17,7 +17,7 @@ class UserFoodController {
 	private final FoodService foodService;
 	private final JwtService jwtService;
 
-	private UserFoodController(UserFoodService userFoodService, UserService userService, FoodService foodService,
+	public UserFoodController(UserFoodService userFoodService, UserService userService, FoodService foodService,
 			JwtService jwtService) {
 		this.userService = userService;
 		this.foodService = foodService;
@@ -33,13 +33,13 @@ class UserFoodController {
 		int volumn = request.getVolumn();
 
 		UserFood userFood = new UserFood(user.getId(), food.getId(), volumn, unit);
-		userFood.setDate(request.getDate().toString());
+		userFood.setDate(request.getDate());
 		userFoodService.addUserFood(userFood);
 		return ResponseEntity.ok(userFood.getId());
 	}
 
 	@GetMapping("/user/{requestedId}")
-	private ResponseEntity<List<UserFoodDTO>> findByUserId(
+	public ResponseEntity<List<UserFoodDTO>> findByUserId(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Long requestedId)
 			throws Exception {
 		String token = null;

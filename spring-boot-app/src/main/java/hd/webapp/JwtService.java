@@ -18,9 +18,6 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -30,7 +27,7 @@ import java.security.PublicKey;
 
 @Service
 public class JwtService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
 	private final ResourceLoader resourceLoader;
@@ -60,7 +57,7 @@ public class JwtService {
 		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
 
 		Claims claims = claimsJws.getBody();
-		return  claims.getExpiration().toGMTString();
+		return claims.getExpiration().toGMTString();
 	}
 
 	private PrivateKey loadPrivateKeyFromPem() throws Exception {
@@ -70,7 +67,7 @@ public class JwtService {
 
 		// 2. Use Regex to capture ONLY the Base64 payload between BEGIN and END markers
 		// This regex assumes standard PKCS#8 format.
-		Pattern pattern = Pattern.compile("-----BEGIN (PRIVATE|PUBLIC) KEY-----([\\s\\S]*?)-----END \\1 KEY-----",
+		Pattern pattern = Pattern.compile("-----BEGIN (PRIVATE|PUBLIC) KEY-----(.*?)-----END \\1 KEY-----",
 				Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(pemContent);
 
@@ -102,13 +99,11 @@ public class JwtService {
 		}
 
 		Date now = new Date();
-		String jwtToken = Jwts.builder().setSubject(subject) // e.g., User ID
+		return Jwts.builder().setSubject(subject) // e.g., User ID
 				.setId(UUID.randomUUID().toString()).setIssuedAt(now)
 				.setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
 				// --- THE CRITICAL STEP: Signing with the loaded PrivateKey ---
 				.signWith(signingKey, SignatureAlgorithm.RS256).compact();
-
-		return jwtToken;
 	}
 
 	@Transactional
@@ -117,20 +112,16 @@ public class JwtService {
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = publkicKeyResource.getContentAsString(StandardCharsets.UTF_8);
 		PublicKey publicKey = loadPublicKeyFromPem(pemContent);
-		
+
 		if (Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token) != null) {
 			Date exDate = new Date(extractExpiration(token));
-			if (exDate.before(new Date()))
-				return false;
-			return true;
+			return !exDate.before(new Date());
 		}
 		return false;
 	}
 
 	private PublicKey loadPublicKeyFromPem(String pemKeyString) throws Exception {
-		String cleanBase64 = pemKeyString;
-
-		cleanBase64 = pemKeyString.replace("-----BEGIN PUBLIC KEY-----", "") // Remove start header
+		String cleanBase64  = pemKeyString.replace("-----BEGIN PUBLIC KEY-----", "") // Remove start header
 				.replace("-----END PUBLIC KEY-----", "") // Remove end footer
 				.replaceAll("\\s+", "");
 		if (!cleanBase64.isEmpty()) {
@@ -152,13 +143,11 @@ public class JwtService {
 				// running the code!
 				// Use Paths.get() which handles OS-specific path separators robustly.
 				java.nio.file.Path javaPath = Paths.get(osPath);
-				FileSystemResource fsResource2 = new FileSystemResource(javaPath.toString());
-				return fsResource2;
+				return new FileSystemResource(javaPath.toString());
 			}
 
 			@Override
 			public ClassLoader getClassLoader() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		};
@@ -168,13 +157,13 @@ public class JwtService {
 		// 2. Generate a token for a sample user String userId = "hdo"; String token
 		String token = service.generateToken(userId);
 
-		log.info("✨ TOKEN GENERATION SUCCESSFUL ✨");
-		log.info("User Subject: {}", userId);
-		log.info("Generated JWT (RS256):{}", token);
-		
-		// 3. Demonstrate verification (requires public key setup)
-		if (service.verifyToken(token)) {
+		if (service.verifyToken(token) && log.isInfoEnabled() && service.extractSubject(token).equals(userId) ) {
+			log.info("✨ TOKEN GENERATION SUCCESSFUL ✨");
+			log.info("User Subject: {}", userId);
+			log.info("Generated JWT (RS256):{}", token);
 			log.info("✨ TOKEN VALIDATION SUCCESSFUL for subject : {} ✨", service.extractSubject(token));
+		} else {
+			log.error("Wrong token generated.");
 		}
 
 	}

@@ -17,7 +17,12 @@ import lombok.Setter;
 @Table(name = "users") // Explicitly names the table 'users'
 public class User implements UserDetails {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1118084838557296937L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrementing primary key
     private Long id;
 

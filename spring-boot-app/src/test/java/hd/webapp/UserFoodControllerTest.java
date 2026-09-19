@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -67,8 +66,6 @@ public class UserFoodControllerTest {
     	 UserFood userFood1 = new UserFood(user1.getId(), food1.getId(), 200, 0);
     	 jwtToken = jwtService.generateToken(user1.getName());
     	 LocalDate today = LocalDate.now();
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-         String formattedDate = today.format(formatter);
     	 
     	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
     	 userFoodRequest1.setDate(today.toString());

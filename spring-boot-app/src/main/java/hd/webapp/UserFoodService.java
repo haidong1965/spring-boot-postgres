@@ -18,14 +18,13 @@ public class UserFoodService {
 		return userFoodRepository;
 	}
 
-	public UserFoodService(UserFoodRepository userFoodRepository, UserRepository userRepository,
-			FoodRepository foodRepository) {
+	public UserFoodService(UserFoodRepository userFoodRepository) {
 		this.userFoodRepository = userFoodRepository;
 	}
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
-		log.info("xxxxxxxxxxxxxxxx " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString() + " xxxxxxxxxxxxxxxxxx");
+		log.info("xxxxxxxxxxxxxxxx {} xxxxxxxxxxxxxxx", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 		userFoodRepository.save(userFood);
 		return true;
 	}
@@ -42,7 +41,6 @@ public class UserFoodService {
 	}
 
 	public List<UserFood> findAll() {
-		// TODO Auto-generated method stub
 		return userFoodRepository.findAll();
 	}
 
