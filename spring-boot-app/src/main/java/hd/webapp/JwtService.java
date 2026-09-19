@@ -6,7 +6,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.jsonwebtoken.*;
@@ -19,6 +18,9 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -58,7 +60,7 @@ public class JwtService {
 		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
 
 		Claims claims = claimsJws.getBody();
-		return claims.getExpiration().toGMTString();
+		return  claims.getExpiration().toGMTString();
 	}
 
 	private PrivateKey loadPrivateKeyFromPem() throws Exception {
@@ -167,13 +169,12 @@ public class JwtService {
 		String token = service.generateToken(userId);
 
 		log.info("✨ TOKEN GENERATION SUCCESSFUL ✨");
-		log.info("User Subject: " + userId);
-		log.info("Generated JWT (RS256):");
-		log.info(token);
-
+		log.info("User Subject: {}", userId);
+		log.info("Generated JWT (RS256):{}", token);
+		
 		// 3. Demonstrate verification (requires public key setup)
 		if (service.verifyToken(token)) {
-			log.info("✨ TOKEN VALIDATION SUCCESSFUL for subject : " + service.extractSubject(token) + " ✨");
+			log.info("✨ TOKEN VALIDATION SUCCESSFUL for subject : {} ✨", service.extractSubject(token));
 		}
 
 	}
