@@ -29,10 +29,9 @@ public class FoodController {
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		}
-		if (token != null) {
-			if (jwtService.verifyToken(token))
+		if ((token != null) && jwtService.verifyToken(token))
 				return ResponseEntity.ok(foods);
-		}
+		
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 	
