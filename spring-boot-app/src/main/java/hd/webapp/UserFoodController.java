@@ -48,7 +48,7 @@ class UserFoodController {
 		}
 		if (token != null) {
 			List<UserFood> userFoods = userFoodService.getUserFoodRepository().findByUserId(requestedId);
-			List<UserFoodDTO> userFoodsDTO = new ArrayList<UserFoodDTO>();
+			List<UserFoodDTO> userFoodsDTO = new ArrayList<>();
 			for(UserFood uf : userFoods) {
 				double weight = 1.0;
 				if(uf.getUnit() == 0)

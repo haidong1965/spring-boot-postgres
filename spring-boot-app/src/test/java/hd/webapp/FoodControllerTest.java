@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.hasSize;
 @AutoConfigureMockMvc
 @ActiveProfiles("test") 
 @Transactional
-public class FoodControllerTest {
+class FoodControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;

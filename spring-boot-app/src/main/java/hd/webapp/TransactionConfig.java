@@ -11,7 +11,6 @@ import jakarta.persistence.EntityManagerFactory;
 public class TransactionConfig {
 
     @Bean PlatformTransactionManager  transactionManager(EntityManagerFactory emf) {
-       // DataSourceTransactionManager txManager = new DataSourceTransactionManager(dataSource);
         JpaTransactionManager txManager = new JpaTransactionManager(emf);
         // ✅ ENABLE NESTED TRANSACTIONS
         txManager.setNestedTransactionAllowed(true); 

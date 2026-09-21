@@ -29,11 +29,11 @@ public class UserFood {
 
 	}
 
-	public UserFood(Long user_id, Long food_id, int volumn, int unit) {
+	public UserFood(Long userId, Long foodId, int volumn, int unit) {
 		this.volumn = volumn;
 		this.unit = unit;
-		this.userId = user_id;
-		this.foodId = food_id;
+		this.userId = userId;
+		this.foodId = foodId;
 	}
 
 	@Column(name = "unit")

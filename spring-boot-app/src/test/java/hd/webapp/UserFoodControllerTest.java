@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 @ActiveProfiles("test") 
 @Transactional
-public class UserFoodControllerTest {
+class UserFoodControllerTest {
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	

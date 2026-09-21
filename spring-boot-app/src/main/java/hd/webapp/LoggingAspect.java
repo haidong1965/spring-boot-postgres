@@ -18,13 +18,13 @@ public class LoggingAspect {
     public void logBefore(JoinPoint joinPoint){
     	 String methodName = joinPoint.getSignature().getName();
     	 String className = joinPoint.getTarget().getClass().getSimpleName();
-         log.info(">>> Intercepted class " + className + " method call: " + methodName);
+         log.info(">>> Intercepted class {} method call: {}", className, methodName);
     }
 
     @After("execution(* hd.webapp.UserService.*(..))")
     public void logAfter(JoinPoint joinPoint){
     	String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
-        log.info("<<< Intercepted class " + className + " method call: " + methodName);
+        log.info("<<< Intercepted class {} method call: {}", className, methodName);
     }
 }

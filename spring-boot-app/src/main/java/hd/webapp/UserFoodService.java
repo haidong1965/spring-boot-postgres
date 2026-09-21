@@ -24,7 +24,9 @@ public class UserFoodService {
 
 	@Transactional
 	public boolean addUserFood(UserFood userFood) {
-		log.info("xxxxxxxxxxxxxxxx {} xxxxxxxxxxxxxxx", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+		if(log.isInfoEnabled()) {
+		    log.info("xxxxxxxxxxxxxxxx {} xxxxxxxxxxxxxxx", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		}
 		userFoodRepository.save(userFood);
 		return true;
 	}

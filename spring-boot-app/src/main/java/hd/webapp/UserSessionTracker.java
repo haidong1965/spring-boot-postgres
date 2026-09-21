@@ -20,7 +20,7 @@ public class UserSessionTracker {
     private static Map<String, SessionInfo> sessions = new ConcurrentHashMap<>();
     
     public void registerSession(String sessionId, String username, String ip, String userAgent) {
-    	log.info("+++++++ registerSession : " + username);
+    	log.info("+++++++ registerSession : {}", username);
         sessions.put(sessionId, new SessionInfo(
             sessionId, username, ip, userAgent,
             Instant.now(), true
@@ -32,16 +32,14 @@ public class UserSessionTracker {
     }
 
     public List<SessionInfo> getAllActiveSessions() {
-    	List<SessionInfo> active = new ArrayList<SessionInfo>();
+    	List<SessionInfo> active = new ArrayList<>();
     	if(sessions.isEmpty())
     	    log.info("+++++++ empty map +++++++++++++++");
     	sessions.forEach((key, value) -> {
     		active.add(value);
-    		log.info("+++++++ " + value.getUserAgent());
+    		log.info("+++++++ {}", value.getUserAgent());
     	});
-    	//sessions.forEach((value, key) => {
-    	//	active.add(value); // Alice, Bob, Charlie
-    	//	});
+    	
         return new ArrayList<>(sessions.values());
     }
 

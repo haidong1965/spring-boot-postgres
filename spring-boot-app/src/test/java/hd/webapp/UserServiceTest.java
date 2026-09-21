@@ -1,7 +1,6 @@
 package hd.webapp;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +11,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test") 
-public class UserServiceTest {
+class UserServiceTest {
 	@Mock
 	UserRepository userRepository;
 	
@@ -20,11 +19,11 @@ public class UserServiceTest {
 	UserService userService;
 	
 	@Test
-	public void testGetUserByName() {
+	void testGetUserByName() {
 		User tUser = new User("test", "USER", "test");
 		given(userRepository.findByName("test")).willReturn(tUser);
 		User sUser = userService.getUserByName("test");
-		assertTrue(sUser.equals(tUser));
+		assertEquals(sUser, tUser);
 	}
 
 }
