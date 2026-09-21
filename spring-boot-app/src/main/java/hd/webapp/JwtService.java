@@ -9,13 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.IOException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -40,7 +42,7 @@ public class JwtService {
 		return signingKey;
 	}
 
-	public JwtService(ResourceLoader resourceLoader, JwtProperties jwtProperties) throws Exception {
+	public JwtService(ResourceLoader resourceLoader, JwtProperties jwtProperties) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		this.resourceLoader = resourceLoader;
 		this.jwtProperties = jwtProperties;
 		this.signingKey = loadPrivateKeyFromPem();
@@ -60,7 +62,7 @@ public class JwtService {
 		return claims.getExpiration().toGMTString();
 	}
 
-	private PrivateKey loadPrivateKeyFromPem() throws Exception {
+	private PrivateKey loadPrivateKeyFromPem() throws  IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		URL resourceURL = getClass().getClassLoader().getResource("authz.pem");
 		Resource privateKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = privateKeyResource.getContentAsString(StandardCharsets.UTF_8);
