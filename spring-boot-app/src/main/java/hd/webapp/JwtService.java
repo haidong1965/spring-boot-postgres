@@ -122,7 +122,7 @@ public class JwtService {
 		return false;
 	}
 
-	private PublicKey loadPublicKeyFromPem(String pemKeyString) throws Exception {
+	private PublicKey loadPublicKeyFromPem(String pemKeyString) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String cleanBase64  = pemKeyString.replace("-----BEGIN PUBLIC KEY-----", "") // Remove start header
 				.replace("-----END PUBLIC KEY-----", "") // Remove end footer
 				.replaceAll("\\s+", "");
