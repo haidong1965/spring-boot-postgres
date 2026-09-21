@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS user_food (
     food_id BIGINT NOT NULL,
     date VARCHAR(150) NOT NULL,
     unit SMALLINT,
-    volumn INT
+    volume INT
 );
 
 -- Create the audit table

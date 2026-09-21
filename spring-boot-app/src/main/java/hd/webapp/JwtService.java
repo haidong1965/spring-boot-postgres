@@ -55,11 +55,10 @@ public class JwtService {
 		return claims.getSubject();
 	}
 
-	public String extractExpiration(String token) {
+	public Date extractExpiration(String token) {
 		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
-
 		Claims claims = claimsJws.getBody();
-		return claims.getExpiration().toGMTString();
+		return claims.getExpiration();
 	}
 
 	private PrivateKey loadPrivateKeyFromPem() throws  IOException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -116,8 +115,7 @@ public class JwtService {
 		PublicKey publicKey = loadPublicKeyFromPem(pemContent);
 
 		if (Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token) != null) {
-			Date exDate = new Date(extractExpiration(token));
-			return !exDate.before(new Date());
+			return !extractExpiration(token).before(new Date());
 		}
 		return false;
 	}
