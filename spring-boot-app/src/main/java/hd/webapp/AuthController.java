@@ -41,9 +41,6 @@ import org.springframework.transaction.annotation.*;
 @RequestMapping("/")
 public class AuthController {
 
-	
-
-
 	@Value("${server.port}")
 	private String serverPort;
 	@Value("${server.public}")
@@ -51,28 +48,21 @@ public class AuthController {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-	
-	private final UserService userService;
-	private final JwtService jwtService;
 	private final EmailService emailService;
-	private final UserSessionTracker tracker;
 	private final AuditService auditService;
-	private final AuthenticationManager authenticationManager;
 	private final ObjectMapper objectMapper;
 	private final CustomSpringEventPublisher publisher;
+	private final UserOperationFacade userOperationFacade;
 
-    AuthController(UserService userService, JwtService jwtService,
-			EmailService emailService, UserSessionTracker tracker, 
+    AuthController(EmailService emailService, UserSessionTracker tracker, 
 			AuditService auditService, ObjectMapper objectMapper,
-			AuthenticationManager authenticationManager, CustomSpringEventPublisher publisher) {
-		this.userService = userService;
-		this.jwtService = jwtService;
+			CustomSpringEventPublisher publisher,
+			UserOperationFacade userOperationFacade) {
 		this.emailService = emailService;
-		this.tracker = tracker;
 		this.auditService = auditService;
 		this.objectMapper = objectMapper;
-		this.authenticationManager = authenticationManager;
 		this.publisher = publisher;
+		this.userOperationFacade = userOperationFacade;
 	}
 
 	@GetMapping("/")
@@ -94,18 +84,15 @@ public class AuthController {
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		}
-		if ((token != null) && jwtService.verifyToken(token))
-		    return ResponseEntity.ok("");
-	
-		return null;
+		return userOperationFacade.validate(token);
 	}
 
 	@GetMapping("/api/auth/activeUsers")
 	public ResponseEntity<List<String>> getActiveUsers() {
 		List<String> response = new ArrayList<>();
-		List<SessionInfo> list = tracker.getAllActiveSessions();
+		List<SessionInfo> list = userOperationFacade.getAllActiveSessions();
 		for (SessionInfo si : list) {
-			log.info("****  active session " + si.getUsername());
+			log.info("****  active session {}", si.getUsername());
 			response.add(si.getUsername());
 		}
 		return ResponseEntity.ok(response);
@@ -116,36 +103,21 @@ public class AuthController {
 		String eventMessage = String.format("User %s logout event", username);
 		publisher.publishEvent(eventMessage);
 		log.info("logout session ID: {}", session.getId());
-		tracker.unregisterSession(session.getId());
+		userOperationFacade.unregisterSession(session.getId());
 		return new ResponseEntity<>("logout sussessfully.", HttpStatus.OK);
 	}
 
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpServletRequest servRequest,
 			HttpSession session) throws JsonProcessingException  {
-		String url = "";
 		String messageEvent = String.format("User %s login", request.getName());
 		publisher.publishEvent(messageEvent);
 		
 		log.info("login session ID: {}", session.getId());
-		if (userService.verifyPassword(request.getName(), request.getPassword())) {
-			Authentication authentication = authenticationManager.authenticate(
-						new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
-			
-			String token = jwtService.generateToken(authentication.getName());
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
-			User user = userService.getUserByName(request.getName());
-			if (user.getRole().equalsIgnoreCase("ADMIN"))
-				url = "/admin";
-			else
-				url = "/users/" + user.getId();
-
-			tracker.registerSession(session.getId(), authentication.getName(), getClientIp(servRequest),
-					servRequest.getHeader("User-Agent"));
-			LoginResponse response = new LoginResponse(true, token, url, request.getName());
-			return new ResponseEntity<>(objectMapper.writeValueAsString(response), HttpStatus.OK);
+		if(userOperationFacade.verifyPassword(request.getName(), request.getPassword())) {
+			return new ResponseEntity<>(objectMapper.writeValueAsString(userOperationFacade.login(request, servRequest, session)), HttpStatus.OK);
 		}
+		
 		return new ResponseEntity<>("incorrect username or password", HttpStatus.FORBIDDEN);
 	}
 
@@ -153,14 +125,9 @@ public class AuthController {
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
 	public ResponseEntity<String> addNewUser(@RequestParam("name") String name, @RequestParam("token") String token)
 			throws IllegalArgumentException {
-		String password = jwtService.extractSubject(token);
-
-		userService.createUser(name, "USER", password);
 		String createMessage = String.format("+++++ create request from new User : %s ++++", name);
-		auditService.createAudit(
-				new CreateAuditRequest(createMessage, AuditLevel.INFO));
-		String response = String.format("<html><body>Congratulations %s! <br/>You can go to the login page to login  now<br/> </body></html>", name);
-		return ResponseEntity.ok(response);
+		auditService.createAudit(new CreateAuditRequest(createMessage, AuditLevel.INFO));
+		return userOperationFacade.addNewUser(name, token);
 	}
 
 	@PostMapping("/signup")
@@ -168,7 +135,7 @@ public class AuthController {
 		String eventMessage = String.format("User %s signup event",  request.username);
 		publisher.publishEvent(eventMessage);
 		
-		String token = jwtService.generateToken(request.password);
+		String token = userOperationFacade.generateToken(request.password);
 		String text = String.format("You have signup with email address : %n %s%nPlease confirm it by click on link : %nhttps://%s:%s/create?name=%s&token=%s", 
 				request.username, serverPublic, serverPort, request.username, token);
 		Map<String, Object> response = new HashMap<>();
@@ -189,18 +156,8 @@ public class AuthController {
 	@DeleteMapping("/delete/{id}")
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
 	public ResponseEntity<Void> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@PathVariable Long id) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
- {
-		String token = null;
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			token = authHeader.substring(7);
-		}
-		if ((token != null) && jwtService.verifyToken(token)) {
-			userService.deleteUserById(id);
-			return ResponseEntity.noContent().build();
-		}
-		
-		return null;
+			@PathVariable Long id) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		return userOperationFacade.deleteUser(authHeader, id);
 	}
 
 	static class SignupRequest {
@@ -246,19 +203,5 @@ public class AuthController {
 		}
 	}
 
-	public static String getClientIp(HttpServletRequest request) {
-		String[] headers = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_X_FORWARDED_FOR",
-				"HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR",
-				"HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR" };
-
-		for (String header : headers) {
-			String ip = request.getHeader(header);
-			if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
-				// X-Forwarded-For can contain multiple IPs; take the first
-				return ip.split(",")[0].trim();
-			}
-		}
-
-		return request.getRemoteAddr();
-	}
+	
 }
