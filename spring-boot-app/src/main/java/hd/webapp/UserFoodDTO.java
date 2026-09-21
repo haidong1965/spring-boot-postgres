@@ -1,34 +1,23 @@
 package hd.webapp;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Setter
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserFoodDTO {
-	
-	private final Long id;
-	private final Long userId;
-	private final String name;
-	private final int energy;
-	private final double protein;
-	private final double fiber;
-	private final double calcium;
-	private String date;
-	private int unit;
-	private int volumn;
-	
-    
-    public UserFoodDTO(Long id, Long userId, String name, int energy, double protein, double fiber, double calcium, String date, int unit, int volumn) {
-    	this.id = id;
-        this.name = name;
-        this.energy = energy;
-        this.protein = protein;
-        this.fiber = fiber;
-        this.calcium = calcium;
-        this.userId = userId;
-        this.date = date;
-        this.unit = unit;
-        this.volumn = volumn;
-    }
+    private Long id;
+    private Long userId;
+    private String name;
+    private int energy;
+    private double protein;
+    private double fiber;
+    private double calcium;
+    private String date;
+    private int unit;
+    private int volume;
 }

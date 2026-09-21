@@ -67,7 +67,7 @@ class UserFoodControllerTest {
     	 jwtToken = jwtService.generateToken(user1.getName());
     	 LocalDate today = LocalDate.now();
     	 
-    	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolumn(), userFood1.getUnit());
+    	 UserFoodRequest userFoodRequest1 = new UserFoodRequest(user1.getName(), food1.getName(),  userFood1.getVolume(), userFood1.getUnit());
     	 userFoodRequest1.setDate(today.toString());
          mockMvc.perform(post("/user_food/add")
         		 .header("Authorization", "Bearer " + jwtToken)

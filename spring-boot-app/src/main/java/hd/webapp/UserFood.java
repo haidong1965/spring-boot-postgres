@@ -29,8 +29,8 @@ public class UserFood {
 
 	}
 
-	public UserFood(Long userId, Long foodId, int volumn, int unit) {
-		this.volumn = volumn;
+	public UserFood(Long userId, Long foodId, int volume, int unit) {
+		this.volume = volume;
 		this.unit = unit;
 		this.userId = userId;
 		this.foodId = foodId;
@@ -39,8 +39,8 @@ public class UserFood {
 	@Column(name = "unit")
 	private int unit;
 
-	@Column(name = "volumn")
-	private int volumn;
+	@Column(name = "volume")
+	private int volume;
 
 	@Column(name = "date")
 	private String date;

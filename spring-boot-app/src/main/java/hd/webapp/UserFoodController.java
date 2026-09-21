@@ -59,13 +59,13 @@ class UserFoodController {
 						id,
 						uf.getUserId(),
 						foodReference.getName(),
-						(int)(foodReference.getEnergy()*uf.getVolumn()/weight),
-						foodReference.getProtein()*uf.getVolumn()/weight,
-						foodReference.getFiber()*uf.getVolumn()/weight,
-						foodReference.getCalcium()*uf.getVolumn()/weight,
+						(int)(foodReference.getEnergy()*uf.getVolume()/weight),
+						foodReference.getProtein()*uf.getVolume()/weight,
+						foodReference.getFiber()*uf.getVolume()/weight,
+						foodReference.getCalcium()*uf.getVolume()/weight,
 						uf.getDate(),
 						uf.getUnit(),
-						uf.getVolumn()
+						uf.getVolume()
 						);
 				userFoodsDTO.add(userFoodDTO);
 			}
