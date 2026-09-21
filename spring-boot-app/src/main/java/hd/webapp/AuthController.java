@@ -54,7 +54,7 @@ public class AuthController {
 	private final CustomSpringEventPublisher publisher;
 	private final UserOperationFacade userOperationFacade;
 
-    AuthController(EmailService emailService, UserSessionTracker tracker, 
+    AuthController(EmailService emailService,
 			AuditService auditService, ObjectMapper objectMapper,
 			CustomSpringEventPublisher publisher,
 			UserOperationFacade userOperationFacade) {
