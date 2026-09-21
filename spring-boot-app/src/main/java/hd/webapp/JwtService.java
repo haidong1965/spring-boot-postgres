@@ -109,7 +109,7 @@ public class JwtService {
 	}
 
 	@Transactional
-	public boolean verifyToken(String token) throws Exception {
+	public boolean verifyToken(String token) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		URL resourceURL = getClass().getClassLoader().getResource("authz.pub");
 		Resource publkicKeyResource = resourceLoader.getResource(resourceURL.toString());
 		String pemContent = publkicKeyResource.getContentAsString(StandardCharsets.UTF_8);
