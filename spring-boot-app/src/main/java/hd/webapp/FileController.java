@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +60,7 @@ public class FileController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<String> uploadFile(@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@RequestParam("myFile") MultipartFile file) throws Exception {
+			@RequestParam("myFile") MultipartFile file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
@@ -101,7 +103,7 @@ public class FileController {
 
 	@DeleteMapping("/delete/{fileName}")
 	public ResponseEntity<String> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@PathVariable String fileName) throws Exception {
+			@PathVariable String fileName) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		log.info("++++++++++++++ delete file {} ++++++++++++", fileName);
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {

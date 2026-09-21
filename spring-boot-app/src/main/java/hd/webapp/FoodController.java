@@ -1,5 +1,8 @@
 package hd.webapp;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -23,7 +26,8 @@ public class FoodController {
 	}
 	
 	@GetMapping("/list")
-	public  ResponseEntity<List<Food>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	public  ResponseEntity<List<Food>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) 
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		List<Food> foods = foodService.getAllFoodsSortedByName();
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {

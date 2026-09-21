@@ -3,6 +3,9 @@ package hd.webapp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @RestController
@@ -28,7 +31,8 @@ class UserController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	public ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = false) String authHeader) 
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 		
 		List<User> users = userService.getUserRepository().findAll();
 		String token = null;

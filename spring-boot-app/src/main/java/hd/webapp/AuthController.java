@@ -1,5 +1,8 @@
 package hd.webapp;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +87,9 @@ public class AuthController {
 	}
 
 	@GetMapping("/validate")
-	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+	public ResponseEntity<String> validate(@RequestHeader(name = "Authorization", required = false) String authHeader) 
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
+ {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
@@ -184,7 +189,8 @@ public class AuthController {
 	@DeleteMapping("/delete/{id}")
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
 	public ResponseEntity<Void> deleteUser(@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@PathVariable Long id) throws Exception {
+			@PathVariable Long id) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException
+ {
 		String token = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
