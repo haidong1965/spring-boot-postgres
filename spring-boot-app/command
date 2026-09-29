@@ -7,3 +7,7 @@ docker-compose up -d
 docker-compose exec postgres psql -U postgres -d token_auth_db
 
  psql -d my_webapp_db  -U app_user
+ 
+ 
+ 
+ make 20 test questions on Spring Data / JPA like Spring academy certificate test with questions and answers in seperate parts
