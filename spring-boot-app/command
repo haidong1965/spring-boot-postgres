@@ -10,4 +10,4 @@ docker-compose exec postgres psql -U postgres -d token_auth_db
  
  spring.datasource.password=resuPpa6202
  
- make 20 test questions on Spring Spring MVC / REST like Spring academy certificate test with questions and answers in seperate parts
+ make 20 test questions on Spring Security like Spring academy certificate test with questions and answers in seperate parts
