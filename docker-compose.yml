@@ -6,7 +6,7 @@ services:
       context: ./react_app
       dockerfile: Dockerfile
     ports:
-      - "5175:5175"
+      - "5173:5173"
   #  volumes:
   #    - ./certs:/app/certs
 
@@ -53,7 +53,7 @@ services:
       ADMIN_PASSWORD: rpass
      # JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
     ports:
-      - "8445:8445"
+      - "8443:8443"
       - "8080:8080" # Maps host 8081 to container 8081 (Actuator)
     networks:
       - spring-network
